@@ -1,4 +1,3 @@
-// Generated on 2016-04-04 using generator-angular-wixapp 0.2.12
 'use strict';
 
 // # Globbing
