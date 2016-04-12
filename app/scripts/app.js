@@ -10,10 +10,6 @@ angular.module('wixApp', [
         templateUrl: 'views/app.html',
         controller: 'MainCtrl'
       })
-    .when('/Widget/', {
-        templateUrl: 'views/widget.html',
-        controller: 'WidgetController'
-      })
       .otherwise({
         redirectTo: '/'
       });
