@@ -4,12 +4,12 @@ angular.module('widget')
     .controller('WidgetController', function($scope, $wix, feedbacksDb) {
 
         $scope.newComment = {};
-        $scope.feedbacks = feedbacksDb.getFeedbacks();
+        $scope.feedbacks = feedbacksDb.feedbackss;
 
-        if ($wix.Utils.getViewMode() !== 'standalone') {
+        /*if ($wix.Utils.getViewMode() !== 'standalone') {
             $scope.instanceId = $wix.Utils.getInstanceId();
             $scope.instance = $wix.Utils.getInstance();
-        }
+        }*/
     })
     .directive('feedback', function($interpolate) {
         return {
@@ -17,36 +17,17 @@ angular.module('widget')
             scope: {
                 feedback: '=info'
             },
-            templateUrl: 'views/templates/feedback.html'
-                //template: 'img: {{feedback.img}}<br/>author: {{feedback.author}}<br/>content: {{feedback.content}}'
+            templateUrl: 'views/templates/feedback.html '
         };
     })
     .factory('feedbacksDb', ['$http', function($http) {
 
-        var FeedbacksDataOp = {};
-        FeedbacksDataOp.getStudents = function() {
-            return $http.get(urlBase + '/GetStudents');
+        var obj = {
+            feedbackss: null
         };
 
-        FeedbacksDataOp.getFeedbacks = function() {
-            return [{
-                img: 1,
-                author: "me",
-                content: "lol"
-            }, {
-                img: 3,
-                author: "me",
-                content: "lol"
-            }, {
-                img: 3,
-                author: "me",
-                content: "lol"
-            }, {
-                img: 3,
-                author: "me",
-                content: "lol"
-            }];
-        };
-
-        return FeedbacksDataOp;
+        $http.get('/dummy_data/feedbacks.json').success(function(response) {
+            obj.feedbackss = response;
+        });
+        return obj;
     }]);
