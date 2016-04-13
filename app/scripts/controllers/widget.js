@@ -8,7 +8,8 @@ angular.module('widget')
         };
 
         $scope.widgetInstance;
-
+        $scope.actualInstance = $wix.Utils.getInstanceId();
+        $scope.compId = $wix.Utils.getCompId();
         $scope.$watch(
             "widgetInstance",
             function change(newValue, oldValue) {
