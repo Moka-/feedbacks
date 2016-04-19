@@ -1,11 +1,4 @@
-// Generated on 2016-04-04 using generator-angular-wixapp 0.2.12
 'use strict';
-
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// use this if you want to recursively match all subfolders:
-// 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
   // Load grunt tasks automatically
@@ -43,7 +36,7 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
       },
-      // 
+      //
       gruntfile: {
         files: ['Gruntfile.js']
       },
@@ -139,8 +132,6 @@ module.exports = function (grunt) {
       }
     },
 
-    //
-
     // Renames files for browser caching purposes
     rev: {
       dist: {
@@ -159,7 +150,11 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: ['<%= yeoman.app %>/index.html', '<%= yeoman.app %>/settings.html'],
+      html: [
+        '<%= yeoman.app %>/index.html',
+        '<%= yeoman.app %>/settings.html',
+        '<%= yeoman.app %>/widget.html'
+      ],
       options: {
         dest: '<%= yeoman.dist %>'
       }
@@ -253,19 +248,13 @@ module.exports = function (grunt) {
     // Run some tasks in parallel to speed up the build process
     concurrent: {
       server: [
-        //
         'copy:styles'
-        //
       ],
       test: [
-        //
         'copy:styles'
-        //
       ],
       dist: [
-        //
         'copy:styles'
-        //
       ]
     },
 
@@ -281,7 +270,6 @@ module.exports = function (grunt) {
       }
     }
   });
-
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
