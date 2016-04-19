@@ -4,25 +4,13 @@ module.exports = function (grunt) {
         express: {
             options: {
                 background: true,
-                fallback: function () {
-                },
+                fallback: function (){},
                 port: 9000,
                 output: ".+"
             },
             dev: {
                 options: {
                     script: 'server/server.js'
-                }
-            },
-            prod: {
-                options: {
-                    script: 'path/to/prod/server.js',
-                    node_env: 'production'
-                }
-            },
-            test: {
-                options: {
-                    script: 'path/to/test/server.js'
                 }
             }
         },
@@ -49,7 +37,7 @@ module.exports = function (grunt) {
             files: ['test/**/*.html']
         },
         jshint: {
-            files: ['Gruntfile.js', 'app/**/*.js', 'test/**/*.js'],
+            files: ['Gruntfile.js', 'app/**/*.js', 'server/**/*.js', 'test/**/*.js'],
             options: {
                 // options here to override JSHint defaults
                 globals: {
@@ -65,8 +53,8 @@ module.exports = function (grunt) {
                 livereload: true
             },
             express: {
-                files:  [ '**/*.js' ],
-                tasks:  [ 'express:dev' ],
+                files: ['**/*.js'],
+                tasks: ['express:dev'],
                 options: {
                     spawn: false
                 }
@@ -83,18 +71,18 @@ module.exports = function (grunt) {
             }
         }
 
-  });
+    });
 
     grunt.loadNpmTasks('grunt-express-server');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  //grunt.registerTask('test', ['jshint', 'qunit']);
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    //grunt.registerTask('test', ['jshint', 'qunit']);
 
-  //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
+    //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
 
     //grunt.registerTask('rebuild', [ 'browserify:scripts', 'stylus', 'copy:images']);
-    grunt.registerTask('dev', [ 'express:dev', 'watch']);
+    grunt.registerTask('dev', ['express:dev', 'watch']);
 };
