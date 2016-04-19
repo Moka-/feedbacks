@@ -18,6 +18,10 @@
   "strict": true,
   "trailing": true,
   "smarttabs": true,
+  "-W098": true,
+  "-W109": true,
+  "-W015": true,
+  "-W117": true,
   "globals": {
     "angular": false,
     "Wix": true,

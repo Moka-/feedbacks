@@ -41,5 +41,23 @@
   },
   "engines": {
     "node": ">=0.8.0"
-  }
+  },
+  "description": "feedbacks",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Moka-/feedbacks.git"
+  },
+  "author": "ShokoVanilla Inc.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Moka-/feedbacks/issues"
+  },
+  "homepage": "https://github.com/Moka-/feedbacks#readme"
 }
