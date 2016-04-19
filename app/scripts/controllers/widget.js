@@ -4,14 +4,13 @@ angular.module('widget')
     .controller('WidgetController', function($scope, $wix, feedbacksDb) {
 
         $scope.newComment = {
-            content: ""
+            content: ''
         };
 
-        $scope.widgetInstance;
         $scope.actualInstance = $wix.Utils.getInstanceId();
         $scope.compId = $wix.Utils.getCompId();
         $scope.$watch(
-            "widgetInstance",
+            'widgetInstance',
             function change(newValue, oldValue) {
               if (Number.isInteger(newValue)) {
                 feedbacksDb.getFeedbacks($scope.widgetInstance).then(function(d) {
@@ -51,5 +50,5 @@ angular.module('widget')
                 });
             });
             return promise;
-        }
+        };
     }]);

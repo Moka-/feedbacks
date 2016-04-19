@@ -2,7 +2,7 @@
  * Learn more about protractor locators:
  * https://angular.github.io/protractor/#/locators
  */
-
+'use strict';
 describe('protractor sanity test', function() {
   it('should test if app page loads', function() {
     browser.get('/');
