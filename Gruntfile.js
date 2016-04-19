@@ -76,7 +76,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     //grunt.registerTask('test', ['jshint', 'qunit']);
-
+    //retarded comment just to commit suicide 
     //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
 
     //grunt.registerTask('rebuild', [ 'browserify:scripts', 'stylus', 'copy:images']);
