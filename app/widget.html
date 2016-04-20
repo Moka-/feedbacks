@@ -13,15 +13,18 @@
     <script type="text/javascript" src="//sslstatic.wix.com/services/js-sdk/1.42.0/js/wix.min.js"></script>
   </head>
   <body data-ng-app="widget">
-    <div ng-view=""></div>
+    <div data-ng-view=""></div>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
 
     <!-- build:js({.tmp,app}) scripts/app.js -->
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="scripts/services/wix.js"></script>
+    <script src="scripts/services/feedbacksData.js"></script>
     <script src="scripts/widget.js"></script>
     <script src="scripts/controllers/widget.js"></script>
+    <script src="scripts/directives/widget.js"></script>
+
     <!-- endbuild -->
   </body>
 </html>

@@ -15,4 +15,5 @@ angular.module('wix').factory('$wix', function ($location) {
     }
   };
   return Wix;
+  
 });
