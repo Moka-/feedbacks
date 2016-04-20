@@ -55,15 +55,8 @@ module.exports = function (grunt) {
                     spawn: false
                 }
             },
-            less: {
-                files: ["public/**/*.less"],
-                tasks: ["less"],
-                options: {
-                    livereload: false
-                }
-            },
             public: {
-                files: ["public/**/*.css", "public/**/*.js"]
+                files: ["app/**/*.css", "app/**/*.js"]
             }
         }
 

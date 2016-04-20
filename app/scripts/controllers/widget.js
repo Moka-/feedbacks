@@ -13,7 +13,7 @@ angular.module('widget')
             'widgetInstance',
             function change(newValue, oldValue) {
               if (Number.isInteger(newValue)) {
-                feedbacksDb.getFeedbacks($scope.widgetInstance).then(function(d) {
+                feedbacksDb.getFeedbacks(newValue).then(function(d) {
                     $scope.data = d;
                 });
               }
