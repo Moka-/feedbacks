@@ -1,0 +1,16 @@
+<div class="my-container" ng-controller="WidgetController">
+  Widget instance: <input type="number" ng-model="widgetInstance"/><br/>
+  App instance: {{actualInstance}}<br/>
+  Component instance: {{compId}}<br/>
+    <form name="postFeedbackForm" ng-submit="submit()">
+      <img src="http://dummyimage.com/35x35/bd40bd/d3d5eb.png&text=img"/>
+        <textarea cols="40" rows="2" placeholder="Say something.." ng-model="newFeedback.content" name="content" required></textarea>
+        <br/>
+        <input type="button" class="btn btn-error" id="gplus" value="Connect with Google+" />
+        <input type="submit" class="btn btn-primary" id="submit" ng-disabled="postFeedbackForm.content.$error.required" value="Submit" />
+    </form>
+
+    <div ng-repeat="feedback in data | orderBy: 'publish_date' track by $index">
+        <feedback info="feedback"></feedback>
+    </div>
+</div>
