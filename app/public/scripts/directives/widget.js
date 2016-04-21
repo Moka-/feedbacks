@@ -6,6 +6,6 @@ angular.module('widget').directive('feedback', function() {
         scope: {
             feedback: '=info'
         },
-        templateUrl: 'views/templates/feedback.html '
+        templateUrl: 'partials/templates/feedback.html'
     };
 });

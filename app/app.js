@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // serve index and view partials
 app.get('/widget', widget_routes.widget);
 app.get('/partials/:name', widget_routes.partials);
-app.get('/partials/templates/:name', widget_routes.templates);
+app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
 // JSON API
 //app.get('/api/name', api.name);
@@ -46,6 +46,7 @@ app.use(function(req, res, next) {
 // error handlers
 // development error handler
 // will print stacktrace
+
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
@@ -66,9 +67,8 @@ app.use(function(err, req, res, next) {
     });
 });
 
-
 var server = http.createServer(app).listen( app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
-} );
+});
 
 module.exports = app;

@@ -33,15 +33,6 @@ angular.module('widget')
             }
         };
     })
-    .directive('feedback', function($interpolate) {
-        return {
-            restrict: 'E',
-            scope: {
-                feedback: '=info'
-            },
-            templateUrl: 'partials/templates/feedback.html '
-        };
-    })
     .service('feedbacksDb', ['$http', '$filter', function($http, $filter) {
         this.getFeedbacks = function getFeedbacks(widgetInstance) {
             var promise = $http.get('/dummy_data/feedbacks.json').then(function(response) {
