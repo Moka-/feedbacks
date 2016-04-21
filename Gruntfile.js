@@ -2,14 +2,12 @@
 
 module.exports = function (grunt) {
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
         express: {
             options: {
-                background: true,
-                port: 9000,
-                output: '.+'
+                // Override defaults here
+                port: 9000
             },
-            dev: {
+            web: {
                 options: {
                     script: 'app/app.js'
                 }
@@ -22,23 +20,48 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            options: {
-                livereload: true
-            },
-            express: {
-                files: ['Gruntfile.js'],
-                tasks: ['express:dev'],
+            frontend: {
                 options: {
-                    spawn: false
-                }
+                    livereload: true
+                },
+                files: [
+                    'app/public/styles/**/*.css',
+                    'app/views/**/*.html',
+                    'app/public/scripts/**/*.js',
+                    'app/public/images/**/*'
+                ],
+                tasks: ['jshint']
             },
-            public: {
-                files: ["public/**/*.css", "public/**/*.js"]
+            web: {
+                options: {
+                    nospawn: true, // Without this option specified express won't be reloaded
+                    atBegin: true,
+                },
+                files: [
+                    'app/routes/**/*.js',
+                    'app/app.js',
+                    'Gruntfile.js',
+                ],
+                tasks: [ 'express:web' ]
             }
+        },
+        parallel: {
+            web: {
+                options: {
+                    stream: true
+                },
+                tasks: [{
+                    grunt: true,
+                    args: ['watch:frontend']
+                }, {
+                    grunt: true,
+                    args: ['watch:web'] // Also starts the express.js server
+                }]
+            },
         }
-
     });
 
+    grunt.loadNpmTasks('grunt-parallel');
     grunt.loadNpmTasks('grunt-express-server');
     //grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -50,6 +73,6 @@ module.exports = function (grunt) {
     //grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
 
     //grunt.registerTask('rebuild', [ 'browserify:scripts', 'stylus', 'copy:images']);
-    grunt.registerTask('default', ['jshint' ,'express:dev', 'watch']);
+    grunt.registerTask('default', ['parallel:web']);
     //grunt.registerTask('default', ['express:dev']);
 };
