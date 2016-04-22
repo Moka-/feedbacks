@@ -10,7 +10,7 @@ var express = require('express'),
 
 var app = express();
 
-var widget_routes = require('./routes/widget');
+var routes = require('./routes/widget');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,8 +26,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // serve index and view partials
-app.get('/widget', widget_routes.widget);
-app.get('/partials/:name', widget_routes.partials);
+app.get('/widget', routes.widget);
+app.get('/settings', routes.settings);
+app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
 // JSON API

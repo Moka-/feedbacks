@@ -5,7 +5,7 @@ angular.module('appSettings')
     $scope.params = {
       account: 'john@doe.com'
     };
-
+    debugger;
     $wix.UI.initialize({
       numOfImages: 10,
       isIconShown: true,
