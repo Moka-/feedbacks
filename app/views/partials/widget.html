@@ -1,20 +1,17 @@
 <div class="widget container" ng-controller="WidgetController" ng-style="style()" resize>
     <div class="row">
-        <div class="col-xs-8">
-            <img src="http://dummyimage.com/35x35/bd40bd/d3d5eb.png&text=img"/>
+        <div class="col-xs-12">
+            <img ng-src="{{google_plus_user.image_url}}"/>
             <span>
-                {{visitorName}}
+                {{google_plus_user.full_name}}
             </span>
-        </div>
-        <div class="col-xs-4">
-            <google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja" ng-hide="visitorName"/>
-            <!--<div class="g-signin2" data-onsuccess="onSignIn"></div>-->
+            <google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja"/>
         </div>
     </div>
     <div class="row">
         <form name="postFeedbackForm" ng-submit="submit()">
             <fieldset class="form-group">
-                <textarea cols="40" rows="2" placeholder="Say something.." ng-model="newFeedback.content" name="content"
+                <textarea rows="3" placeholder="Say something.." ng-model="newFeedback.content" name="content"
                           required></textarea>
             </fieldset>
             <input type="submit" class="btn btn-primary" id="submit" ng-disabled="postFeedbackForm.content.$error.required"
@@ -23,7 +20,7 @@
     </div>
 
     <div id="feedback-list">
-        <div ng-repeat="feedback in data | orderBy: 'publish_date' track by $index">
+        <div ng-repeat="feedback in data | orderBy:'date':true track by $index">
             <feedback info="feedback"></feedback>
         </div>
     </div>

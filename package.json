@@ -2,9 +2,11 @@
   "name": "feedbacks",
   "version": "0.1.0",
   "dependencies": {
+    "angular-moment": "^1.0.0-beta.5",
     "ejs": "^2.4.1",
     "grunt-contrib-qunit": "^1.2.0",
-    "grunt-express-server": "^0.5.2"
+    "grunt-express-server": "^0.5.2",
+    "moment": "^2.13.0"
   },
   "devDependencies": {
     "body-parser": "~1.13.2",

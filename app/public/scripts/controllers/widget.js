@@ -5,20 +5,23 @@ angular.module('widget')
 
         $scope.$on('event:google-plus-signin-success', function (event, authResult) {
             $scope.visitorName = authResult.wc.Za;
+
+            var authResponse = authResult.getAuthResponse();
+            var profile = authResult.getBasicProfile();
+
+            $scope.google_plus_user = {
+                id: profile.getId(),
+                id_token: authResponse.id_token,
+                full_name: profile.getName(),
+                given_name: profile.getGivenName(),
+                family_name: profile.getFamilyName(),
+                email: profile.getEmail(),
+                image_url: profile.getImageUrl()
+            };
+    debugger;
             $scope.$apply();
-
-            if (authResult.isSignedIn()) {
-                var profile = authResult.getBasicProfile();
-                console.log('ID: ' + profile.getId());
-                console.log('Full Name: ' + profile.getName());
-                console.log('Given Name: ' + profile.getGivenName());
-                console.log('Family Name: ' + profile.getFamilyName());
-                console.log('Image URL: ' + profile.getImageUrl());
-                console.log('Email: ' + profile.getEmail());
-            }
-
-            console.log('Signed in!');
         });
+
         $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
             // User has not authorized the G+ App!
             console.log('Not signed into Google Plus.');
@@ -41,14 +44,15 @@ angular.module('widget')
 
         $scope.submit = function () {
             if ($scope.newComment) {
-                $scope.data.push({
-                    "widget": 10,
-                    "name": "Judith Wallace",
-                    "content": "Morbi a ipsum. Integer a nibh. In quis justo.",
-                    "publish_date": "19.10.2015",
-                    "publish_time": "15:43",
-                    "image": "http://dummyimage.com/231x134.gif/5fa2dd/ffffff"
-                });
+                $scope.data.push(
+                {"app_instance":"bcac1c8a-3b11-4374-aff7-e865a14c2681",
+                    "comp_instance":"comp-imz3qe6k",
+                    "date":"2015-11-27T04:54:53Z",
+                    "google_id_token":"016a8be5-a79c-4972-b81d-6e4bae4b1a92",
+                    "content":"Vesa Curae; Duis faucibus accumsan odio. Curabitur convallis.",
+                    "name":"Virginia Wallace",
+                    "image":"http://dummyimage.com/52x95.png/dddddd/000000"}
+                );
             }
         };
     })

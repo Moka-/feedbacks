@@ -24,6 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/node', express.static(path.join(__dirname, '../node_modules')));
 
 // serve index and view partials
 app.get('/widget', routes.widget);
