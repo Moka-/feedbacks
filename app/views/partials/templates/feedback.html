@@ -1,0 +1,13 @@
+<div class="feedback">
+    <img class="avatar" ng-src="{{feedback.image}}"/>
+    <div class="info">
+        <p class="content">
+            {{feedback.content | limitTo:50}}
+        </p>
+        <p>
+            By {{feedback.name}} |
+            <span am-time-ago="feedback.date"></span> |
+            Reply
+        </p>
+    </div>
+</div>
