@@ -1,27 +1,12 @@
 <div class="widget container" ng-controller="WidgetController" ng-style="style()" resize>
-    <div class="row">
-        <div class="col-xs-12">
-            <img ng-src="{{google_plus_user.image_url}}"/>
-            <span>
-                {{google_plus_user.full_name}}
-            </span>
-            <google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja"/>
-        </div>
+    <div class="row top-buffer">
+        <write-feedback widgetInstance="widget_id"></write-feedback>
     </div>
     <div class="row">
-        <form name="postFeedbackForm" ng-submit="submit()">
-            <fieldset class="form-group">
-                <textarea rows="3" placeholder="Say something.." ng-model="newFeedback.content" name="content"
-                          required></textarea>
-            </fieldset>
-            <input type="submit" class="btn btn-primary" id="submit" ng-disabled="postFeedbackForm.content.$error.required"
-                   value="Submit"/>
-        </form>
-    </div>
-
-    <div id="feedback-list">
-        <div ng-repeat="feedback in data | orderBy:'date':true track by $index">
-            <feedback info="feedback"></feedback>
+        <div id="feedback-list">
+            <div ng-repeat="feedback in data | orderBy:'date':true track by $index">
+                <feedback info="feedback"/>
+            </div>
         </div>
     </div>
 </div>

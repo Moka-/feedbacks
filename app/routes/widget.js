@@ -5,7 +5,7 @@ exports.widget = function(req, res){
 };
 
 exports.settings = function(req, res){
-    res.render('widget');
+    res.render('settings');
 };
 
 exports.partials = function (req, res) {

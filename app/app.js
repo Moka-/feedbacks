@@ -2,7 +2,6 @@
 
 var express = require('express'),
     path = require('path'),
-    favicon = require('serve-favicon'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
@@ -17,7 +16,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.set('port', process.env.PORT || 9000);
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -25,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/node', express.static(path.join(__dirname, '../node_modules')));
+app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
 
 // serve index and view partials
 app.get('/widget', routes.widget);

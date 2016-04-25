@@ -3,42 +3,16 @@
 angular.module('widget')
     .controller('WidgetController', function ($scope, $wix, feedbacksDb) {
 
-        $scope.$on('event:google-plus-signin-success', function (event, authResult) {
-            $scope.visitorName = authResult.wc.Za;
-
-            var authResponse = authResult.getAuthResponse();
-            var profile = authResult.getBasicProfile();
-
-            $scope.google_plus_user = {
-                id: profile.getId(),
-                id_token: authResponse.id_token,
-                full_name: profile.getName(),
-                given_name: profile.getGivenName(),
-                family_name: profile.getFamilyName(),
-                email: profile.getEmail(),
-                image_url: profile.getImageUrl()
-            };
-    debugger;
-            $scope.$apply();
-        });
-
-        $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
-            // User has not authorized the G+ App!
-            console.log('Not signed into Google Plus.');
-        });
+        $scope.widget_id = {
+            app_instance: $wix.Utils.getInstanceId(),
+            comp_instance: $wix.Utils.getCompId()
+        }
 
         $scope.newComment = {
             content: ''
         };
-        
-        $scope.app_instance = $wix.Utils.getInstanceId();
-        $scope.comp_instance = $wix.Utils.getCompId();
 
-        $wix.getBoundingRectAndOffsets(function (data) {
-            $scope.widgetDimensions = {height: data.rect.height};
-        });
-
-        feedbacksDb.getFeedbacks($scope.app_instance, $scope.comp_instance).then(function (d) {
+        feedbacksDb.getFeedbacks($scope.widget_id.app_instance, $scope.widget_id.comp_instance).then(function (d) {
             $scope.data = d;
         });
 
