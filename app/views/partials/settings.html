@@ -3,21 +3,22 @@
     <img width="86" src="images/wix_icon.png" alt="logo"/>
   </div>
   <div class="loggedOut">
-    <p translate="description">
+    <p>
+      {{description}}
     </p>
 
     <div class="login-panel">
-      <p class="create-account" translate="create"></p>
-      <button class="submit uilib-btn connect">{{'connect' | translate}}</button>
+      <p class="create-account"></p>
+      <button class="submit uilib-btn connect">{{'connect'}}</button>
     </div>
   </div>
   <div class="loggedIn hidden">
-    <p>{{'connected' | translate:params}}<br/>
-      <a class="disconnect-account">{{'disconnect' | translate}}</a></p>
+    <p>{{'connected'}}<br/>
+      <a class="disconnect-account">{{'disconnect' }}</a></p>
 
     <div class="premium-panel">
-      <p class="premium-features ">{{'premium' | translate}}</p>
-      <button class="submit uilib-btn btn-upgrade upgrade">{{'upgrade' | translate}}</button>
+      <p class="premium-features ">{{'premium' }}</p>
+      <button class="submit uilib-btn btn-upgrade upgrade">{{'upgrade' }}</button>
     </div>
   </div>
 </header>

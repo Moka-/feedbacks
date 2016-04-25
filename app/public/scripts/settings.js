@@ -1,24 +1,17 @@
 'use strict';
 
-angular.module('appSettings', [
+angular.module('settings', [
     'ngRoute',
-    'pascalprecht.translate',
     'wix'
   ])
-  .config(function ($routeProvider, $translateProvider) {
+  .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/settings.html',
-        controller: 'SettingsCtrl'
+        templateUrl: 'partials/settings', 
+        controller: 'SettingsController'
       })
       .otherwise({
         redirectTo: '/'
       });
 
-    $translateProvider.useStaticFilesLoader({
-      prefix: 'translations/settings_',
-      suffix: '.json'
-    });
-
-    $translateProvider.preferredLanguage('en');
   });

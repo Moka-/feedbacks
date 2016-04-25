@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('appSettings')
-  .controller('SettingsCtrl', function ($scope, $wix) {
+angular.module('settings')
+  .controller('SettingsController', function ($scope, $wix) {
     $scope.params = {
       account: 'john@doe.com'
     };
-    debugger;
+      
     $wix.UI.initialize({
       numOfImages: 10,
       isIconShown: true,
