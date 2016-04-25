@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <base target="_parent" />
-  <title>App settings</title>
-  <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
-  <link rel="stylesheet" href="bower_components/wix-ui-lib2/ui-lib.min.css"/>
+  <link rel="stylesheet" href="bower/angular-material/angular-material.min.css">
+  <link rel="stylesheet" href="bower/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bower/wix-ui-lib2/ui-lib.min.css"/>
   <link rel="stylesheet" href="styles/settings.css">
-
   <script type="text/javascript" src="//sslstatic.wix.com/services/js-sdk/1.42.0/js/wix.min.js"></script>
-
 </head>
-<body data-ng-app="settings">
+<body ng-cloak="" class="tabsdemoDynamicHeight" data-ng-app="settings">
 
 <div class="app" data-ng-view=""></div>
+<script src="bower/jquery/dist/jquery.min.js"></script>
 
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/angular/angular.min.js"></script>
-
-<script src="bower_components/wix-ui-lib2/ui-lib.min.js"></script>
-<script src="bower_components/angular-route/angular-route.js"></script>
-<!--<script src="bower_components/angular-translate/angular-translate.js"></script>-->
-<!--<script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>-->
+<script src="bower/angular/angular.min.js"></script>
+<script src="bower/angular-route/angular-route.js"></script>
+<script src="bower/angular-animate/angular-animate.min.js"></script>
+<script src="bower/angular-aria/angular-aria.min.js"></script>
+<script src="bower/angular-messages/angular-messages.min.js"></script>
+<script src="bower/angular-material/angular-material.min.js"></script>
+<script src="http://ngmaterial.assets.s3.amazonaws.com/svg-assets-cache.js"></script>
+<script src="bower/wix-ui-lib2/ui-lib.min.js"></script>
 <script src="scripts/services/wix.js"></script>
 <script src="scripts/settings.js"></script>
 <script src="scripts/controllers/settings.js"></script>

@@ -2,12 +2,12 @@
 
 angular.module('settings', [
     'ngRoute',
-    'wix'
+    'wix','ngMaterial'
   ])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'partials/settings', 
+        templateUrl: 'partials/settings',
         controller: 'SettingsController'
       })
       .otherwise({
