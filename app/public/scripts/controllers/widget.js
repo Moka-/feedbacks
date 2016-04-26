@@ -1,20 +1,16 @@
 'use strict';
 
 angular.module('widget')
-    .controller('WidgetController', function ($scope, $wix, feedbacksDb) {
-        
-        $scope.widget_id = {
-            app_instance: $wix.Utils.getInstanceId(),
-            comp_instance: $wix.Utils.getCompId(),
-            origComp_instance: $wix.Utils.getOrigCompId()
-        }
+    .controller('WidgetController', function ($scope, $wix, feedbacksDb, feedbacksApp) {
+
+        var widget_id = feedbacksApp.getWidgetId();
 
         $scope.newComment = {
             content: ''
         };
 
-        feedbacksDb.getFeedbacks($scope.widget_id.app_instance, $scope.widget_id.comp_instance).then(function (d) {
-            $scope.data = d;
+        feedbacksDb.getFeedbacks(widget_id).then(function (d) {
+            $scope.data = d.data;
         });
 
         $scope.submit = function () {
@@ -32,11 +28,10 @@ angular.module('widget')
         };
     })
     .service('feedbacksDb', ['$http', '$filter', function ($http, $filter) {
-        this.getFeedbacks = function getFeedbacks(app_instance, comp_instance) {
-            var promise = $http.get('/dummy_data/feedbacks.json').then(function (response) {
-                return $filter('filter')(response.data, {
-                    app_instance: app_instance, comp_instance: comp_instance
-                });
+        this.getFeedbacks = function getFeedbacks(widgetid) {
+
+            var promise = $http.get('/feedbacks/' + widgetid).then(function(response) {
+                return response;
             });
             return promise;
         };

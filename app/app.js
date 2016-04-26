@@ -39,6 +39,12 @@ app.get('/visitor/:id', api.visitors.view);
 app.put('/visitor/:id', api.visitors.update);
 app.delete('/visitor/:id', api.visitors.delete);
 
+app.get('/feedbacks/:widgetid', api.feedbacks.list);
+app.post('/feedbacks', api.feedbacks.add);
+app.get('/feedback/:id', api.feedbacks.view);
+app.put('/feedback/:id', api.feedbacks.update);
+app.delete('/feedback/:id', api.feedbacks.delete);
+
 // redirect all others to the index (HTML5 history)
 //app.get('*', widget_routes.widget);
 

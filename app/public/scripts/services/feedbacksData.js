@@ -1,11 +1,12 @@
 'use strict';
 
-angular.module('feedbacksData', []).service('feedbacksData', ['$http', '$filter', function($http, $filter) {
-    this.getFeedbacks = function getFeedbacks(widgetInstance) {
-        var promise = $http.get('/dummy_data/feedbacks.json').then(function(response) {
-            return $filter('filter')(response.data, {
-                widget: widgetInstance
-            });
+angular.module('feedbacksData', [])
+    .service('feedbacksData', ['$http', '$filter', function($http, $filter) {
+    this.getFeedbacks = function getFeedbacks(widgetid) {
+        debugger;
+        var promise = $http.get('/feedbacks/' + widgetid).then(function(response) {
+            debugger;
+            return response;
         });
         return promise;
     };
