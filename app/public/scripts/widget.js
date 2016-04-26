@@ -4,7 +4,8 @@ angular.module('widget', [
         'ngRoute',
         'wix',
         'directive.g+signin',
-        'angularMoment'
+        'angularMoment',
+        'feedbacksApp'
     ])
     .config(function ($routeProvider) {
         $routeProvider
