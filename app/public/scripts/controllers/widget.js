@@ -2,10 +2,11 @@
 
 angular.module('widget')
     .controller('WidgetController', function ($scope, $wix, feedbacksDb) {
-
+        
         $scope.widget_id = {
             app_instance: $wix.Utils.getInstanceId(),
-            comp_instance: $wix.Utils.getCompId()
+            comp_instance: $wix.Utils.getCompId(),
+            origComp_instance: $wix.Utils.getOrigCompId()
         }
 
         $scope.newComment = {

@@ -1,10 +1,14 @@
 'use strict';
 
 angular.module('settings')
-  .controller('SettingsController', function ($scope, $wix) {
+  .controller('SettingsController', function ($scope, $wix, feedbacksApp) {
     $scope.params = {
       account: 'john@doe.com'
     };
+
+      $scope.widget_id = feedbacksApp.getWidgetId();
+      $scope.widget_settings = feedbacksApp.getWidgetSettings();
+      
       
     $wix.UI.initialize({
       numOfImages: 10,

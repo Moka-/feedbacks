@@ -6,10 +6,12 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     http = require('http');
+var router = express.Router();
 
 var app = express();
 
 var routes = require('./routes/widget');
+var api = require('./routes/api');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,13 +33,15 @@ app.get('/settings', routes.settings);
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
-// JSON API
-//app.get('/api/name', api.name);
+app.get('/visitors', api.visitors.list);
+app.post('/visitors', api.visitors.add);
+app.get('/visitor/:id', api.visitors.view);
+app.put('/visitor/:id', api.visitors.update);
+app.delete('/visitor/:id', api.visitors.delete);
 
 // redirect all others to the index (HTML5 history)
 //app.get('*', widget_routes.widget);
 
-// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
