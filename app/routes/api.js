@@ -26,7 +26,17 @@ function handle_database(req, res) {
 
         console.log('connected as id ' + connection.threadId);
 
-        connection.query(req.query, req.params, function (err, rows) {
+        connection.config.queryFormat = function (query, values) {
+            if (!values) return query;
+            return query.replace(/:(\w+)/g, function (txt, key) {
+                if (values.hasOwnProperty(key)) {
+                    return this.escape(values[key]);
+                }
+                return txt;
+            }.bind(this));
+        };
+
+        connection.query(req.sql, function (err, rows) {
             connection.release();
             if (!err) {
                 res.json(rows);
@@ -42,8 +52,11 @@ function handle_database(req, res) {
 }
 
 var widgetAvgQuery = 'SELECT widget_id,ROUND(AVG(t.rating),1) FROM feedbacks t GROUP BY widget_id';
-var dummy_visitors = JSON.parse(fs.readFileSync('./app/dummy_data/visitors.json', 'utf8'));
-var dummy_feedbacks = JSON.parse(fs.readFileSync('./app/dummy_data/feedbacks.json', 'utf8'));
+var insertFeedback = 'INSERT ' +
+                     'INTO `feedbacks` ' +
+                     '(`id`, `widget_id`, `visitor_id`, `created_on`, `edited_on`, `rating`, `comment`, `comment_title`) ' +
+                     'VALUES ' +
+                     '(<{id: }>,<{widget_id: }>, <{visitor_id: }>, <{created_on: }>, <{edited_on: }>, <{rating: }>, <{comment: }>, <{comment_title: }>)'
 
 exports.visitors = {
     list: function (req, res) {
@@ -52,24 +65,19 @@ exports.visitors = {
         handle_database(req, res);
     },
     view: function (req, res) {
-        console.log('1'); // moka's magnificent work
-        //console.log(params); // params undefined, throws exception
-        console.log(req.params); // working log
-        var id = req.params.id;
-        req.query = 'SELECT * FROM visitors WHERE id = ' + pool.escape(id);
-        //andle_database(req, res); why comment
-        //res.json(params);// again, params does not exist
-        res.json(req.params);//
+        console.log(req.params.id);
+        req.sql = 'SELECT * FROM `visitors` WHERE `id`=' + pool.escape(req.params.id);
+        handle_database(req, res);
     },
     add: function (req, res) {
-        req.query = 'INSERT INTO visitors SET';
+        req.sql = 'INSERT INTO `visitors` SET';
         handle_database(req, res);
     },
     update: function (req, res) {
         handle_database(req, res);
     },
     delete: function (req, res) {
-        req.query = 'DELETE visitors WHERE id ='
+        req.sql = 'DELETE `visitors` WHERE `id` ='
         handle_database(req, res);
     }
 };
@@ -77,21 +85,21 @@ exports.visitors = {
 exports.feedbacks = {
     list: function (req, res) {
         var id = req.params.widgetid;
-
+        /*
         var results = dummy_feedbacks.filter(function (obj) {
             return obj.widget_id == id;
         });
         console.log(results.length);
-        res.json(results);
+        res.json(results);*/
+        req.sql = 'SELECT * FROM `feedbacks` where `widget_id` = ' + pool.escape(id);
+        handle_database(req, res);
     },
     view: function (req, res) {
         res.render('widget');
     },
     add: function (req, res) {
-        console.log(req.params);
-        console.log(req.data);
-        console.log(req.body); // this actually contains the data
-        res.render('widget');
+        req.sql = 'INSERT INTO feedbacks SET ';
+        handle_database(req, res);
     },
     update: function (req, res) {
         res.render('widget');
