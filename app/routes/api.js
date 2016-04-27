@@ -12,7 +12,7 @@ var pool = mysql.createPool({
     user: 'feedback',
     password: 'Aa123456',
     database: 'wix_feedbacks_test',
-    debug: true
+    debug: false
 });
 
 function handle_database(req, res) {
@@ -26,7 +26,7 @@ function handle_database(req, res) {
 
         console.log('connected as id ' + connection.threadId);
 
-        connection.config.queryFormat = function (query, values) {
+        /*connection.config.queryFormat = function (query, values) {
             if (!values) return query;
             return query.replace(/:(\w+)/g, function (txt, key) {
                 if (values.hasOwnProperty(key)) {
@@ -34,9 +34,9 @@ function handle_database(req, res) {
                 }
                 return txt;
             }.bind(this));
-        };
+        };*/
 
-        connection.query(req.sql, function (err, rows) {
+        connection.query(req.sql, req.params, function (err, rows) {
             connection.release();
             if (!err) {
                 res.json(rows);
@@ -52,53 +52,47 @@ function handle_database(req, res) {
 }
 
 var widgetAvgQuery = 'SELECT widget_id,ROUND(AVG(t.rating),1) FROM feedbacks t GROUP BY widget_id';
-var insertFeedback = 'INSERT ' +
-                     'INTO `feedbacks` ' +
-                     '(`id`, `widget_id`, `visitor_id`, `created_on`, `edited_on`, `rating`, `comment`, `comment_title`) ' +
-                     'VALUES ' +
-                     '(<{id: }>,<{widget_id: }>, <{visitor_id: }>, <{created_on: }>, <{edited_on: }>, <{rating: }>, <{comment: }>, <{comment_title: }>)'
+var insertFeedback = 'INSERT INTO `feedbacks` SET ?';
+var getWidgetData = 'SELECT f.*, v.display_name, v.avatar_url ' +
+                    'FROM `feedbacks` f,`visitors` v ' +
+                    'WHERE  f.visitor_id = v.id ' +
+                    'AND ?';
+var dummy_visitors = JSON.parse(fs.readFileSync('./app/dummy_data/visitors.json', 'utf8'));
+var dummy_feedbacks = JSON.parse(fs.readFileSync('./app/dummy_data/feedbacks.json', 'utf8'));
 
 exports.visitors = {
     list: function (req, res) {
-        req.query = 'SELECT * FROM visitors';
-        req.params = '';
+        req.sql = 'SELECT * FROM `visitors`';
         handle_database(req, res);
     },
     view: function (req, res) {
         console.log(req.params.id);
-        req.sql = 'SELECT * FROM `visitors` WHERE `id`=' + pool.escape(req.params.id);
+        req.sql = 'SELECT * FROM `visitors` WHERE ?';
         handle_database(req, res);
     },
     add: function (req, res) {
-        req.sql = 'INSERT INTO `visitors` SET';
+        req.query = 'INSERT INTO visitors SET';
         handle_database(req, res);
     },
     update: function (req, res) {
         handle_database(req, res);
     },
     delete: function (req, res) {
-        req.sql = 'DELETE `visitors` WHERE `id` ='
+        req.query = 'DELETE visitors WHERE id ='
         handle_database(req, res);
     }
 };
 
 exports.feedbacks = {
     list: function (req, res) {
-        var id = req.params.widgetid;
-        /*
-        var results = dummy_feedbacks.filter(function (obj) {
-            return obj.widget_id == id;
-        });
-        console.log(results.length);
-        res.json(results);*/
-        req.sql = 'SELECT * FROM `feedbacks` where `widget_id` = ' + pool.escape(id);
+        req.sql = getWidgetData;
         handle_database(req, res);
     },
     view: function (req, res) {
         res.render('widget');
     },
     add: function (req, res) {
-        req.sql = 'INSERT INTO feedbacks SET ';
+        req.sql = insertFeedback;
         handle_database(req, res);
     },
     update: function (req, res) {
