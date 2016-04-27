@@ -14,3 +14,4 @@ app/scripts/config.js
 # Emacs temporary files
 .#*
 *#$
+*.log
