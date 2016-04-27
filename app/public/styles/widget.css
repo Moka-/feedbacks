@@ -4,7 +4,7 @@ body {
 }
 
 .widget{
-    background-color: white;
+    background-color: transparent;
     border: 0;
     overflow-y: hidden;
     overflow-x: hidden;
@@ -46,12 +46,6 @@ body {
     overflow: hidden;
     background-color: #f6f6f6;
 }
-
-.widget .feedback .avatar{
-     float: left;
-    margin-right: 10px;
-    height: 70px;
- }
 
 .widget .feedback .info{
     float: left;
