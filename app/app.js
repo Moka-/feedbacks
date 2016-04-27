@@ -39,7 +39,7 @@ app.get('/visitor/:id', api.visitors.view);
 app.put('/visitor/:id', api.visitors.update);
 app.delete('/visitor/:id', api.visitors.delete);
 
-app.get('/feedbacks/:widgetid', api.feedbacks.list);
+app.get('/feedbacks/:widget_id', api.feedbacks.list);
 app.post('/feedbacks', api.feedbacks.add);
 app.get('/feedback/:id', api.feedbacks.view);
 app.put('/feedback/:id', api.feedbacks.update);

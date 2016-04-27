@@ -12,7 +12,7 @@ var pool = mysql.createPool({
     user: 'feedback',
     password: 'Aa123456',
     database: 'wix_feedbacks_test',
-    debug: true
+    debug: false
 });
 
 function handle_database(req, res) {
@@ -26,7 +26,17 @@ function handle_database(req, res) {
 
         console.log('connected as id ' + connection.threadId);
 
-        connection.query(req.query, req.params, function (err, rows) {
+        /*connection.config.queryFormat = function (query, values) {
+            if (!values) return query;
+            return query.replace(/:(\w+)/g, function (txt, key) {
+                if (values.hasOwnProperty(key)) {
+                    return this.escape(values[key]);
+                }
+                return txt;
+            }.bind(this));
+        };*/
+
+        connection.query(req.sql, req.params, function (err, rows) {
             connection.release();
             if (!err) {
                 res.json(rows);
@@ -42,24 +52,23 @@ function handle_database(req, res) {
 }
 
 var widgetAvgQuery = 'SELECT widget_id,ROUND(AVG(t.rating),1) FROM feedbacks t GROUP BY widget_id';
+var insertFeedback = 'INSERT INTO `feedbacks` SET ?';
+var getWidgetData = 'SELECT f.*, v.display_name, v.avatar_url ' +
+                    'FROM `feedbacks` f,`visitors` v ' +
+                    'WHERE  f.visitor_id = v.id ' +
+                    'AND ?';
 var dummy_visitors = JSON.parse(fs.readFileSync('./app/dummy_data/visitors.json', 'utf8'));
 var dummy_feedbacks = JSON.parse(fs.readFileSync('./app/dummy_data/feedbacks.json', 'utf8'));
 
 exports.visitors = {
     list: function (req, res) {
-        req.query = 'SELECT * FROM visitors';
-        req.params = '';
+        req.sql = 'SELECT * FROM `visitors`';
         handle_database(req, res);
     },
     view: function (req, res) {
-        console.log('1'); // moka's magnificent work
-        //console.log(params); // params undefined, throws exception
-        console.log(req.params); // working log
-        var id = req.params.id;
-        req.query = 'SELECT * FROM visitors WHERE id = ' + pool.escape(id);
-        //andle_database(req, res); why comment
-        //res.json(params);// again, params does not exist
-        res.json(req.params);//
+        console.log(req.params.id);
+        req.sql = 'SELECT * FROM `visitors` WHERE ?';
+        handle_database(req, res);
     },
     add: function (req, res) {
         req.query = 'INSERT INTO visitors SET';
@@ -76,22 +85,15 @@ exports.visitors = {
 
 exports.feedbacks = {
     list: function (req, res) {
-        var id = req.params.widgetid;
-
-        var results = dummy_feedbacks.filter(function (obj) {
-            return obj.widget_id == id;
-        });
-        console.log(results.length);
-        res.json(results);
+        req.sql = getWidgetData;
+        handle_database(req, res);
     },
     view: function (req, res) {
         res.render('widget');
     },
     add: function (req, res) {
-        console.log(req.params);
-        console.log(req.data);
-        console.log(req.body); // this actually contains the data
-        res.render('widget');
+        req.sql = insertFeedback;
+        handle_database(req, res);
     },
     update: function (req, res) {
         res.render('widget');

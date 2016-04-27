@@ -6,6 +6,7 @@ angular.module('widget', [
         'directive.g+signin',
         'angularMoment',
         'feedbacksApp',
+        'feedbacksData',
         'ngMaterial',
     'ngAnimate'
     ])
