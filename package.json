@@ -2,12 +2,12 @@
   "name": "feedbacks",
   "version": "0.1.0",
   "dependencies": {
-    "angular-material": "^1.0.7",
     "angular-moment": "^1.0.0-beta.5",
     "ejs": "^2.4.1",
     "grunt-contrib-qunit": "^1.2.0",
     "grunt-express-server": "^0.5.2",
-    "moment": "^2.13.0"
+    "moment": "^2.13.0",
+    "mysql": "^2.10.2"
   },
   "devDependencies": {
     "body-parser": "~1.13.2",
@@ -26,7 +26,7 @@
     "grunt-contrib-htmlmin": "~0.1.3",
     "grunt-contrib-jshint": "~0.7.0",
     "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-waxtch": "~0.5.2",
+    "grunt-contrib-watch": "~0.5.2",
     "grunt-google-cdn": "~0.4.0",
     "grunt-karma": "~0.6.2",
     "grunt-newer": "~0.6.0",

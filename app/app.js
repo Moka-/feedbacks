@@ -33,9 +33,9 @@ app.get('/settings', routes.settings);
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
-app.get('/visitors/', api.visitors.list);
+app.get('/visitors', api.visitors.list);
 app.post('/visitors', api.visitors.add);
-app.get('/visitor/id', api.visitors.view);
+app.get('/visitor/:id', api.visitors.view);
 app.put('/visitor/:id', api.visitors.update);
 app.delete('/visitor/:id', api.visitors.delete);
 
