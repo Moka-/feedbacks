@@ -85,7 +85,8 @@ angular.module('widget')
                         action: "add"
                     },
                     data: {
-                        name: $scope.logged_user
+                        user: $scope.logged_user,
+                        feedback: $scope.new_feedback
                     }
                 });
                 return( request.then( handleSuccess, handleError ) );
