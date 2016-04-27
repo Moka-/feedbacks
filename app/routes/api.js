@@ -41,6 +41,8 @@ function handle_database(req, res) {
 }
 
 var widgetAvgQuery = 'SELECT widget_id,ROUND(AVG(t.rating),1) FROM feedbacks t GROUP BY widget_id';
+var dummy_visitors = JSON.parse(fs.readFileSync('./app/dummy_data/visitors.json', 'utf8'));
+var dummy_feedbacks = JSON.parse(fs.readFileSync('./app/dummy_data/feedbacks.json', 'utf8'));
 
 exports.visitors = {
     list: function (req, res) {

@@ -12,7 +12,7 @@ angular.module('feedbacksApp', ['wix'])
             getWidgetSettings: function () {
                 debugger;
                 var widgetId = this.getWidgetId();
-
+                //$http something TODO: add call to db once kostya is done
             }
         };
 

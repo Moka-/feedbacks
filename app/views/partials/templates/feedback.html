@@ -1,15 +1,27 @@
-<div class="feedback">
+<!--<md-card>-->
+    <!--<md-card-header>-->
+        <!--<md-card-avatar>-->
+            <!--<img class="avatar" ng-src="{{feedback.image ? feedback.image : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"/>-->
+        <!--</md-card-avatar>-->
+        <!--<md-card-header-text>-->
+            <!--<span class="md-title">-->
+                <!--By {{feedback.name ? feedback.name : 'Anonymous'}}-->
+            <!--</span>-->
+            <!--<span class="md-subhead">-->
+                <!--<span am-time-ago="feedback.date"></span> |-->
+                <!--Reply-->
+            <!--</span>-->
+            <!--</md-card-header-text>-->
+    <!--</md-card-header>-->
+    <!--<md-card-content>-->
+            <!--{{feedback.content | limitTo:50}}-->
 
+    <!--</md-card-content>-->
+<!--</md-card>-->
 
-    <img class="avatar" ng-src="{{feedback.image}}"/>
-    <div class="info">
-        <p class="content">
-            {{feedback.content | limitTo:50}}
-        </p>
-        <p>
-            By {{feedback.name}} |
-            <span am-time-ago="feedback.date"></span> |
-            Reply
-        </p>
-    </div>
-</div>
+<!--<img ng-src="{{feedback.image ? feedback.image : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}" class="md-avatar"/>-->
+<!--<div class="md-list-item-text">-->
+    <!--<h3>{{feedback.content | limitTo:50}}</h3>-->
+    <!--<p>By {{feedback.name ? feedback.name : 'Anonymous'}} | <span am-time-ago="feedback.date"></span> |-->
+        <!--Reply</p>-->
+<!--</div>-->
