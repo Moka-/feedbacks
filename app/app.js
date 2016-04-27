@@ -12,7 +12,7 @@ var app = express();
 
 var routes = require('./routes/widget');
 var api = require('./routes/api');
-
+var dal = require('./dal/dal');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
@@ -33,9 +33,9 @@ app.get('/settings', routes.settings);
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
-app.get('/visitors', api.visitors.list);
+app.get('/visitors/', api.visitors.list);
 app.post('/visitors', api.visitors.add);
-app.get('/visitor/:id', api.visitors.view);
+app.get('/visitor/id', api.visitors.view);
 app.put('/visitor/:id', api.visitors.update);
 app.delete('/visitor/:id', api.visitors.delete);
 
@@ -83,3 +83,21 @@ var server = http.createServer(app).listen( app.get('port'), function() {
 });
 
 module.exports = app;
+
+process.on('SIGINT', cleanup);
+process.on('SIGTERM', cleanup);
+
+function cleanup () {
+    server.close( function () {
+        console.log( "Closed out remaining connections.");
+        // Close db connections, other chores, etc.
+        process.exit();
+    });
+
+    setTimeout( function () {
+        console.error("Could not close connections in time, forcing shut down");
+        process.exit(1);
+    }, 30*1000);
+
+}
+
