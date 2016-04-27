@@ -68,6 +68,23 @@ angular.module('widget')
             template: '<img class="avatar" ng-src="{{image}}"/>'
         };
     })
+    .directive('feedbacksInteraction', function () {
+        return {
+            restrict: 'EA',
+            scope: {
+                image: '=info'
+            },
+            templateUrl: 'partials/templates/feedback-summary.html',
+        controller: function ($scope) {
+
+            $scope.logged_in = false;
+            $scope.logged_user = null;
+
+            $scope.toggle = true;
+            $scope.settings = $scope.$parent.settings;
+            $scope.rating = 2;
+        }
+    }})
     .directive('starRating', function () {
     return {
         scope: {
@@ -129,4 +146,4 @@ angular.module('widget')
             };
         }
     };
-});
+});;
