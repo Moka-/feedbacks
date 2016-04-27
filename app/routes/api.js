@@ -88,6 +88,9 @@ exports.feedbacks = {
         res.render('widget');
     },
     add: function (req, res) {
+        console.log(req.params);
+        console.log(req.data);
+        console.log(req.body); // this actually contains the data
         res.render('widget');
     },
     update: function (req, res) {

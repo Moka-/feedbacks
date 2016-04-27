@@ -1,16 +1,13 @@
 <div class="widget" ng-controller="WidgetController" ng-style="style()" resize>
     <md-content layout-xs="column" layout="row">
         <feedbacks-interaction></feedbacks-interaction>
-
-        <write-feedback widgetInstance="widget_id"></write-feedback>
         <section ng-if="settings.show_feedbacks">
-            <md-subheader class="md-no-sticky">Feedbacks</md-subheader>
             <md-list layout-padding>
                 <md-list-item class="md-2-line" ng-repeat="feedback in data | orderBy:'date':true track by $index">
                     <img ng-src="{{feedback.image ? feedback.image : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"
                          class="md-avatar"/>
                     <div class="md-list-item-text">
-                        <h3>{{feedback.content | limitTo:50}}</h3>
+                        <h3>{{feedback.comment | limitTo:50}}</h3>
                         <p>By {{feedback.name ? feedback.name : 'Anonymous'}} | <span
                                 am-time-ago="feedback.date"></span> |
                             Reply</p>

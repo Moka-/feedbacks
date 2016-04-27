@@ -48,8 +48,6 @@ angular.module('widget')
             },
         };
     })
-
-
     .directive('feedback', function () {
         return {
             restrict: 'E',
@@ -59,29 +57,76 @@ angular.module('widget')
             templateUrl: 'partials/templates/feedback.html'
         };
     })
-    .directive('userImage', function () {
-        return {
-            restrict: 'E',
-            scope: {
-                image: '=info'
-            },
-            template: '<img class="avatar" ng-src="{{image}}"/>'
-        };
-    })
     .directive('feedbacksInteraction', function () {
         return {
             restrict: 'EA',
             scope: {
                 image: '=info'
             },
-            templateUrl: 'partials/templates/feedback-summary.html',
-        controller: function ($scope) {
+            templateUrl: 'partials/templates/widget-form.html',
+        controller: function ($scope, $http) {
 
             $scope.logged_in = false;
             $scope.logged_user = null;
 
-            $scope.toggle = true;
+            $scope.from_expanded = false;
             $scope.settings = $scope.$parent.settings;
+
+            $scope.logOut = function(){
+                gapi.auth.signOut();
+            }
+
+            $scope.submit = function(){
+                debugger;
+                var request = $http({
+                    method: "post",
+                    url: "/feedbacks",
+                    params: {
+                        action: "add"
+                    },
+                    data: {
+                        name: $scope.logged_user
+                    }
+                });
+                return( request.then( handleSuccess, handleError ) );
+            }
+
+
+            var handleSuccess = function (e, p) {
+                debugger;
+            }
+            var handleError = function (e, p) {
+                debugger;
+            }
+
+            $scope.new_feedback = {
+                comment: '',
+                rating: 0
+            }
+
+            $scope.$on('event:google-plus-signin-success', function (event, authResult) {
+                $scope.logged_in = true;
+                var authResponse = authResult.getAuthResponse();
+                var profile = authResult.getBasicProfile();
+
+                $scope.logged_user = {
+                    id_token: authResponse.id_token,
+                    full_name: profile.getName(),
+                    given_name: profile.getGivenName(),
+                    family_name: profile.getFamilyName(),
+                    email: profile.getEmail(),
+                    image_url: profile.getImageUrl()
+                };
+
+                $scope.$apply();
+            });
+
+            $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
+                // User has not authorized the G+ App!
+                debugger;
+                console.log('Not signed into Google Plus.');
+            });
+
             $scope.rating = 2;
         }
     }})
