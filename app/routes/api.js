@@ -76,7 +76,7 @@ exports.visitors = {
         handle_database(req, res);
     },
     delete: function (req, res) {
-        req.sql = 'DELETE `visitors` WHERE `id` ='
+        req.sql = 'DELETE `visitors` WHERE `id` =';
         handle_database(req, res);
     }
 };
