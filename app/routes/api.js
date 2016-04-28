@@ -35,7 +35,6 @@ function handle_database(req, res) {
                 return txt;
             }.bind(this));
         };*/
-
         connection.query(req.sql, req.params, function (err, rows) {
             connection.release();
             if (!err) {
@@ -66,7 +65,6 @@ exports.visitors = {
         handle_database(req, res);
     },
     view: function (req, res) {
-        console.log(req.params.id);
         req.sql = 'SELECT * FROM `visitors` WHERE ?';
         handle_database(req, res);
     },
