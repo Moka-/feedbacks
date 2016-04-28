@@ -39,6 +39,7 @@ module.exports = function (grunt) {
                 },
                 files: [
                     'app/routes/**/*.js',
+                    'app/dal/**/*.js',
                     'app/app.js',
                     'Gruntfile.js',
                 ],

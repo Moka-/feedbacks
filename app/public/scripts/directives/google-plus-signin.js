@@ -94,7 +94,6 @@ angular.module('directive.g+signin', []).
                                     client_id: defaults.clientid,
                                     cookie_policy: defaults.cookiepolicy
                                 });
-
                             if (isAutoRendering) {
                                 gapi.signin2.render(element[0], defaults);
                             } else {

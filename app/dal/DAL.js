@@ -1,55 +1,103 @@
-/**
- * Created by Kostya on 27/4/2016.
- */
-/*var mysql = require('mysql');
-var pool = mysql.createPool({
-    connectionLimit: 100, //important
-    host: 'wix-feedbacks-test.cohruqtd5dnp.us-west-2.rds.amazonaws.com',
-    port: '1337',
-    user: 'feedback',
-    password: 'Aa123456',
-    database: 'wix_feedbacks_test',
-    debug: true
-});
+var db = require('./db');
 
-exports.dal = {
-    query: function (req, res) {
-
-    },
-    insert: function (req, res) {
-        handle_database(req, res);
-    },
-    update: function (req, res) {
-
-    },
-    delete: function (req, res) {
-
-    }
-
-}
-
-function handle_database(req, res) {
-    pool.getConnection(function (err, connection) {
-        if (err) {
-            connection.release();
-            console.log(err);
-            res.json(err);
-            return;
+// In here you should perform all your queries
+module.exports = {
+    visitors: {
+        list: function (params, callback) {
+            var sql = 'SELECT * FROM `visitors`'; // TODO: consider removeing the ` from this entire file
+            db.query(sql, params, callback);
+        },
+        view: function (params, callback) {
+            var sql = 'SELECT * FROM `visitors` WHERE ?';
+            handle_database(req, res);
+        },
+        add: function (req, res) {
+            var sql = 'INSERT INTO visitors SET';
+            handle_database(req, res);
+        },
+        update: function (req, res) {
+            var sql = "";
+            handle_database(req, res);
+        },
+        delete: function (req, res) {
+            var sql = 'DELETE visitors WHERE id ='
+            handle_database(req, res);
         }
-
-        console.log('connected as id ' + connection.threadId);
-
-        connection.query(req.query, function (err, rows) {
-            connection.release();
-            if (!err) {
-                res.json(rows);
+    },
+    feedbacks: {
+        list: function (params, callback) {
+            var sql = 'SELECT f.*, v.display_name, v.avatar_url FROM `feedbacks` f,`visitors` v WHERE f.visitor_id = v.id AND ?';
+            db.query(sql, params, callback);
+        },
+        view: function (req, res) {
+            var sql = "";
+            res.render('widget');
+        },
+        add: function (req, res) {
+            var params = {
+                id: "fdsfdsfssd",
+                comment: "this is a test",
+                comment_title: "Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",
+                created_on: "2015-07-28T21:00:00.000Z",
+                edited_on: "2016-04-25T21:00:00.000Z",
+                rating: 10,
+                visitor_id: "8884d4e3-2fda-4dbe-a0b8-605fccaa3b0c",
+                widget_id: "bcac1c8a-3b11-4374-aff7-e865a14c2681comp-imxne0xw"
             }
-        });
-
-        connection.on('error', function (err) {
-            console.log(err);
-            res.json(err);
-            return;
-        });
-    });
-}*/
+            var sql = 'INSERT INTO feedbacks SET ?';
+            handle_database1(req, res, params);
+        },
+        update: function (req, res) {
+            var sql = "";
+            res.render('widget');
+        },
+        delete: function (req, res) {
+            var sql ="";
+            res.render('widget');
+        }
+    },
+    widgets: {
+        list: function (req, res) {
+            var sql = "";
+            res.json(dummy_visitors);
+        },
+        view: function (req, res) {
+            var sql = "";
+            res.render('widget');
+        },
+        add: function (req, res) {
+            var sql = "";
+            res.render('widget');
+        },
+        update: function (req, res) {
+            var sql = "";
+            res.render('widget');
+        },
+        delete: function (req, res) {
+            var sql = "";
+            res.render('widget');
+        }
+    },
+    sites: {
+        list: function (req, res) {
+            var sql = "";
+            res.json(dummy_visitors);
+        },
+        view: function (req, res) {
+            var sql = "";
+            res.render('widget');
+        },
+        add: function (req, res) {
+            var sql = "";
+            res.render('widget');
+        },
+        update: function (req, res) {
+            var sql = "";
+            res.render('widget');
+        },
+        delete: function (req, res) {
+            var sql = "";
+            res.render('widget');
+        }
+    }
+};

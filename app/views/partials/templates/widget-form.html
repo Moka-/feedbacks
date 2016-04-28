@@ -1,0 +1,53 @@
+<md-card >
+    <md-card-header>
+        <md-card-header-text>
+            <span class="md-title"><star-rating rating="rating" read-only="true"></star-rating></span>
+            <span class="md-subhead">By 2,045 users</span>
+        </md-card-header-text>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button class="md-raised" ng-click="from_expanded = !from_expanded">
+                {{ from_expanded ? 'Maybe later' : 'Rate & Comment' }}</md-button>
+        </md-card-actions>
+    </md-card-header>
+
+    <md-divider ng-show="from_expanded"/>
+
+    <md-card-header ng-show="from_expanded && !logged_in" >
+        <md-card-header-text>
+            <span class="md-title">User</span>
+            <span class="md-subhead"><google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja"/></span>
+        </md-card-header-text>
+    </md-card-header>
+
+    <md-card-header ng-show="from_expanded && logged_in" >
+        <md-card-avatar>
+            <img class="md-user-avatar" ng-src="{{logged_user.image_url}}"/>
+        </md-card-avatar>
+        <md-card-header-text>
+            <span class="md-title">{{logged_user.full_name}}</span>
+            <span class="md-subhead">
+                <a href="" ng-click="logOut()">
+                    Not {{logged_user.full_name}}? Log in as another user
+                </a>
+
+            </span>
+        </md-card-header-text>
+    </md-card-header>
+
+    <md-card-title ng-show="from_expanded">
+        <md-card-title-text>
+            <span class="md-subhead">
+                <md-input-container class="md-block">
+            <label>Say something!</label>
+            <textarea ng-model="new_feedback.comment" md-maxlength="150" rows="3" md-select-on-focus></textarea>
+                    <star-rating rating="new_feedback.rating"/>
+        </md-input-container>
+            </span>
+        </md-card-title-text>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button class="md-raised md-primary" ng-click="submit()">Post</md-button>
+        </md-card-actions>
+    </md-card-title>
+
+
+</md-card>
