@@ -96,38 +96,95 @@
 
 <!--</div>-->
 <div ng-cloak>
-    <md-content>
+    <md-content layout="column" layout-align="space-between none">
         <md-tabs md-dynamic-height md-border-bottom>
-            <md-tab label="features">
-                <md-content class="md-padding">
-                    <h1 class="md-display-1">Comments</h1>
-                        <md-checkbox ng-model="allow_comments" aria-label="Allow comments">
-                            Allow comments
-                        </md-checkbox>
-                    <md-divider></md-divider>
-                    <h1 class="md-display-1">Ratings</h1>
-                    <p>Rating system:</p>
-                    <md-radio-group ng-model="data.group1">
-                        <md-radio-button value="None" class="md-primary">None</md-radio-button>
-                        <md-radio-button value="Stars">Stars</md-radio-button>
-                        <md-radio-button value="Likes">Likes</md-radio-button>
-                    </md-radio-group>
+            <md-tab label="Features" layout="column">
+                <md-content flex layout-padding>
+                    <section>
+                    <md-subheader>Comments</md-subheader>
+                    <div layout="row" layout-align="space-between center">
+                            <span>Enable comments</span>
+                            <md-switch ng-model="showHinssts"/>
+                    </div>
+                        <div layout="row" layout-align="space-between center">
+                            <span>Required?</span>
+                            <md-checkbox ng-model="showHinsstss"/>
+                        </div>
+
+                        <div layout="row" layout-align="space-between center">
+                                <span flex="40">Comment maximum-length</span>
+                            <md-slider flex ng-model="color.blue" min="10" max="300" aria-label="blue" id="blue-slider" class="md-primary">
+                            </md-slider>
+                            <div flex="10" layout layout-align="center center">
+                                <input flex type="number" ng-model="color.blue" aria-label="blue" aria-controls="blue-slider">
+                            </div>
+                        </div>
+                        </section>
+                    <section>
+                        <md-subheader>Ratings</md-subheader>
+                        <div layout="row" layout-align="space-between center">
+                            <span>Enable ratings</span>
+                            <md-switch ng-model="showHinssts"/>
+                        </div>
+                        <div layout="row" layout-align="space-between center">
+                            <span>Required?</span>
+                            <md-checkbox ng-model="showHinsstss"/>
+                        </div>
+                        <div layout="row" layout-align="space-between center">
+                            <span flex="40">Rating steps</span>
+                            <md-slider flex md-discrete ng-model="rating3" step="1" min="3" max="10" aria-label="rating">
+                            </md-slider>
+                        </div>
+
+                    </section>
                 </md-content>
             </md-tab>
-            <md-tab label="design">
-                <md-content class="md-padding">
-                    <h1 class="md-display-2">Tab Two</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor, orci enim rutrum enim, vel tempor sapien arcu a tellus. Vivamus convallis sodales ante varius gravida. Curabitur a purus vel augue ultrices ultricies id a nisl. Nullam malesuada consequat diam, a facilisis tortor volutpat et. Sed urna dolor, aliquet vitae posuere vulputate, euismod ac lorem. Sed felis risus, pulvinar at interdum quis, vehicula sed odio. Phasellus in enim venenatis, iaculis tortor eu, bibendum ante. Donec ac tellus dictum neque volutpat blandit. Praesent efficitur faucibus risus, ac auctor purus porttitor vitae. Phasellus ornare dui nec orci posuere, nec luctus mauris semper.</p>
-                    <p>Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim, at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus. Nunc urna libero, viverra sit amet nisl at, hendrerit tempor turpis. Maecenas facilisis convallis mi vel tempor. Nullam vitae nunc leo. Cras sed nisl consectetur, rhoncus sapien sit amet, tempus sapien.</p>
-                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
-                </md-content>
+            <md-tab label="Design" layout="column">
+                <md-content flex layout-padding>
+                <section>
+                    <md-subheader>Nothing yet</md-subheader>
+                </section>
+                    </md-content>
             </md-tab>
-            <md-tab label="manage">
-                <md-content class="md-padding">
-                    <h1 class="md-display-2">Tab Three</h1>
-                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+            <md-tab label="Properties" layout="column">
+                <md-content flex layout-padding>
+                    <section>
+                        <md-subheader>General</md-subheader>
+                        <div layout="row" layout-align="space-between center">
+                            <div layout="column" flex="60">
+                                <span>
+                                Widget name
+                                <p>
+                                    While not required, naming a widget lets you access additional features in the <a href="#">dashboard</a>.
+                                </p>
+                                    </span>
+                            </div>
+                            <md-input-container >
+                                <label>Widget name</label>
+                                <input ng-model="user.title">
+                            </md-input-container>
+                        </div>
+                        <div layout="row" layout-align="space-between center">
+                            <span>
+                                Catalog
+                            </span>
+                            <md-select placeholder="Assign to catalog" ng-model="catalog" md-on-open="loadCatalogs()" flex="40">
+                                <md-option ng-value="catalog" ng-repeat="catalog in catalogs">{{catalog}}</md-option>
+                            </md-select>
+                        </div>
+                    </section>
                 </md-content>
             </md-tab>
         </md-tabs>
+<md-divider></md-divider>
+        <md-content flex layout-padding layout="row" layout-align="space-between center">
+            <div>
+                <md-button>Go to dashboard</md-button>
+            </div>
+            <div>
+                <md-button class="md-raised">Revert</md-button>
+                <md-button class="md-raised md-primary">Save settings</md-button>
+            </div>
+        </md-content>
     </md-content>
 </div>

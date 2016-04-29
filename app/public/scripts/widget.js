@@ -10,7 +10,7 @@ angular.module('widget', [
         'ngMaterial',
     'ngAnimate'
     ])
-    .config(function ($routeProvider) {
+    .config(function ($routeProvider, $mdThemingProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: '/partials/widget',
@@ -19,5 +19,9 @@ angular.module('widget', [
             .otherwise({
                 redirectTo: '/'
             });
-    })
+
+        $mdThemingProvider.theme('default')
+            .primaryPalette('amber')
+            .accentPalette('amber');
+    });
 ;

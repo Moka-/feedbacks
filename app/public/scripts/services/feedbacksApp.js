@@ -10,7 +10,6 @@ angular.module('feedbacksApp', ['wix'])
                 return $wix.Utils.getInstanceId() + compId;
             },
             getWidgetSettings: function () {
-                debugger;
                 var widgetId = this.getWidgetId();
                 //$http something TODO: add call to db once kostya is done
             }

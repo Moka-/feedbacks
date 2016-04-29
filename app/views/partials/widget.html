@@ -1,16 +1,19 @@
-<div class="widget" ng-controller="WidgetController" >
-    <md-content layout-xs="column" layout="row" ng-style="{height: widgetHeight + 'px'}">
+<div class="widget" ng-controller="WidgetController" flex layout-fill>
+    <md-content layout="column" ng-style="{height: widgetHeight + 'px'}">
         <feedbacks-interaction></feedbacks-interaction>
-        <section ng-if="settings.show_feedbacks">
-            <md-list layout-padding>
-                <md-list-item class="md-2-line" ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
+        <div layout="row" layout-align="space-around" ng-if="loading_feedbacks">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+        <section ng-if="settings.show_feedbacks" ng-hide="loading_feedbacks">
+            <md-list class="md-dense">
+                <md-subheader class="md-no-sticky">Feedbacks ({{data.length}}):</md-subheader>
+                <md-list-item class="md-3-line md-long-text" ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
                     <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"
                          class="md-avatar"/>
                     <div class="md-list-item-text">
-                        <h3>{{feedback.comment | limitTo:50}}</h3>
-                        <p>By {{feedback.display_name ? feedback.display_name : 'Anonymous'}} |
-                            <span am-time-ago="feedback.created_on"></span> |
-                            Reply</p>
+                        <h4>By {{feedback.display_name ? feedback.display_name : 'Anonymous'}} |
+                            <span am-time-ago="feedback.created_on"></span></h4>
+                        <p>{{feedback.comment}}</p>
                     </div>
                 </md-list-item>
             </md-list>
