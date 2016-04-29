@@ -1,20 +1,20 @@
 'use strict';
 
 var dal = require('../dal/dal');
-
-var widgetAvgQuery = 'SELECT widget_id,ROUND(AVG(t.rating),1) FROM feedbacks t GROUP BY widget_id';
-var insertFeedback = 'INSERT INTO feedbacks SET ?';
+var uuid = require('node-uuid');
+const https = require('https');
 
 module.exports = {
     visitors: {
         list: function (req, res) {
-            req.sql = 'SELECT * FROM `visitors`';
-            handle_database(req, res);
+            dal.visitors.list(req.params, function (err, result) {
+                res.json(result);
+            });
         },
         view: function (req, res) {
-            console.log(req.params.id);
-            req.sql = 'SELECT * FROM `visitors` WHERE ?';
-            handle_database(req, res);
+            dal.visitors.view(req.params, function (err, result) {
+                res.json(result);
+            });
         },
         add: function (req, res) {
             req.query = 'INSERT INTO visitors SET';
@@ -39,6 +39,47 @@ module.exports = {
 
         },
         add: function (req, res) {
+            /*
+             widget_id: $scope.$parent.widget_id,
+             comment: $scope.new_feedback.comment,
+             rating: $scope.new_feedback.rating,
+             id_token: $scope.logged_user.id_token,
+             full_name: $scope.logged_user.full_name,
+             avatar_url: $scope.logged_user.image_url
+             */
+
+            var feedback = req.body;
+
+            feedback.id = uuid.v4();
+            feedback.created_on = new Date().toISOString();
+            var tokenInfoUrl = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + params.id_token;
+
+            https.get(tokenInfoUrl, function (googleRes) {
+                console.log('statusCode: ', googleRes.statusCode);
+                console.log('headers: ', googleRes.headers);
+                console.log('email: ', googleRes.body.email);
+                feedback.visitor_id = res.body.email;
+
+                dal.visitors.view(feedback.visitor_id, function (err, user) {
+                    if (user.length == 0) {
+                        var visitor = {
+                            google_id_token: req.body.id_token,
+                            display_name: req.body.full_name,
+                            avatar_url: googleRes.body.picture,
+                            id: res.body.email
+                        };
+                        dal.visitors.add(visitor, function (err, result) {
+                            dal.feedbacks.add(params, function (err, results) {
+                                res.json(results);
+                            });
+                        });
+                    } else {
+                        dal.feedbacks.add(params, function (err, results) {
+                            res.json(results);
+                        });
+                    }
+                });
+            });
             // var params = {
             //     id:"fdsfdsfssd",
             // comment
@@ -63,9 +104,6 @@ module.exports = {
             //     :
             //     "bcac1c8a-3b11-4374-aff7-e865a14c2681comp-imxne0xw"
             // }
-
-            handle_database1(req, res, params);
-            console.log('111');
         },
         update: function (req, res) {
             res.render('widget');
