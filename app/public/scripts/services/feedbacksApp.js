@@ -11,7 +11,34 @@ angular.module('feedbacksApp', ['wix'])
             },
             getWidgetSettings: function () {
                 var widgetId = this.getWidgetId();
-                //$http something TODO: add call to db once kostya is done
+                return request = $http.get('/widget/' + widgetId);
+                
+                //
+                // return request.then(
+                //     function (res) {
+                //         debugger;
+                //     }, function (err) {
+                //         debugger;
+                //     });
+                //
+                // return {
+                //     // Widget settings, stored under widgets
+                //     widget_id: "fdsfs",
+                //     widget_name: "Poptarts",
+                //     catalog: 2,
+                //     show_summary: true,
+                //     show_feedbacks: true,
+                //     enable_comments: true,
+                //     comment_required: false,
+                //     comment_max_length: 150,
+                //     enable_ratings: true,
+                //     rating_required: false,
+                //     max_rating: 5,
+                //
+                //     // Widget statistics, computed from feedbacks
+                //     average_rate: 4.3,
+                //     feedbacks_count: 3000
+                // }
             }
         };
 

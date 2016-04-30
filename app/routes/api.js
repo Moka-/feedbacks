@@ -117,7 +117,9 @@ module.exports = {
             res.json(dummy_visitors);
         },
         view: function (req, res) {
-            res.render('widget');
+            dal.widgets.view(req.params, function (err, results) {
+                res.json(results);
+            });
         },
         add: function (req, res) {
             res.render('widget');

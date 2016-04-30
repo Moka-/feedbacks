@@ -14,6 +14,6 @@ angular.module('settings', [
                 redirectTo: '/'
             });
         $mdThemingProvider.theme('default')
-            .primaryPalette('amber')
+            .primaryPalette('blue-grey')
             .accentPalette('amber');
     });

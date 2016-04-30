@@ -31,10 +31,4 @@ angular.module('widget')
             $scope.$apply();
         });
 
-        debugger;
-        $scope.$on($wix.Events.SETTINGS_UPDATED, function (event, newFeedback) {
-            debugger;
-            $scope.data.push(newFeedback);
-            $scope.$apply();
-        });
 });

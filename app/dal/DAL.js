@@ -1,3 +1,5 @@
+'use strict'
+
 var db = require('./db');
 
 var widgetAvgQuery = 'SELECT ROUND(AVG(t.rating),1) ' +
@@ -67,8 +69,12 @@ module.exports = {
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
-            var sql = "";
-            db.query(sql, params, callback);
+            var sql = 'SELECT * FROM `widgets` WHERE ?';
+            db.query(sql, params, function(err, results){
+                console.log(results);
+
+                callback(err, results);
+            });
         },
         add: function (params, callback) {
             var sql = "";

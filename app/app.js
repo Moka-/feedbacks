@@ -45,6 +45,12 @@ app.get('/feedback/:id', api.feedbacks.view);
 app.put('/feedback/:id', api.feedbacks.update);
 app.delete('/feedback/:id', api.feedbacks.delete);
 
+app.get('/widgets', api.widgets.list);
+app.post('/widgets', api.widgets.add);
+app.get('/widget/:id', api.widgets.view);
+app.put('/widget/:id', api.widgets.update);
+app.delete('/widget/:id', api.widgets.delete);
+
 // redirect all others to the index (HTML5 history)
 //app.get('*', widget_routes.widget);
 
