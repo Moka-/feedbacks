@@ -1,133 +1,120 @@
-<!--<header class="box">-->
-  <!--<div class="logo">-->
-    <!--<img width="86" src="images/wix_icon.png" alt="logo"/>-->
-  <!--</div>-->
-  <!--<div class="loggedOut">-->
-    <!--<p>-->
-      <!--{{description}}-->
-    <!--</p>-->
-
-    <!--<div class="login-panel">-->
-      <!--<p class="create-account"></p>-->
-      <!--<button class="submit uilib-btn connect">{{'connect'}}</button>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--<div class="loggedIn hidden">-->
-    <!--<p>{{'connected'}}<br/>-->
-      <!--<a class="disconnect-account">{{'disconnect' }}</a></p>-->
-
-    <!--<div class="premium-panel">-->
-      <!--<p class="premium-features ">{{'premium' }}</p>-->
-      <!--<button class="submit uilib-btn btn-upgrade upgrade">{{'upgrade' }}</button>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</header>-->
-
-<!--<div wix-ctrl="Accordion">-->
-
-  <!--<div class="acc-pane">-->
-    <!--<h3>General Settings: </h3>-->
-
-    <!--<div class="acc-content">-->
-      <!--<ul class="list">-->
-        <!--<li wix-label="Image Visibility:">-->
-          <!--<div wix-model="imageVisibility" wix-ctrl="Dropdown" style="width:144px">-->
-            <!--<option value="show">Show Images</option>-->
-            <!--<option value="hide">Hide Images</option>-->
-            <!--<option value="showhover">Show Images on Hover</option>-->
-          <!--</div>-->
-        <!--</li>-->
-        <!--<li wix-label="Number of images:">-->
-          <!--<div wix-model="numOfImages" wix-ctrl="Slider" wix-options="{ preLabel:'0', postLabel:'100'}"></div>-->
-        <!--</li>-->
-        <!--<li wix-label="Show Icons:">-->
-          <!--<div wix-model="isIconShown" wix-ctrl="Checkbox"></div>-->
-        <!--</li>-->
-      <!--</ul>-->
-    <!--</div>-->
-  <!--</div>-->
-
-  <!--<div class="acc-pane">-->
-    <!--<h3>Color Settings (wix-params demo): </h3>-->
-
-    <!--<div class="acc-content">-->
-      <!--<ul class="list">-->
-        <!--<li wix-label="Text Color:">-->
-          <!--<div wix-param="textColor" wix-ctrl="ColorPickerWithOpacity" wix-options="{startWithColor:'color-5'}"></div>-->
-        <!--</li>-->
-        <!--<li wix-label="Background Color:">-->
-          <!--<div wix-param="backgroundColor" wix-ctrl="ColorPickerWithOpacity"-->
-               <!--wix-options="{startWithColor:'color-1'}"></div>-->
-        <!--</li>-->
-      <!--</ul>-->
-    <!--</div>-->
-  <!--</div>-->
-
-  <!--<div class="acc-pane">-->
-    <!--<h3>Sync Options</h3>-->
-
-    <!--<div class="acc-content">-->
-      <!--<p>How many images to sync ?</p>-->
-
-      <!--<div wix-model="imagesToSync" wix-ctrl="Radio">-->
-        <!--<div data-radio-value="sync10">Sync 10 images</div>-->
-        <!--<div data-radio-value="sync25">Sync 25 images</div>-->
-        <!--<div data-radio-value="sync50">Sync 50 images</div>-->
-      <!--</div>-->
-      <!--<p>Sync Meta Data ?</p>-->
-
-      <!--<div wix-model="imageMeta" wix-ctrl="Checkbox:{ postLabel:'Image Meta'}"></div>-->
-      <!--<div wix-model="imageAlt" wix-ctrl="Checkbox:{ postLabel:'Image Alt'}"></div>-->
-      <!--<div wix-model="imageLink" wix-ctrl="Checkbox:{ postLabel:'Image Link'}"></div>-->
-    <!--</div>-->
-  <!--</div>-->
-
-  <!--<div class="acc-pane">-->
-    <!--<h3>Button Group</h3>-->
-
-    <!--<div class="acc-content">-->
-      <!--<div wix-model="adsSize" wix-ctrl="ButtonGroup">-->
-        <!--<button value="mini">Mini</button>-->
-        <!--<button value="medium">Medium</button>-->
-        <!--<button value="large">Large</button>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-
-<!--</div>-->
 <div ng-cloak>
-    <md-content>
+    <div layout="row" layout-align="space-around" ng-if="!settings">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+    <md-content layout="column" layout-align="space-between none" ng-show="settings">
         <md-tabs md-dynamic-height md-border-bottom>
-            <md-tab label="features">
-                <md-content class="md-padding">
-                    <h1 class="md-display-1">Comments</h1>
-                        <md-checkbox ng-model="allow_comments" aria-label="Allow comments">
-                            Allow comments
-                        </md-checkbox>
-                    <md-divider></md-divider>
-                    <h1 class="md-display-1">Ratings</h1>
-                    <p>Rating system:</p>
-                    <md-radio-group ng-model="data.group1">
-                        <md-radio-button value="None" class="md-primary">None</md-radio-button>
-                        <md-radio-button value="Stars">Stars</md-radio-button>
-                        <md-radio-button value="Likes">Likes</md-radio-button>
-                    </md-radio-group>
+            <md-tab label="Features" layout="column">
+                <md-content flex layout-padding>
+                    <section>
+                        <md-subheader>Comments</md-subheader>
+                        <div layout="row" layout-align="space-between center">
+                            <span>Enable comments</span>
+                            <md-switch ng-model="settings.enable_comments"/>
+                        </div>
+                        <div layout="row" layout-align="space-between center">
+                            <span>Required?</span>
+                            <md-checkbox ng-model="settings.comment_required"/>
+                        </div>
+
+                        <div layout="row" layout-align="space-between center">
+                            <span flex="40">Comment maximum-length</span>
+                            <md-slider flex ng-model="settings.comment_max_length" min="10" max="300" aria-label="blue" id="blue-slider">
+                            </md-slider>
+                            <md-input-container class="md-block" flex="10">
+                                <input required type="number" step="any" name="rate" ng-model="settings.comment_max_length" min="10"
+                                       max="300"/>
+                            </md-input-container>
+                        </div>
+                    </section>
+                    <section>
+                        <md-subheader>Ratings</md-subheader>
+                        <div layout="row" layout-align="space-between center">
+                            <span>Enable ratings</span>
+                            <md-switch ng-model="settings.enable_ratings"/>
+                        </div>
+                        <div layout="row" layout-align="space-between center">
+                            <span>Required?</span>
+                            <md-checkbox ng-model="settings.rating_required"/>
+                        </div>
+                        <div layout="row" layout-align="space-between center">
+                            <span flex="40">Rating steps</span>
+                            <md-slider flex md-discrete ng-model="settings.max_rating" step="1" min="3" max="10"
+                                       aria-label="Rating steps">
+                            </md-slider>
+                        </div>
+                    </section>
                 </md-content>
             </md-tab>
-            <md-tab label="design">
-                <md-content class="md-padding">
-                    <h1 class="md-display-2">Tab Two</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor, orci enim rutrum enim, vel tempor sapien arcu a tellus. Vivamus convallis sodales ante varius gravida. Curabitur a purus vel augue ultrices ultricies id a nisl. Nullam malesuada consequat diam, a facilisis tortor volutpat et. Sed urna dolor, aliquet vitae posuere vulputate, euismod ac lorem. Sed felis risus, pulvinar at interdum quis, vehicula sed odio. Phasellus in enim venenatis, iaculis tortor eu, bibendum ante. Donec ac tellus dictum neque volutpat blandit. Praesent efficitur faucibus risus, ac auctor purus porttitor vitae. Phasellus ornare dui nec orci posuere, nec luctus mauris semper.</p>
-                    <p>Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim, at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus. Nunc urna libero, viverra sit amet nisl at, hendrerit tempor turpis. Maecenas facilisis convallis mi vel tempor. Nullam vitae nunc leo. Cras sed nisl consectetur, rhoncus sapien sit amet, tempus sapien.</p>
-                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+            <md-tab label="Appearance" layout="column">
+                <md-content flex layout-padding>
+                    <section>
+                        <md-subheader>Display</md-subheader>
+                        <div layout="row" layout-align="space-between center">
+                            <span>Summary</span>
+                            <md-switch ng-model="settings.show_summary"/>
+                        </div>
+                        <div layout="row" layout-align="space-between center">
+                            <span>Feedbacks</span>
+                            <md-switch ng-model="settings.show_feedbacks"/>
+                        </div>
+                    </section>
+                    <section>
+                        <md-subheader>Themes</md-subheader>
+                        <div layout="row" layout-padding layout-align="space-between center">
+                            <span>Not yet.. :)</span>
+                        </div>
+                    </section>
                 </md-content>
             </md-tab>
-            <md-tab label="manage">
-                <md-content class="md-padding">
-                    <h1 class="md-display-2">Tab Three</h1>
-                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+            <md-tab label="Properties" layout="column">
+                <md-content flex layout-padding>
+                    <section>
+                        <md-subheader>General</md-subheader>
+                        <div layout="row" layout-align="space-between center">
+                            <div layout="column" flex="60">
+                                <span>
+                                Widget name
+                                <p>
+                                    While not required, naming a widget lets you access additional features in the <a
+                                        href="#">dashboard</a>.
+                                </p>
+                                    </span>
+                            </div>
+                            <md-input-container>
+                                <label>Widget name</label>
+                                <input ng-model="settings.widget_name">
+                            </md-input-container>
+                        </div>
+                        <div layout="row" layout-align="space-between center">
+                            <span>
+                                Catalog
+                            </span>
+                            <div layout="row" layout-align="end center">
+                                <md-select placeholder="Assign to catalog" ng-model="catalog"
+                                           md-on-open="loadCatalogs()" flex="40">
+                                    <md-option ng-value="settings.catalog" ng-repeat="catalog in catalogs">{{catalog.text}}
+                                    </md-option>
+                                </md-select>
+                                <md-button ng-click="settings.catalog = undefined" ng-disabled="!settings.catalog"
+                                           style="margin-left: 20px;">Clear
+                                </md-button>
+                            </div>
+                        </div>
+                    </section>
                 </md-content>
             </md-tab>
         </md-tabs>
+        <md-divider></md-divider>
+        <md-content flex layout-padding layout="row" layout-align="space-between center">
+            <div>
+                <md-button ng-click="gotodash()">Go to dashboard</md-button>
+            </div>
+            <div>
+                <md-button class="md-raised" ng-click="revert()">Revert</md-button>
+                <md-button class="md-raised" ng-click="apply()">Apply</md-button>
+                <md-button class="md-raised md-primary" ng-click="save()">Save settings</md-button>
+            </div>
+        </md-content>
     </md-content>
 </div>

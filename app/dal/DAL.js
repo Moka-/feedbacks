@@ -1,103 +1,114 @@
+'use strict'
+
 var db = require('./db');
+
+var widgetAvgQuery = 'SELECT ROUND(AVG(t.rating),1) ' +
+                     'FROM `feedbacks` t ' +
+                     'WHERE ?';
+
+var widgetFeedbacksCountQuery = 'SELECT COUNT(1) ' +
+                                'FROM `feedbacks` f ' +
+                                'WHERE ?';
+
+var  widgetFeedbacksQuery = 'SELECT f.*, v.display_name, v.avatar_url ' +
+                            'FROM `feedbacks` f,`visitors` v ' +
+                            'WHERE f.visitor_id = v.id ' +
+                            'AND ?';
+
+var insertFeedback = 'INSERT INTO feedbacks SET ?';
 
 // In here you should perform all your queries
 module.exports = {
     visitors: {
         list: function (params, callback) {
-            var sql = 'SELECT * FROM `visitors`'; // TODO: consider removeing the ` from this entire file
+            var sql = 'SELECT * FROM `visitors`';
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
             var sql = 'SELECT * FROM `visitors` WHERE ?';
-            handle_database(req, res);
+            db.query(sql, params, callback);
         },
-        add: function (req, res) {
-            var sql = 'INSERT INTO visitors SET';
-            handle_database(req, res);
+        add: function (params, callback) {
+            var sql = 'INSERT INTO `visitors `SET';
+            db.query(sql, params, callback);
         },
-        update: function (req, res) {
+        update: function (params, callback) {
             var sql = "";
-            handle_database(req, res);
+            db.query(sql, params, callback);
         },
-        delete: function (req, res) {
-            var sql = 'DELETE visitors WHERE id ='
-            handle_database(req, res);
+        delete: function (params, callback) {
+            var sql = 'DELETE `visitors` WHERE ?';
+            db.query(sql, params, callback);
         }
     },
     feedbacks: {
         list: function (params, callback) {
-            var sql = 'SELECT f.*, v.display_name, v.avatar_url FROM `feedbacks` f,`visitors` v WHERE f.visitor_id = v.id AND ?';
+            var sql = widgetFeedbacksQuery;
             db.query(sql, params, callback);
         },
-        view: function (req, res) {
+        view: function (params, callback) {
             var sql = "";
-            res.render('widget');
+            db.query(sql, params, callback);
         },
-        add: function (req, res) {
-            var params = {
-                id: "fdsfdsfssd",
-                comment: "this is a test",
-                comment_title: "Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",
-                created_on: "2015-07-28T21:00:00.000Z",
-                edited_on: "2016-04-25T21:00:00.000Z",
-                rating: 10,
-                visitor_id: "8884d4e3-2fda-4dbe-a0b8-605fccaa3b0c",
-                widget_id: "bcac1c8a-3b11-4374-aff7-e865a14c2681comp-imxne0xw"
-            }
+        add: function (params, callback) {
             var sql = 'INSERT INTO feedbacks SET ?';
-            handle_database1(req, res, params);
+            db.query(sql, params, callback);
         },
-        update: function (req, res) {
+        update: function (params, callback) {
             var sql = "";
-            res.render('widget');
+            db.query(sql, params, callback);
         },
-        delete: function (req, res) {
+        delete: function (params, callback) {
             var sql ="";
-            res.render('widget');
+            db.query(sql, params, callback);
         }
     },
     widgets: {
-        list: function (req, res) {
+        list: function (params, callback) {
             var sql = "";
-            res.json(dummy_visitors);
+            db.query(sql, params, callback);
         },
-        view: function (req, res) {
-            var sql = "";
-            res.render('widget');
+        view: function (params, callback) {
+            var sql = 'SELECT * FROM `widgets` WHERE ?';
+            db.query(sql, params, function(err, results){
+                console.log(results);
+
+                callback(err, results);
+            });
         },
-        add: function (req, res) {
+        add: function (params, callback) {
             var sql = "";
-            res.render('widget');
+            db.query(sql, params, callback);
         },
-        update: function (req, res) {
+        update: function (params, callback) {
             var sql = "";
-            res.render('widget');
+            db.query(sql, params, callback);
         },
-        delete: function (req, res) {
+        delete: function (params, callback) {
             var sql = "";
-            res.render('widget');
+            db.query(sql, params, callback);
         }
     },
     sites: {
-        list: function (req, res) {
+        list: function (params, callback) {
             var sql = "";
-            res.json(dummy_visitors);
+            db.query(sql, params, callback);
         },
-        view: function (req, res) {
+        view: function (params, callback) {
             var sql = "";
-            res.render('widget');
+            db.query(sql, params, callback);
         },
-        add: function (req, res) {
+        add: function (params, callback) {
             var sql = "";
-            res.render('widget');
+            db.query(sql, params, callback);
         },
-        update: function (req, res) {
+        update: function (params, callback) {
             var sql = "";
-            res.render('widget');
+            db.query(sql, params, callback);
         },
-        delete: function (req, res) {
+        delete: function (params, callback) {
             var sql = "";
-            res.render('widget');
+            db.query(sql, params, callback);
         }
     }
 };

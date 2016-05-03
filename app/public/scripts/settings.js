@@ -4,7 +4,7 @@ angular.module('settings', [
         'ngRoute',
         'wix', 'ngMaterial', 'feedbacksApp'
     ])
-    .config(function ($routeProvider) {
+    .config(function ($routeProvider, $mdThemingProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: 'partials/settings',
@@ -13,5 +13,7 @@ angular.module('settings', [
             .otherwise({
                 redirectTo: '/'
             });
-
+        $mdThemingProvider.theme('default')
+            .primaryPalette('blue-grey')
+            .accentPalette('amber');
     });
