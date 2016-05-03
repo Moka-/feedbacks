@@ -66,38 +66,52 @@ angular.module('widget')
             templateUrl: 'partials/templates/widget-form.html',
         controller: function ($scope, $http) {
 
+            $scope.writeFeedbackButtonText = '';
+
             $scope.logged_in = false;
             $scope.logged_user = null;
 
             $scope.from_expanded = false;
             $scope.settings = $scope.$parent.settings;
 
+            if($scope.settings.comments_enabled){
+                $scope.writeFeedbackButtonText += "comment"
+            }
+            if($scope.settings.ratings_enabled){
+                $scope.writeFeedbackButtonText += " & rate"
+            }
+
             $scope.logOut = function(){
                 gapi.auth.signOut();
             }
 
-            $scope.submit = function(){
+            $scope.postComment = function(){
                 debugger;
                 var request = $http({
                     method: "post",
                     url: "/feedbacks",
-                    params: {
-                        action: "add"
-                    },
                     data: {
-                        user: $scope.logged_user,
-                        feedback: $scope.new_feedback
+                        widget_id: $scope.$parent.widget_id,
+                        comment: $scope.new_feedback.comment,
+                        rating: $scope.new_feedback.rating,
+                        id_token: $scope.logged_user.id_token,
+                        full_name: $scope.logged_user.full_name,
+                        avatar_url: $scope.logged_user.image_url
                     }
                 });
-                return( request.then( handleSuccess, handleError ) );
-            }
 
+                return request.then(
+                    function (res) {
+                        $rootScope.$broadcast('event:posted-feedback', res);
 
-            var handleSuccess = function (e, p) {
-                debugger;
-            }
-            var handleError = function (e, p) {
-                debugger;
+                    }, function (err) {
+                        alert('oops');
+                        $scope.new_feedback = {
+                            comment: '',
+                            rating: 0
+                        };
+                        $scope.from_expanded = false;
+                    });
             }
 
             $scope.new_feedback = {
@@ -127,8 +141,6 @@ angular.module('widget')
                 debugger;
                 console.log('Not signed into Google Plus.');
             });
-
-            $scope.rating = 2;
         }
     }})
     .directive('starRating', function () {

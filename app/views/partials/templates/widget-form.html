@@ -1,12 +1,16 @@
-<md-card >
+<md-card>
     <md-card-header>
-        <md-card-header-text>
-            <span class="md-title"><star-rating rating="rating" read-only="true"></star-rating></span>
-            <span class="md-subhead">By 2,045 users</span>
+        <md-card-header-text ng-if="settings.show_summary">
+            <span class="md-title">
+                <star-rating rating="settings.average_rate" max-rating="{{settings.max_rating}}" read-only="true"></star-rating>
+            </span>
+            <span class="md-subhead">
+                ({{settings.average_rate | number}}/{{settings.max_rating | number}}) by
+                {{settings.feedbacks_count | number}} users</span>
         </md-card-header-text>
         <md-card-actions layout="row" layout-align="end center">
             <md-button class="md-raised" ng-click="from_expanded = !from_expanded">
-                {{ from_expanded ? 'Maybe later' : 'Rate & Comment' }}</md-button>
+                {{ from_expanded ? 'maybe later...' : writeFeedbackButtonText }}</md-button>
         </md-card-actions>
     </md-card-header>
 
@@ -20,7 +24,7 @@
     </md-card-header>
 
     <md-card-header ng-show="from_expanded && logged_in" >
-        <md-card-avatar>
+        <md-card-avatar layout="row" layout-align="start center">
             <img class="md-user-avatar" ng-src="{{logged_user.image_url}}"/>
         </md-card-avatar>
         <md-card-header-text>
@@ -29,7 +33,6 @@
                 <a href="" ng-click="logOut()">
                     Not {{logged_user.full_name}}? Log in as another user
                 </a>
-
             </span>
         </md-card-header-text>
     </md-card-header>
@@ -38,14 +41,14 @@
         <md-card-title-text>
             <span class="md-subhead">
                 <md-input-container class="md-block">
-            <label>Say something!</label>
-            <textarea ng-model="new_feedback.comment" md-maxlength="150" rows="3" md-select-on-focus></textarea>
-                    <star-rating rating="new_feedback.rating"/>
+            <label ng-if="settings.comments_enabled">Say something!</label>
+            <textarea ng-model="new_feedback.comment" md-maxlength="150" rows="3" md-select-on-focus ng-if="settings.comments_enabled"></textarea>
+                    <star-rating rating="new_feedback.rating" max-rating="{{settings.max_rating}}" ng-if="settings.ratings_enabled"/>
         </md-input-container>
             </span>
         </md-card-title-text>
         <md-card-actions layout="row" layout-align="end center">
-            <md-button class="md-raised md-primary" ng-click="submit()">Post</md-button>
+            <md-button class="md-raised md-primary" ng-click="postComment()">Post</md-button>
         </md-card-actions>
     </md-card-title>
 

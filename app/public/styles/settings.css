@@ -1,11 +1,12 @@
 body {
     background-color: #fdfdfd;
 }
- md-content {
-    background-color: transparent !important; }
-md-content md-tabs {
-    border: 1px solid #e1e1e1; }
-md-content md-tabs md-tabs-wrapper {
-    background: white; }
-md-content h1:first-child {
-    margin-top: 0; }
+ md-input-container{
+     margin: 0;
+ } md-switch{
+     margin: 5px;
+ }
+ md-checkbox{
+     margin: 10px;
+ }
+.md-track-ticks canvas { display: none; }
