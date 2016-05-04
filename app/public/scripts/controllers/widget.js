@@ -31,4 +31,11 @@ angular.module('widget')
             $scope.$apply();
         });
 
+        $scope.handleSettingsApplied = function (newSettings) {
+            $scope.settings = newSettings;
+            $scope.$apply();
+        }
+
+        $wix.addEventListener($wix.Events.SETTINGS_UPDATED, $scope.handleSettingsApplied);
+
 });
