@@ -30,6 +30,7 @@ app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
 // serve index and view partials
 app.get('/widget', routes.widget);
 app.get('/settings', routes.settings);
+app.get('/dashboard', routes.dashboard);
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
@@ -50,6 +51,12 @@ app.post('/widgets', api.widgets.add);
 app.get('/widget/:id', api.widgets.view);
 app.put('/widget/:id', api.widgets.update);
 app.delete('/widget/:id', api.widgets.delete);
+
+app.get('/catalogs/:app_instance', api.catalogs.list);
+app.post('/catalogs', api.catalogs.add);
+//app.get('/catalogs/:id', api.catalogs.view);
+app.put('/catalogs/:id', api.catalogs.update);
+app.delete('/catalogs/:id', api.catalogs.delete);
 
 // redirect all others to the index (HTML5 history)
 //app.get('*', widget_routes.widget);
