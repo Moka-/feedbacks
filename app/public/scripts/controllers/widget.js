@@ -2,8 +2,8 @@
 
 angular.module('widget')
     .controller('WidgetController', function ($scope, $wix, feedbacksDb, feedbacksApp) {
-
-        $scope.widget_id = feedbacksApp.getWidgetId();
+        $scope.app_instance = feedbacksApp.getAppInstance();
+        $scope.comp_id = feedbacksApp.getComponentId();
         $scope.loading_feedbacks = true;
 
         $wix.getBoundingRectAndOffsets(function(data){
@@ -21,7 +21,7 @@ angular.module('widget')
             feedbacks_count: 3000
         };
 
-        feedbacksDb.getFeedbacks($scope.widget_id).then(function (d) {
+        feedbacksDb.getFeedbacks($scope.app_instance, $scope.comp_id).then(function (d) {
             $scope.data = d.data;
             $scope.loading_feedbacks = false;
         });
