@@ -15,6 +15,12 @@ var  widgetFeedbacksQuery = 'SELECT f.*, v.display_name, v.avatar_url ' +
                             'WHERE f.visitor_id = v.id ' +
                             'AND ?';
 
+var  widgetFeedbacksQuery2 = 'SELECT f.*, v.display_name, v.avatar_url ' +
+    'FROM `feedbacks` f,`visitors` v ' +
+    'WHERE f.visitor_id = v.id ' +
+    'AND f.app_instance = ?' +
+    'AND f.comp_id = ? ';
+
 var insertFeedback = 'INSERT INTO feedbacks SET ?';
 
 // In here you should perform all your queries
@@ -43,7 +49,7 @@ module.exports = {
     },
     feedbacks: {
         list: function (params, callback) {
-            var sql = widgetFeedbacksQuery;
+            var sql = widgetFeedbacksQuery2;
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
@@ -97,6 +103,32 @@ module.exports = {
         view: function (params, callback) {
             var sql = "";
             db.query(sql, params, callback);
+        },
+        add: function (params, callback) {
+            var sql = "";
+            db.query(sql, params, callback);
+        },
+        update: function (params, callback) {
+            var sql = "";
+            db.query(sql, params, callback);
+        },
+        delete: function (params, callback) {
+            var sql = "";
+            db.query(sql, params, callback);
+        }
+    },
+    catalogs: {
+        list: function (params, callback) {
+            var sql = 'SELECT * FROM `catalogs` WHERE ?';
+            db.query(sql, params, function(err, results){
+                callback(err, results);
+            });
+        },
+        view: function (params, callback) {
+            var sql = 'SELECT * FROM `catalogs` WHERE ?';
+            db.query(sql, params, function(err, results){
+                callback(err, results);
+            });
         },
         add: function (params, callback) {
             var sql = "";

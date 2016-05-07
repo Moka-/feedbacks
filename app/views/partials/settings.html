@@ -10,20 +10,20 @@
                         <md-subheader>Comments</md-subheader>
                         <div layout="row" layout-align="space-between center">
                             <span>Enable comments</span>
-                            <md-switch ng-model="settings.enable_comments"/>
+                            <md-switch ng-model="settings.enable_comments" aria-label="Enable comments"/>
                         </div>
                         <div layout="row" layout-align="space-between center">
                             <span>Required?</span>
-                            <md-checkbox ng-model="settings.comment_required"/>
+                            <md-checkbox ng-model="settings.comment_required" aria-label="Comment required"/>
                         </div>
 
                         <div layout="row" layout-align="space-between center">
                             <span flex="40">Comment maximum-length</span>
-                            <md-slider flex ng-model="settings.comment_max_length" min="10" max="300" aria-label="blue" id="blue-slider">
-                            </md-slider>
+                            <md-slider flex ng-model="settings.comment_max_length" min="10" max="300"
+                                       aria-label="Comment maximum length"></md-slider>
                             <md-input-container class="md-block" flex="10">
                                 <input required type="number" step="any" name="rate" ng-model="settings.comment_max_length" min="10"
-                                       max="300"/>
+                                       max="300" aria-label="Comment maximum length"/>
                             </md-input-container>
                         </div>
                     </section>
@@ -31,16 +31,16 @@
                         <md-subheader>Ratings</md-subheader>
                         <div layout="row" layout-align="space-between center">
                             <span>Enable ratings</span>
-                            <md-switch ng-model="settings.enable_ratings"/>
+                            <md-switch ng-model="settings.enable_ratings" aria-label="Enable ratings"/>
                         </div>
                         <div layout="row" layout-align="space-between center">
                             <span>Required?</span>
-                            <md-checkbox ng-model="settings.rating_required"/>
+                            <md-checkbox ng-model="settings.rating_required" aria-label="Rating required"/>
                         </div>
                         <div layout="row" layout-align="space-between center">
                             <span flex="40">Rating steps</span>
                             <md-slider flex md-discrete ng-model="settings.max_rating" step="1" min="3" max="10"
-                                       aria-label="Rating steps">
+                                       aria-label="Max rating">
                             </md-slider>
                         </div>
                     </section>
@@ -52,11 +52,11 @@
                         <md-subheader>Display</md-subheader>
                         <div layout="row" layout-align="space-between center">
                             <span>Summary</span>
-                            <md-switch ng-model="settings.show_summary"/>
+                            <md-switch ng-model="settings.show_summary" aria-label="Show summary"/>
                         </div>
                         <div layout="row" layout-align="space-between center">
                             <span>Feedbacks</span>
-                            <md-switch ng-model="settings.show_feedbacks"/>
+                            <md-switch ng-model="settings.show_feedbacks" aria-label="Show feedbacks"/>
                         </div>
                     </section>
                     <section>
