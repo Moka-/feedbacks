@@ -14,7 +14,7 @@ var  widgetFeedbacksQuery = 'SELECT f.*, v.display_name, v.avatar_url ' +
     'FROM `feedbacks` f,`visitors` v ' +
     'WHERE f.visitor_id = v.id ' +
     'AND f.app_instance = ?' +
-    'AND f.comp_id = ? ';
+    'AND f.component_id = ? ';
 
 var insertFeedback = 'INSERT INTO feedbacks SET ?';
 
