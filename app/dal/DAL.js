@@ -110,5 +110,31 @@ module.exports = {
             var sql = "";
             db.query(sql, params, callback);
         }
+    },
+    catalogs: {
+        list: function (params, callback) {
+            var sql = 'SELECT * FROM `catalogs` WHERE ?';
+            db.query(sql, params, function(err, results){
+                callback(err, results);
+            });
+        },
+        view: function (params, callback) {
+            var sql = 'SELECT * FROM `catalogs` WHERE ?';
+            db.query(sql, params, function(err, results){
+                callback(err, results);
+            });
+        },
+        add: function (params, callback) {
+            var sql = "";
+            db.query(sql, params, callback);
+        },
+        update: function (params, callback) {
+            var sql = "";
+            db.query(sql, params, callback);
+        },
+        delete: function (params, callback) {
+            var sql = "";
+            db.query(sql, params, callback);
+        }
     }
 };

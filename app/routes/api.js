@@ -147,5 +147,34 @@ module.exports = {
         delete: function (req, res) {
             res.render('widget');
         }
+    },
+    catalogs: {
+        list: function (req, res) {
+            dal.catalogs.list(req.params, function (err, catalogs) {
+                dal.widgets.view({app_instance: req.params.app_instance}, function (err, widgets) {
+                    catalogs.forEach(function(current){
+                        current.widgets = widgets.filter(function (value) {
+                            return value.app_instance == current.app_instance &&
+                                value.catalog_id == current.id;
+                        });
+                    });
+                    res.json(catalogs);
+                });
+            });
+        },
+        view: function (req, res) {
+            dal.catalogs.view(req.params, function (err, results) {
+                res.json(results);
+            });
+        },
+        add: function (req, res) {
+            res.render('widget');
+        },
+        update: function (req, res) {
+            res.render('widget');
+        },
+        delete: function (req, res) {
+            res.render('widget');
+        }
     }
 };

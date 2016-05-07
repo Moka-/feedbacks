@@ -12,6 +12,9 @@ angular.module('feedbacksApp', ['wix'])
             getWidgetSettings: function () {
                 var widgetId = this.getWidgetId();
                 return request = $http.get('/widget/' + widgetId);
+            },
+            getApplicationId: function () {
+                return $wix.Utils.getInstanceId();
             }
         };
 
