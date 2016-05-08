@@ -70,7 +70,7 @@ module.exports = {
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
-            var sql = 'SELECT * FROM `widgets` WHERE ?';
+            var sql = 'SELECT * FROM `widgets` WHERE app_instance=? and component_id=?';
             db.query(sql, params, function(err, results){
                 console.log(results);
 
