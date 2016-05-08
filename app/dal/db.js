@@ -24,6 +24,7 @@ module.exports = {
             },
             function (err, rows, fields) {
                 if (err) throw err;
+                console.log(params);
                 callback(err, rows);
             });
         // pool.getConnection(function (err, connection) {

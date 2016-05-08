@@ -27,8 +27,8 @@ angular.module('widget')
                         email: profile.getEmail(),
                         image_url: profile.getImageUrl()
                     };
-
-                    $scope.$apply();
+                    
+                    $scope.$apply()
                 });
 
                 $scope.$on('event:google-plus-signin-failure', function (event, authResult) {

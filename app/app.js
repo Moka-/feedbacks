@@ -40,7 +40,7 @@ app.get('/visitor/:id', api.visitors.view);
 app.put('/visitor/:id', api.visitors.update);
 app.delete('/visitor/:id', api.visitors.delete);
 
-app.get('/feedbacks/:widget_id', api.feedbacks.list);
+app.get('/feedbacks/:app_instance/:component_id', api.feedbacks.list);
 app.post('/feedbacks', api.feedbacks.add);
 app.get('/feedback/:id', api.feedbacks.view);
 app.put('/feedback/:id', api.feedbacks.update);
@@ -48,7 +48,7 @@ app.delete('/feedback/:id', api.feedbacks.delete);
 
 app.get('/widgets', api.widgets.list);
 app.post('/widgets', api.widgets.add);
-app.get('/widget/:id', api.widgets.view);
+app.get('/widget/:app_instance/:component_id', api.widgets.view);
 app.put('/widget/:id', api.widgets.update);
 app.delete('/widget/:id', api.widgets.delete);
 
@@ -57,6 +57,18 @@ app.post('/catalogs', api.catalogs.add);
 //app.get('/catalogs/:id', api.catalogs.view);
 app.put('/catalogs/:id', api.catalogs.update);
 app.delete('/catalogs/:id', api.catalogs.delete);
+
+/*
+var req={};
+api.feedbacks.add(req);
+*/
+/*
+var req = {};
+req.params = {app_instance : "4a8eda33-6035-4c65-9cf6-6befeaf2d2af",
+                component_id : "comp-inx9esxf"}
+api.feedbacks.list(req);
+*/
+
 
 // redirect all others to the index (HTML5 history)
 //app.get('*', widget_routes.widget);

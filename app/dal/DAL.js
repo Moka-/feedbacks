@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var db = require('./db');
 
@@ -11,9 +11,10 @@ var widgetFeedbacksCountQuery = 'SELECT COUNT(1) ' +
                                 'WHERE ?';
 
 var  widgetFeedbacksQuery = 'SELECT f.*, v.display_name, v.avatar_url ' +
-                            'FROM `feedbacks` f,`visitors` v ' +
-                            'WHERE f.visitor_id = v.id ' +
-                            'AND ?';
+    'FROM `feedbacks` f,`visitors` v ' +
+    'WHERE f.visitor_id = v.id ' +
+    'AND f.app_instance = ?' +
+    'AND f.component_id = ? ';
 
 var insertFeedback = 'INSERT INTO feedbacks SET ?';
 
