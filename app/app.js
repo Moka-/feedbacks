@@ -58,11 +58,6 @@ app.post('/catalogs', api.catalogs.add);
 app.put('/catalogs/:id', api.catalogs.update);
 app.delete('/catalogs/:id', api.catalogs.delete);
 
-var req={};
-api.feedbacks.add(req);
-
-
-
 // redirect all others to the index (HTML5 history)
 //app.get('*', widget_routes.widget);
 

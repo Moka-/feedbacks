@@ -38,16 +38,11 @@ body {
     margin-top: 10px;
 }
 
-.widget .feedback {
-    margin-top: 10px;
-    clear: both;
-    border: 0;
-    display: block;
-    overflow: hidden;
-    background-color: #f6f6f6;
+.feedback h4 {
+    font-weight: 600 !important;
 }
 
-.widget .feedback .info{
-    float: left;
-    padding-top: 10px;
+.feedback .time-ago {
+    font-weight: 400 !important;
+    font-size: 0.8em;
 }
