@@ -116,14 +116,15 @@ module.exports = {
             res.render('widget');
         }
     },
+
     widgets: {
         list: function (req, res) {
             res.json(dummy_visitors);
         },
         view: function (req, res) {
             console.log('========================');
-            console.log(req.params);
-            dal.widgets.view(req.params, function (err, results) {
+            var params = [req.params.app_instance, req.params.component_id];
+            dal.widgets.view(params, function (err, results) {
                 res.json(results);
             });
         },

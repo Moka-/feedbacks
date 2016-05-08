@@ -3,8 +3,6 @@
 angular.module('settings')
   .controller('SettingsController', function ($scope, $wix, feedbacksApp) {
 
-      $scope.widget_id = feedbacksApp.getWidgetId();
-
       var loadSettings = function(){
           feedbacksApp.getWidgetSettings().then(
               function (response){ // Success loading settings

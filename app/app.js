@@ -48,7 +48,7 @@ app.delete('/feedback/:id', api.feedbacks.delete);
 
 app.get('/widgets', api.widgets.list);
 app.post('/widgets', api.widgets.add);
-app.get('/widget/:id', api.widgets.view);
+app.get('/widgets/:app_instance/:component_id', api.widgets.view);
 app.put('/widget/:id', api.widgets.update);
 app.delete('/widget/:id', api.widgets.delete);
 

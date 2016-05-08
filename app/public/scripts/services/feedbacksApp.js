@@ -2,8 +2,7 @@ angular.module('feedbacksApp', ['wix'])
     .factory('feedbacksApp', function ($wix, $http) {
         var app = {
             getWidgetSettings: function () {
-                var widgetId = this.getWidgetId();
-                return request = $http.get('/widget/' + widgetId);
+                return request = $http.get('/widgets/' +this.getAppInstance() + '/' + this.getComponentId());
             },
             getApplicationId: function () {
                 return $wix.Utils.getInstanceId();
