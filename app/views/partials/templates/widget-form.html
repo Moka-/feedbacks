@@ -5,8 +5,8 @@
                 <star-rating rating="settings.average_rate" max-rating="{{settings.max_rating}}" read-only="true"></star-rating>
             </span>
             <span class="md-subhead">
-                ({{settings.average_rate | number}}/{{settings.max_rating | number}}) by
-                {{settings.feedbacks_count | number}} users</span>
+                ({{feedbacks.average_rating | number}}/{{settings.max_rating | number}}) by
+                {{feedbacks.rating_count | number}} users</span>
         </md-card-header-text>
         <md-card-actions layout="row" layout-align="end center">
             <md-button class="md-raised" ng-click="from_expanded = !from_expanded">

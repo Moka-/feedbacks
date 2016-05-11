@@ -33,6 +33,8 @@ angular.module('widget')
             $scope.loading_feedbacks = false;
         });
 
+        $scope.inject = {average_rating: 0, rating_count: 0};
+
         $scope.$on('event:posted-feedback', function (event, newFeedback) {
             $scope.data.push(newFeedback);
             $scope.$apply();
@@ -45,4 +47,19 @@ angular.module('widget')
 
         $wix.addEventListener($wix.Events.SETTINGS_UPDATED, $scope.handleSettingsApplied);
 
+        $scope.average_rating;
+        $scope.rating_count;
+
+        $scope.$watch('data', function(newValue, oldValue){
+            if (oldValue && newValue && (newValue.length != oldValue.length)){
+                var sum = 0;
+                for(var i = 0; i < newValue.length; i++) {
+                    sum += newValue[i].rating;
+                }
+
+                $scope.inject.average_rating = sum / newValue.length;
+                $scope.inject.rating_count = newValue.length;
+                $scope.$apply();
+            }
+        });
 });

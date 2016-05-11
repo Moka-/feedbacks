@@ -64,8 +64,7 @@ angular.module('widget')
                 image: '=info'
             },
             templateUrl: 'partials/templates/widget-form.html',
-        controller: function ($scope, $http) {
-
+        controller: function ($scope, $rootScope,  $http) {
             $scope.logOut = function() {
                 debugger;
                 var auth2 = gapi.auth2.getAuthInstance();
@@ -83,6 +82,17 @@ angular.module('widget')
 
             $scope.from_expanded = false;
             $scope.settings = $scope.$parent.settings;
+
+            $scope.average_rating = $scope.$parent.average_rating;
+            $scope.rating_count = $scope.$parent.rating_count;
+
+            $scope.feedbacks = $scope.$parent.inject;
+            $scope.$watch('feedbacks', function(newValue, oldValue){
+                debugger;
+                if (oldValue && newValue){
+                    debugger;
+                }
+            });
 
             if($scope.settings.comments_enabled){
                 $scope.writeFeedbackButtonText += "comment"

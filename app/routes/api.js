@@ -122,7 +122,6 @@ module.exports = {
             res.json(dummy_visitors);
         },
         view: function (req, res) {
-            console.log('========================');
             var params = [req.params.app_instance, req.params.component_id];
             dal.widgets.view(params, function (err, results) {
                 res.json(results);
