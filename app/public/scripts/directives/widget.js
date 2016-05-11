@@ -27,8 +27,8 @@ angular.module('widget')
                         email: profile.getEmail(),
                         image_url: profile.getImageUrl()
                     };
-
-                    $scope.$apply();
+                    
+                    $scope.$apply()
                 });
 
                 $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
@@ -66,6 +66,16 @@ angular.module('widget')
             templateUrl: 'partials/templates/widget-form.html',
         controller: function ($scope, $http) {
 
+            $scope.logOut = function() {
+                debugger;
+                var auth2 = gapi.auth2.getAuthInstance();
+                auth2.signOut().then(function () {
+                    $scope.logged_in = false;
+                    $scope.logged_user = null;
+                    $scope.$apply();
+                });
+            }
+
             $scope.writeFeedbackButtonText = '';
 
             $scope.logged_in = false;
@@ -79,10 +89,6 @@ angular.module('widget')
             }
             if($scope.settings.ratings_enabled){
                 $scope.writeFeedbackButtonText += " & rate"
-            }
-
-            $scope.logOut = function(){
-                gapi.auth.signOut();
             }
 
             $scope.postComment = function(){
@@ -138,7 +144,6 @@ angular.module('widget')
 
             $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
                 // User has not authorized the G+ App!
-                debugger;
                 console.log('Not signed into Google Plus.');
             });
         }

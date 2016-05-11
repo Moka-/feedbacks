@@ -11,7 +11,9 @@ angular.module('settings')
 
               });
       }
-      loadSettings();
+      //loadSettings();
+      $scope.settings = {};
+
 
       $scope.catalogs = []; // Init an empty array
       

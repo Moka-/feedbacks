@@ -10,7 +10,14 @@ angular.module('widget')
             $scope.widgetHeight = data.rect.height;
         });
 
-        // $scope.settings = feedbacksApp.getWidgetSetting(); //TODO: actually get the 
+        // feedbacksApp.getWidgetSettings().then(
+        //     function (response){ // Success loading settings
+        //         $scope.settings = response.data[0];
+        //     }, function(response){ // Shit's fucked yo
+        //
+        //     });
+
+        // $scope.settings = feedbacksApp.getWidgetSetting(); //TODO: actually get the
         $scope.settings = {
             show_summary: true,
             show_feedbacks: true,
