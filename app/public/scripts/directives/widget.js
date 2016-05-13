@@ -98,14 +98,17 @@ angular.module('widget')
                         component_id: $scope.$parent.comp_id,
                         comment: $scope.new_feedback.comment,
                         rating: $scope.new_feedback.rating,
-                        id_token: $scope.logged_user.id_token
+                        id_token: $scope.logged_user.id_token,
                         visitor_id: $scope.logged_user.id_token
                     }
                 });
 
                 return request.then(
-                    function (res) {},
-                    function (err) {
+                    function (res) { // success
+                        debugger;
+
+                    },
+                    function (err) { // error
                         debugger;
                         alert('oops');
                         $scope.new_feedback = {
@@ -114,12 +117,12 @@ angular.module('widget')
                         };
                         $scope.from_expanded = false;
                     });
-            }
+            };
 
             $scope.new_feedback = {
                 comment: '',
                 rating: 0
-            }
+            };
 
             $scope.$on('event:google-plus-signin-success', function (event, authResult) {
                 $scope.logged_in = true;

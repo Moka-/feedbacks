@@ -11,7 +11,7 @@
                 <md-subheader>
                     Feedbacks ({{data.length}})
                 </md-subheader>
-                <md-list-item class="md-3-line md-no-sticky feedback"
+                <md-list-item class="md-3-line feedback"
                               ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
                     <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"
                          class="md-avatar"/>
@@ -21,7 +21,6 @@
                             <star-rating rating="feedback.rating" max-rating="{{settings.max_rating}}" ng-if="settings.enable_ratings" read-only="true"/>
                         </h4>
                         <p>{{feedback.comment}}</p>
-
                     </div>
                 </md-list-item>
             </md-list>
