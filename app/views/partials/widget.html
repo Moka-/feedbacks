@@ -17,8 +17,11 @@
                          class="md-avatar"/>
                     <div class="md-list-item-text">
                         <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
-                            <span am-time-ago="feedback.created_on" class="time-ago"></span></h4>
+                            <span am-time-ago="feedback.created_on" class="time-ago"></span>
+                            <star-rating rating="feedback.rating" max-rating="{{settings.max_rating}}" ng-if="settings.enable_ratings" read-only="true"/>
+                        </h4>
                         <p>{{feedback.comment}}</p>
+
                     </div>
                 </md-list-item>
             </md-list>

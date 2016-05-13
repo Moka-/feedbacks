@@ -44,7 +44,6 @@ angular.module('widget')
                         $scope.expanded = false;
                     }
                 };
-
             },
         };
     })
@@ -64,9 +63,8 @@ angular.module('widget')
                 image: '=info'
             },
             templateUrl: 'partials/templates/widget-form.html',
-        controller: function ($scope, $rootScope,  $http) {
+        controller: function ($scope, $http) {
             $scope.logOut = function() {
-                debugger;
                 var auth2 = gapi.auth2.getAuthInstance();
                 auth2.signOut().then(function () {
                     $scope.logged_in = false;
@@ -74,7 +72,7 @@ angular.module('widget')
                     $scope.$apply();
                 });
             }
-
+ 
             $scope.writeFeedbackButtonText = '';
 
             $scope.logged_in = false;
@@ -83,21 +81,10 @@ angular.module('widget')
             $scope.from_expanded = false;
             $scope.settings = $scope.$parent.settings;
 
-            $scope.average_rating = $scope.$parent.average_rating;
-            $scope.rating_count = $scope.$parent.rating_count;
-
-            $scope.feedbacks = $scope.$parent.inject;
-            $scope.$watch('feedbacks', function(newValue, oldValue){
-                debugger;
-                if (oldValue && newValue){
-                    debugger;
-                }
-            });
-
-            if($scope.settings.comments_enabled){
+            if($scope.settings.enable_comments){
                 $scope.writeFeedbackButtonText += "comment"
             }
-            if($scope.settings.ratings_enabled){
+            if($scope.settings.enable_ratings){
                 $scope.writeFeedbackButtonText += " & rate"
             }
 
@@ -110,17 +97,14 @@ angular.module('widget')
                         widget_id: $scope.$parent.widget_id,
                         comment: $scope.new_feedback.comment,
                         rating: $scope.new_feedback.rating,
-                        id_token: $scope.logged_user.id_token,
-                        full_name: $scope.logged_user.full_name,
-                        avatar_url: $scope.logged_user.image_url
+                        id_token: $scope.logged_user.id_token
                     }
                 });
 
                 return request.then(
-                    function (res) {
-                        $rootScope.$broadcast('event:posted-feedback', res);
-
-                    }, function (err) {
+                    function (res) {},
+                    function (err) {
+                        debugger;
                         alert('oops');
                         $scope.new_feedback = {
                             comment: '',

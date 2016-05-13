@@ -5,8 +5,8 @@
                 <star-rating rating="settings.average_rate" max-rating="{{settings.max_rating}}" read-only="true"></star-rating>
             </span>
             <span class="md-subhead">
-                ({{feedbacks.average_rating | number}}/{{settings.max_rating | number}}) by
-                {{feedbacks.rating_count | number}} users</span>
+                ({{settings.average_rate | number}}/{{settings.max_rating | number}}) by
+                {{settings.feedbacks_count | number}} users</span>
         </md-card-header-text>
         <md-card-actions layout="row" layout-align="end center">
             <md-button class="md-raised" ng-click="from_expanded = !from_expanded">
@@ -40,9 +40,9 @@
         <md-card-title-text>
             <span class="md-subhead">
                 <md-input-container class="md-block">
-            <label ng-if="settings.comments_enabled">Say something!</label>
-            <textarea ng-model="new_feedback.comment" md-maxlength="150" rows="3" md-select-on-focus ng-if="settings.comments_enabled"></textarea>
-                    <star-rating rating="new_feedback.rating" max-rating="{{settings.max_rating}}" ng-if="settings.ratings_enabled"/>
+            <label ng-if="settings.enable_comments">Say something!</label>
+            <textarea ng-model="new_feedback.comment" md-maxlength="150" rows="3" md-select-on-focus ng-if="settings.enable_comments"></textarea>
+                    <star-rating rating="new_feedback.rating" max-rating="{{settings.max_rating}}" ng-if="settings.enable_ratings"/>
         </md-input-container>
             </span>
         </md-card-title-text>

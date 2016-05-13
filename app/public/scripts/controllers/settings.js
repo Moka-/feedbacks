@@ -6,14 +6,13 @@ angular.module('settings')
       var loadSettings = function(){
           feedbacksApp.getWidgetSettings().then(
               function (response){ // Success loading settings
+                  debugger;
                   $scope.settings = response.data[0];
               }, function(response){ // Shit's fucked yo
 
               });
       }
-      //loadSettings();
-      $scope.settings = {};
-
+      loadSettings();
 
       $scope.catalogs = []; // Init an empty array
       
