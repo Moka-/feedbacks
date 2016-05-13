@@ -17,7 +17,7 @@ angular.module('widget')
             enable_comments: true,
             enable_ratings: true,
             max_rating: 5,
-            average_rate: 4.3,
+            avarage_rating: 4.3,
             feedbacks_count: 3000
         };
 
