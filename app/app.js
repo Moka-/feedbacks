@@ -66,12 +66,10 @@ api.feedbacks.add(req, function (a, b) {
     console.log(a);
     console.log(b);
 });*/
-/*
-var req = {};
+/*var req = {};
 req.params = {app_instance : "4a8eda33-6035-4c65-9cf6-6befeaf2d2af",
                 component_id : "comp-inx9esxf"}
-api.feedbacks.list(req);
-*/
+ api.widgets.view(req);*/
 
 
 // redirect all others to the index (HTML5 history)

@@ -90,7 +90,7 @@ module.exports = {
                                     console.log(err);
                                     console.log(results);
                                     res.json(err);
-                                }else {
+                               } else {
                                     var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
                                     dal.feedbacks.view(widgetParams, function(err, results){
                                         res.json(results);
