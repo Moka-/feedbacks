@@ -108,11 +108,12 @@ angular.module('widget')
                         $rootScope.$broadcast('event:posted-feedback', res);
 
                     }, function (err) {
-                        alert('oops');
+                        console.error(err);
                         $scope.new_feedback = {
                             comment: '',
                             rating: 0
                         };
+
                         $scope.from_expanded = false;
                     });
             }
