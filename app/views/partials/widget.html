@@ -1,5 +1,4 @@
 <div class="widget" ng-controller="WidgetController" flex layout-fill>
-
     <md-content layout="column" ng-style="{height: widgetHeight + 'px'}">
         <feedbacks-interaction></feedbacks-interaction>
         <div layout="row" layout-align="space-around" ng-if="loading_feedbacks">
@@ -12,13 +11,15 @@
                 <md-subheader>
                     Feedbacks ({{data.length}})
                 </md-subheader>
-                <md-list-item class="md-3-line md-no-sticky feedback"
+                <md-list-item class="md-3-line feedback"
                               ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
                     <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"
                          class="md-avatar"/>
                     <div class="md-list-item-text">
                         <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
-                            <span am-time-ago="feedback.created_on" class="time-ago"></span></h4>
+                            <span am-time-ago="feedback.created_on" class="time-ago"></span>
+                            <star-rating rating="feedback.rating" max-rating="{{settings.max_rating}}" ng-if="settings.enable_ratings" read-only="true"/>
+                        </h4>
                         <p>{{feedback.comment}}</p>
                     </div>
                 </md-list-item>

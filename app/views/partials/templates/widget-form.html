@@ -40,9 +40,9 @@
         <md-card-title-text>
             <span class="md-subhead">
                 <md-input-container class="md-block">
-            <label ng-if="settings.comments_enabled">Say something!</label>
-            <textarea ng-model="new_feedback.comment" md-maxlength="150" rows="3" md-select-on-focus ng-if="settings.comments_enabled"></textarea>
-                    <star-rating rating="new_feedback.rating" max-rating="{{settings.max_rating}}" ng-if="settings.ratings_enabled"/>
+            <label ng-if="settings.enable_comments">Say something!</label>
+            <textarea ng-model="new_feedback.comment" md-maxlength="150" rows="3" md-select-on-focus ng-if="settings.enable_comments"></textarea>
+                    <star-rating rating="new_feedback.rating" max-rating="{{settings.max_rating}}" ng-if="settings.enable_ratings"/>
         </md-input-container>
             </span>
         </md-card-title-text>
