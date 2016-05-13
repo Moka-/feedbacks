@@ -27,8 +27,8 @@ angular.module('widget')
                         email: profile.getEmail(),
                         image_url: profile.getImageUrl()
                     };
-
-                    $scope.$apply();
+                    
+                    $scope.$apply()
                 });
 
                 $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
@@ -66,6 +66,15 @@ angular.module('widget')
             templateUrl: 'partials/templates/widget-form.html',
         controller: function ($scope, $http) {
 
+            $scope.logOut = function() {
+                var auth2 = gapi.auth2.getAuthInstance();
+                auth2.signOut().then(function () {
+                    $scope.logged_in = false;
+                    $scope.logged_user = null;
+                    $scope.$apply();
+                });
+            }
+
             $scope.writeFeedbackButtonText = '';
 
             $scope.logged_in = false;
@@ -81,22 +90,16 @@ angular.module('widget')
                 $scope.writeFeedbackButtonText += " & rate"
             }
 
-            $scope.logOut = function(){
-                gapi.auth.signOut();
-            }
-
             $scope.postComment = function(){
-                debugger;
                 var request = $http({
                     method: "post",
                     url: "/feedbacks",
                     data: {
-                        widget_id: $scope.$parent.widget_id,
+                        app_instance: $scope.$parent.app_instance,
+                        component_id: $scope.$parent.comp_id,
                         comment: $scope.new_feedback.comment,
                         rating: $scope.new_feedback.rating,
-                        id_token: $scope.logged_user.id_token,
-                        full_name: $scope.logged_user.full_name,
-                        avatar_url: $scope.logged_user.image_url
+                        visitor_id: $scope.logged_user.id_token
                     }
                 });
 
@@ -123,6 +126,7 @@ angular.module('widget')
                 $scope.logged_in = true;
                 var authResponse = authResult.getAuthResponse();
                 var profile = authResult.getBasicProfile();
+                console.log(authResponse.id_token);
 
                 $scope.logged_user = {
                     id_token: authResponse.id_token,
@@ -138,7 +142,6 @@ angular.module('widget')
 
             $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
                 // User has not authorized the G+ App!
-                debugger;
                 console.log('Not signed into Google Plus.');
             });
         }

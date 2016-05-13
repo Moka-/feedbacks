@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var db = require('./db');
 
@@ -11,9 +11,11 @@ var widgetFeedbacksCountQuery = 'SELECT COUNT(1) ' +
                                 'WHERE ?';
 
 var  widgetFeedbacksQuery = 'SELECT f.*, v.display_name, v.avatar_url ' +
-                            'FROM `feedbacks` f,`visitors` v ' +
-                            'WHERE f.visitor_id = v.id ' +
-                            'AND ?';
+    'FROM `feedbacks` f,`visitors` v ' +
+    'WHERE f.visitor_id = v.id ' +
+    'AND f.app_instance = ? ' +
+    'AND f.component_id = ?';
+var feedbackQuery = widgetFeedbacksQuery + ' AND f.id = ?';
 
 var insertFeedback = 'INSERT INTO feedbacks SET ?';
 
@@ -25,11 +27,11 @@ module.exports = {
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
-            var sql = 'SELECT * FROM `visitors` WHERE ?';
+            var sql = 'SELECT * FROM `visitors` WHERE `id` = ?';
             db.query(sql, params, callback);
         },
         add: function (params, callback) {
-            var sql = 'INSERT INTO `visitors `SET';
+            var sql = 'INSERT INTO `visitors` SET ?';
             db.query(sql, params, callback);
         },
         update: function (params, callback) {
@@ -47,11 +49,11 @@ module.exports = {
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
-            var sql = "";
+            var sql = feedbackQuery;
             db.query(sql, params, callback);
         },
         add: function (params, callback) {
-            var sql = 'INSERT INTO feedbacks SET ?';
+            var sql = 'INSERT INTO `feedbacks` SET ?';
             db.query(sql, params, callback);
         },
         update: function (params, callback) {
@@ -69,7 +71,7 @@ module.exports = {
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
-            var sql = 'SELECT * FROM `widgets` WHERE ?';
+            var sql = 'SELECT * FROM `widgets` WHERE app_instance=? and component_id=?';
             db.query(sql, params, function(err, results){
                 console.log(results);
 
@@ -77,7 +79,7 @@ module.exports = {
             });
         },
         add: function (params, callback) {
-            var sql = "";
+            var sql = 'INSERT INTO `widgets` SET ?';
             db.query(sql, params, callback);
         },
         update: function (params, callback) {

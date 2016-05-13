@@ -14,6 +14,18 @@ angular.module('dashboard')
             catalogs: {}
         };
 
+        $scope.saveCatalogs = function () {
+            alert('sss');
+        };
+
+        $scope.addCatalog = function () {
+            $scope.models.catalogs.push({
+                app_instance: feedbacksApp.getApplicationId(),
+                name: "New Catalog",
+                widgets: []
+            })
+        };
+
         // Model to JSON for demo purpose
         $scope.$watch('models', function(model) {
             $scope.modelAsJson = angular.toJson(model, true);

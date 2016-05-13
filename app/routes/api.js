@@ -2,8 +2,9 @@
 
 var dal = require('../dal/dal');
 var uuid = require('node-uuid');
-const https = require('https');
-
+var https = require('https');
+var googleAuth = require('google-auth-library');
+//noinspection JSUnresolvedVariable
 module.exports = {
     visitors: {
         list: function (req, res) {
@@ -30,80 +31,81 @@ module.exports = {
     },
     feedbacks: {
         list: function (req, res) {
-            var params = {widget_id: req.params.widget_id};
+            var params = [req.params.app_instance, req.params.component_id];
             dal.feedbacks.list(params, function (err, results) {
                 res.json(results);
             });
         },
         view: function (req, res) {
-
+            dal.feedbacks.view(req.params, function (err, results) {
+                res.json(results);
+            });
         },
         add: function (req, res) {
-            /*
-             widget_id: $scope.$parent.widget_id,
-             comment: $scope.new_feedback.comment,
-             rating: $scope.new_feedback.rating,
-             id_token: $scope.logged_user.id_token,
-             full_name: $scope.logged_user.full_name,
-             avatar_url: $scope.logged_user.image_url
-             */
+            req.body = {
+                id: "fdsfdsfssd",
+                app_instance: '4a8eda33-6035-4c65-9cf6-6befeaf2d2af',
+                component_id: 'comp-inx9esxf',
+                comment_title: "Le Title",
+                comment: "BananasV3",
+                rating: 10,
+                visitor_id: "eyJhbGciOiJSUzI1NiIsImtpZCI6ImU3ZGJmNTI2ZjYzOWMyMTRjZDc3YjM5NmVjYjlkN2Y4MWQ0N2IzODIifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXRfaGFzaCI6Imtfem8tYl90SDFDRjdRQUk3NUdHdnciLCJhdWQiOiI0NjQ0OTIwMjQxLW9yM3JvY2dpcWIzMTU2bjFyNWo3cjQwdGFldG9sa2phLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA5MTUwNzg4NTQ1NzI3NjAxMDcxIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjQ2NDQ5MjAyNDEtb3Izcm9jZ2lxYjMxNTZuMXI1ajdyNDB0YWV0b2xramEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJlbWFpbCI6InN5ZG9ydWsua29zdHlhQGdtYWlsLmNvbSIsImlhdCI6MTQ2MzEzODYwMiwiZXhwIjoxNDYzMTQyMjAyLCJuYW1lIjoiS29zdHlhIFN5ZG9ydWsiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDQuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy0xS24yNXo4UHkxMC9BQUFBQUFBQUFBSS9BQUFBQUFBQUQ0Yy92Sm96SnJqdkpXcy9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiS29zdHlhIiwiZmFtaWx5X25hbWUiOiJTeWRvcnVrIiwibG9jYWxlIjoiZW4ifQ.VAox1RjwVaCHMfQ9LaLHLWyCg2IlAsDbzShejUEQrCPHHYrmPowIG_Osl7Uc8VlYxBtwTETo35JQPjUgirZ_3e_6cwEDB_ksZXZhw_X1AXxYUVuqxTUKqYAHbrs_EGzZQbuGQC-B_PSzAyyH7W4aq83vLaj8dyc_yrfuL_InR9u2xsExoRgMdlIpqLePOi42mGzN_0lHnfnEPr6Ct7w-Or3_bJJG5qBh8YDnNOg7Lw8wKU07_XJHXK59R8pFHqm_sstkTLuv-lJ73drimGWc-YUlbcKEF6MTEDv_ItDVkIQ90vq4YkSNsfDaV_QTpnqWuHSFhMAln3HFZnsioHPTkw"
+            }
+            console.log(req.body);
 
-            var feedback = req.body;
+            (new (new googleAuth).OAuth2).verifyIdToken(req.body.visitor_id, null, function (err, googleRes) {
+                if(err) {
+                    console.error(err);
+                    throw err;
+                }
 
-            feedback.id = uuid.v4();
-            feedback.created_on = new Date().toISOString();
-            var tokenInfoUrl = 'https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + params.id_token;
+                var googleAttributes = googleRes.getPayload();
 
-            https.get(tokenInfoUrl, function (googleRes) {
-                console.log('statusCode: ', googleRes.statusCode);
-                console.log('headers: ', googleRes.headers);
-                console.log('email: ', googleRes.body.email);
-                feedback.visitor_id = res.body.email;
+                dal.visitors.view(googleAttributes.email, function (err, user) {
+                    var feedback = req.body;
+                    feedback.id = uuid.v4();
+                    feedback.created_on = new Date().toISOString();
+                    feedback.visitor_id = googleAttributes.email;
 
-                dal.visitors.view(feedback.visitor_id, function (err, user) {
                     if (user.length == 0) {
                         var visitor = {
-                            google_id_token: req.body.id_token,
-                            display_name: req.body.full_name,
-                            avatar_url: googleRes.body.picture,
-                            id: res.body.email
+                            google_id_token: req.body.visitor_id,
+                            display_name: googleAttributes.given_name,
+                            avatar_url: googleAttributes.picture,
+                            id: googleAttributes.email
                         };
-                        dal.visitors.add(visitor, function (err, result) {
-                            dal.feedbacks.add(params, function (err, results) {
-                                res.json(results);
+
+                        dal.visitors.add(visitor, function (err) {
+                            if (err){
+                                console.error(err);
+                                throw err;
+                            }
+
+                            dal.feedbacks.add(feedback, function (err, results) {
+                               if (err){
+                                    console.log(err);
+                                    console.log(results);
+                                    res.json(err);
+                                }else {
+                                    var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
+                                    dal.feedbacks.view(widgetParams, res);
+                                }
                             });
                         });
                     } else {
-                        dal.feedbacks.add(params, function (err, results) {
-                            res.json(results);
+                        dal.feedbacks.add(feedback, function (err, results) {
+                            if (err){
+                                console.log(err);
+                                console.log(results);
+                                res.json(err);
+                            } else {
+                                var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
+                                dal.feedbacks.view(widgetParams, res);
+                            }
                         });
                     }
                 });
             });
-            // var params = {
-            //     id:"fdsfdsfssd",
-            // comment
-            //     :
-            //     "this is a test",
-            // comment_title
-            //     :
-            //     "Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",
-            // created_on
-            //     :
-            //     "2015-07-28T21:00:00.000Z",
-            // edited_on
-            //     :
-            //     "2016-04-25T21:00:00.000Z",
-            // rating
-            //     :
-            //     10,
-            // visitor_id
-            //     :
-            //     "8884d4e3-2fda-4dbe-a0b8-605fccaa3b0c",
-            // widget_id
-            //     :
-            //     "bcac1c8a-3b11-4374-aff7-e865a14c2681comp-imxne0xw"
-            // }
         },
         update: function (req, res) {
             res.render('widget');
@@ -112,12 +114,15 @@ module.exports = {
             res.render('widget');
         }
     },
+
     widgets: {
         list: function (req, res) {
             res.json(dummy_visitors);
         },
         view: function (req, res) {
-            dal.widgets.view(req.params, function (err, results) {
+            console.log('========================');
+            var params = [req.params.app_instance, req.params.component_id];
+            dal.widgets.view(params, function (err, results) {
                 res.json(results);
             });
         },
@@ -178,3 +183,15 @@ module.exports = {
         }
     }
 };
+
+function addFeedback() {
+    var feedback = req.body;
+
+    feedback.id = uuid.v4();
+    feedback.created_on = new Date().toISOString();
+    feedback.visitor_id = googleAttributes.email;
+
+    dal.feedbacks.add(feedback, function (err, results) {
+        res.json(results);
+    });
+}

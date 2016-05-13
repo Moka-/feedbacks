@@ -13,8 +13,9 @@ var pool = mysql.createPool({
 
 module.exports = {
     query: function (sql, params, callback) {
+        var querySql = mysql.format(sql, params);
         pool.query({
-                sql: mysql.format(sql, params),
+                sql: querySql,
                 typeCast: function (field, next) {
                     if (field.type == 'TINY' && field.length == 1) {
                         return (field.string() == '1'); // 1 = true, 0 = false
@@ -23,6 +24,7 @@ module.exports = {
                 }
             },
             function (err, rows, fields) {
+                console.log(querySql);
                 if (err) throw err;
                 callback(err, rows);
             });
