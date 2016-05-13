@@ -64,6 +64,7 @@ app.delete('/catalogs/:id', api.catalogs.delete);
 /*var req={};
 api.feedbacks.add(req, function (a, b) {
     console.log(a);
+    console.log(b);
 });*/
 /*
 var req = {};
