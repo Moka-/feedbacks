@@ -62,10 +62,15 @@ module.exports = {
                 var googleAttributes = googleRes.getPayload();
 
                 dal.visitors.view(googleAttributes.email, function (err, user) {
-                    var feedback = req.body;
-                    feedback.id = uuid.v4();
-                    feedback.created_on = new Date().toISOString();
-                    feedback.visitor_id = googleAttributes.email;
+                    var feedback = {
+                        id: uuid.v4(),
+                        app_instance: req.body.app_instance,
+                        component_id: req.body.component_id,
+                        visitor_id: googleAttributes.email,
+                        created_on: new Date().toISOString(),
+                        rating: req.body.rating,
+                        comment: req.body.comment
+                    };
 
                     if (user.length == 0) {
                         var visitor = {
@@ -87,7 +92,9 @@ module.exports = {
                                     res.json(err);
                                 }else {
                                     var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-                                    dal.feedbacks.view(widgetParams, res);
+                                    dal.feedbacks.view(widgetParams, function(err, results){
+                                        res.json(results);
+                                    });
                                 }
                             });
                         });
@@ -99,7 +106,9 @@ module.exports = {
                                 res.json(err);
                             } else {
                                 var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-                                dal.feedbacks.view(widgetParams, res);
+                                dal.feedbacks.view(widgetParams, function(err, results){
+                                    res.json(results);
+                                });
                             }
                         });
                     }
