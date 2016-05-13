@@ -94,10 +94,12 @@ angular.module('widget')
                     method: "post",
                     url: "/feedbacks",
                     data: {
-                        widget_id: $scope.$parent.widget_id,
+                        app_instance: $scope.$parent.app_instance,
+                        component_id: $scope.$parent.comp_id,
                         comment: $scope.new_feedback.comment,
                         rating: $scope.new_feedback.rating,
                         id_token: $scope.logged_user.id_token
+                        visitor_id: $scope.logged_user.id_token
                     }
                 });
 
