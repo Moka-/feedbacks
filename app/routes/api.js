@@ -4,7 +4,6 @@ var dal = require('../dal/dal');
 var uuid = require('node-uuid');
 var https = require('https');
 var googleAuth = require('google-auth-library');
-
 //noinspection JSUnresolvedVariable
 module.exports = {
     visitors: {
@@ -38,76 +37,75 @@ module.exports = {
             });
         },
         view: function (req, res) {
-
+            dal.feedbacks.view(req.params, function (err, results) {
+                res.json(results);
+            });
         },
         add: function (req, res) {
             req.body = {
-                
-                id:"fdsfdsfssd",
-                comment
-                    :
-                    "this is a test",
-                comment_title
-                    :
-                    "Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",
-                created_on
-                    :
-                    "2015-07-28T21:00:00.000Z",
-                edited_on
-                    :
-                    "2016-04-25T21:00:00.000Z",
-                rating
-                    :
-                    10,
-                visitor_id
-                    :
-                    "eyJhbGciOiJSUzI1NiIsImtpZCI6ImM5YmNkMGNjZjU5Yzc4OTI3MzBlNzY1ZmM3NTYzZjU2ZGMwMmJkOWUifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXRfaGFzaCI6Im15ZmxId2J6RXdyV1dyeV9EbU9CNFEiLCJhdWQiOiI0NjQ0OTIwMjQxLW9yM3JvY2dpcWIzMTU2bjFyNWo3cjQwdGFldG9sa2phLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA0NjI5MjUzOTk5MDY1MTQwNTkyIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjQ2NDQ5MjAyNDEtb3Izcm9jZ2lxYjMxNTZuMXI1ajdyNDB0YWV0b2xramEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJlbWFpbCI6ImVibW9oYUBnbWFpbC5jb20iLCJpYXQiOjE0NjI2Mjc1NjAsImV4cCI6MTQ2MjYzMTE2MCwibmFtZSI6Ik1va2EiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1nUEdxVkc5allyZy9BQUFBQUFBQUFBSS9BQUFBQUFBQUx3RS9mUEV3amQ4NXdfRS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiTW9rYSIsImZhbWlseV9uYW1lIjoiLiIsImxvY2FsZSI6ImVuIn0.yzYpNmM2hCeZTYVNcKSe_9UEIigGf7Egvs-i6BSyvp-6Oj49Vj2Jp_w7J7D3jB9c5iMKYxjvnLTkC9AdQ-ktcN7LDQ8tSYGW7TRPsR8M2S_e9R6fJ0o6oOSiwJIBrF_953otM4x1-tMESrRMovXMIGUN-utb05QzsNizFkim1mkmIaV-DFyzfEJq2Ys7i0Tite2JfWGrV0CdcSaRKLbbOv2s9nRsEDIF0s9iSfrlHYMXiL0PiJYHkznesdnzCTGwQoPvj9f3lz4RIbhHxnd5VJ49fZVH2tmdCfwHmlBXgS7ZrSh0QefpxP1_z52GbaKA4c5cyeo7vzNBMvcOwB8sjQ",
-                widget_id
-                    :
-                    "bcac1c8a-3b11-4374-aff7-e865a14c2681comp-imxne0xw"
+                id: "fdsfdsfssd",
+                app_instance: '4a8eda33-6035-4c65-9cf6-6befeaf2d2af',
+                component_id: 'comp-inx9esxf',
+                comment_title: "Le Title",
+                comment: "BananasV3",
+                rating: 10,
+                visitor_id: "eyJhbGciOiJSUzI1NiIsImtpZCI6ImU3ZGJmNTI2ZjYzOWMyMTRjZDc3YjM5NmVjYjlkN2Y4MWQ0N2IzODIifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXRfaGFzaCI6Imtfem8tYl90SDFDRjdRQUk3NUdHdnciLCJhdWQiOiI0NjQ0OTIwMjQxLW9yM3JvY2dpcWIzMTU2bjFyNWo3cjQwdGFldG9sa2phLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA5MTUwNzg4NTQ1NzI3NjAxMDcxIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjQ2NDQ5MjAyNDEtb3Izcm9jZ2lxYjMxNTZuMXI1ajdyNDB0YWV0b2xramEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJlbWFpbCI6InN5ZG9ydWsua29zdHlhQGdtYWlsLmNvbSIsImlhdCI6MTQ2MzEzODYwMiwiZXhwIjoxNDYzMTQyMjAyLCJuYW1lIjoiS29zdHlhIFN5ZG9ydWsiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDQuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy0xS24yNXo4UHkxMC9BQUFBQUFBQUFBSS9BQUFBQUFBQUQ0Yy92Sm96SnJqdkpXcy9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiS29zdHlhIiwiZmFtaWx5X25hbWUiOiJTeWRvcnVrIiwibG9jYWxlIjoiZW4ifQ.VAox1RjwVaCHMfQ9LaLHLWyCg2IlAsDbzShejUEQrCPHHYrmPowIG_Osl7Uc8VlYxBtwTETo35JQPjUgirZ_3e_6cwEDB_ksZXZhw_X1AXxYUVuqxTUKqYAHbrs_EGzZQbuGQC-B_PSzAyyH7W4aq83vLaj8dyc_yrfuL_InR9u2xsExoRgMdlIpqLePOi42mGzN_0lHnfnEPr6Ct7w-Or3_bJJG5qBh8YDnNOg7Lw8wKU07_XJHXK59R8pFHqm_sstkTLuv-lJ73drimGWc-YUlbcKEF6MTEDv_ItDVkIQ90vq4YkSNsfDaV_QTpnqWuHSFhMAln3HFZnsioHPTkw"
             }
-            /*
-             widget_id: $scope.$parent.widget_id,
-             comment: $scope.new_feedback.comment,
-             rating: $scope.new_feedback.rating,
-             id_token: $scope.logged_user.id_token,
-             full_name: $scope.logged_user.full_name,
-             avatar_url: $scope.logged_user.image_url
-             */
+            console.log(req.body);
 
-            var feedback = req.body;
+            (new (new googleAuth).OAuth2).verifyIdToken(req.body.visitor_id, null, function (err, googleRes) {
+                if(err) {
+                    console.error(err);
+                    throw err;
+                }
 
-            feedback.id = uuid.v4();
-            feedback.created_on = new Date().toISOString();
+                var googleAttributes = googleRes.getPayload();
 
-            (new (new googleAuth).OAuth2).verifyIdToken(feedback.visitor_id, null, function (err, gres) {
-                if(!err){
-                console.log(gres.getPayload());
-                var googleAttributes = gres.getPayload();
-                feedback.visitor_id = googleAttributes.email;
+                dal.visitors.view(googleAttributes.email, function (err, user) {
+                    var feedback = req.body;
+                    feedback.id = uuid.v4();
+                    feedback.created_on = new Date().toISOString();
+                    feedback.visitor_id = googleAttributes.email;
 
-                dal.visitors.view(feedback.visitor_id, function (err, user) {
                     if (user.length == 0) {
                         var visitor = {
-                            google_id_token: "shit fuck",
+                            google_id_token: req.body.visitor_id,
                             display_name: googleAttributes.given_name,
                             avatar_url: googleAttributes.picture,
                             id: googleAttributes.email
                         };
-                        dal.visitors.add(visitor, function (err, result) {
-                            dal.feedbacks.add(params, function (err, results) {
-                                res.json(results);
+
+                        dal.visitors.add(visitor, function (err) {
+                            if (err){
+                                console.error(err);
+                                throw err;
+                            }
+
+                            dal.feedbacks.add(feedback, function (err, results) {
+                               if (err){
+                                    console.log(err);
+                                    console.log(results);
+                                    res.json(err);
+                                }else {
+                                    var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
+                                    dal.feedbacks.view(widgetParams, res);
+                                }
                             });
                         });
                     } else {
-                        dal.feedbacks.add(params, function (err, results) {
-                            res.json(results);
+                        dal.feedbacks.add(feedback, function (err, results) {
+                            if (err){
+                                console.log(err);
+                                console.log(results);
+                                res.json(err);
+                            } else {
+                                var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
+                                dal.feedbacks.view(widgetParams, res);
+                            }
                         });
                     }
                 });
-                }
             });
-
         },
         update: function (req, res) {
             res.render('widget');
@@ -185,3 +183,15 @@ module.exports = {
         }
     }
 };
+
+function addFeedback() {
+    var feedback = req.body;
+
+    feedback.id = uuid.v4();
+    feedback.created_on = new Date().toISOString();
+    feedback.visitor_id = googleAttributes.email;
+
+    dal.feedbacks.add(feedback, function (err, results) {
+        res.json(results);
+    });
+}

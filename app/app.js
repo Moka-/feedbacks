@@ -26,7 +26,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/node', express.static(path.join(__dirname, '../node_modules')));
 app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
-
+app.post('/provision', function (res1, res2) {
+    console.log(res1);
+    console.log(res2);
+});
 // serve index and view partials
 app.get('/widget', routes.widget);
 app.get('/settings', routes.settings);
@@ -58,10 +61,10 @@ app.post('/catalogs', api.catalogs.add);
 app.put('/catalogs/:id', api.catalogs.update);
 app.delete('/catalogs/:id', api.catalogs.delete);
 
-/*
-var req={};
-api.feedbacks.add(req);
-*/
+/*var req={};
+api.feedbacks.add(req, function (a, b) {
+    console.log(a);
+});*/
 /*
 var req = {};
 req.params = {app_instance : "4a8eda33-6035-4c65-9cf6-6befeaf2d2af",
