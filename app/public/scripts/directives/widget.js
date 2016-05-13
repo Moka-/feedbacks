@@ -89,7 +89,6 @@ angular.module('widget')
             }
 
             $scope.postComment = function(){
-                debugger;
                 var request = $http({
                     method: "post",
                     url: "/feedbacks",
@@ -98,18 +97,20 @@ angular.module('widget')
                         component_id: $scope.$parent.comp_id,
                         comment: $scope.new_feedback.comment,
                         rating: $scope.new_feedback.rating,
-                        id_token: $scope.logged_user.id_token,
                         visitor_id: $scope.logged_user.id_token
                     }
                 });
 
                 return request.then(
                     function (res) { // success
-                        debugger;
-
+                        $scope.$parent.data.push(res.data[0]);
+                        $scope.new_feedback = {
+                            comment: '',
+                            rating: 0
+                        };
+                        $scope.from_expanded = false;
                     },
                     function (err) { // error
-                        debugger;
                         alert('oops');
                         $scope.new_feedback = {
                             comment: '',
