@@ -130,7 +130,8 @@ angular.module('widget')
                 $scope.logged_in = true;
                 var authResponse = authResult.getAuthResponse();
                 var profile = authResult.getBasicProfile();
-
+                console.log(authResponse.id_token);
+                
                 $scope.logged_user = {
                     id_token: authResponse.id_token,
                     full_name: profile.getName(),
