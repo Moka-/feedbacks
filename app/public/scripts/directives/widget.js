@@ -35,14 +35,12 @@ angular.module('widget')
             $scope.from_expanded = false;
             $scope.settings = $scope.$parent.settings;
 
-
             $scope.$watch('settings', function() {
                 $timeout(function() {
                     $scope.settings.avarage_rating = $scope.$parent.settings.avarage_rating;
                     $scope.settings.feedbacks_count = $scope.$parent.settings.feedbacks_count;
                 }, 1000);
             }, true);
-
 
             if($scope.settings.enable_comments){
                 $scope.writeFeedbackButtonText += "comment"
