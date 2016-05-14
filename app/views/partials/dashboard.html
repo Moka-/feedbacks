@@ -12,12 +12,11 @@
                     <md-content class="md-padding">
                         <h1 class="md-display-2">Overview</h1>
 
-
                     </md-content>
                 </md-tab>
                 <md-tab label="Catalogs">
+                    <h1 class="md-display-2">Catalogs</h1>
                     <md-content class="md-padding simpleDemo" layout="row" layout-align="start stretch">
-                        <h1 class="md-display-2">Catalogs</h1>
                         <section ng-repeat="catalog in models.catalogs" class="catalog-item">
                             <md-subheader class="md-primary">{{catalog.name}}</md-subheader>
                             <ul dnd-list="catalog.widgets">
@@ -55,3 +54,4 @@
             </md-tabs>
         </md-content>
 </div>
+
