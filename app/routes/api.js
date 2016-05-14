@@ -125,7 +125,10 @@ module.exports = {
 
     widgets: {
         list: function (req, res) {
-            res.json(dummy_visitors);
+            var params = [req.params.app_instance];
+            dal.widgets.list(params, function (err, results) {
+                res.json(results);
+            });
         },
         view: function (req, res) {
             var params = [req.params.app_instance, req.params.component_id];
@@ -163,7 +166,7 @@ module.exports = {
     catalogs: {
         list: function (req, res) {
             dal.catalogs.list(req.params, function (err, catalogs) {
-                dal.widgets.view({app_instance: req.params.app_instance}, function (err, widgets) {
+                dal.widgets.list([req.params.app_instance], function (err, widgets) {
                     catalogs.forEach(function(current){
                         current.widgets = widgets.filter(function (value) {
                             return value.app_instance == current.app_instance &&

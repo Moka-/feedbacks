@@ -1,12 +1,11 @@
 'use strict';
 
 angular.module('settings')
-  .controller('SettingsController', function ($scope, $wix, feedbacksApp) {
+  .controller('SettingsController', function ($scope, $wix, $http, feedbacksApp) {
 
       var loadSettings = function(){
           feedbacksApp.getWidgetSettings().then(
               function (response){ // Success loading settings
-                  debugger;
                   $scope.settings = response.data[0];
               }, function(response){ // Shit's fucked yo
 
@@ -15,9 +14,16 @@ angular.module('settings')
       loadSettings();
 
       $scope.catalogs = []; // Init an empty array
-      
+
+      $http.get('/catalogs/' + feedbacksApp.getApplicationId()).then(
+          function (response){ // Success loading settings
+              $scope.catalogs = response.data;
+          }, function(response){ // Shit's fucked yo
+              debugger;
+          });
+
       $scope.loadCatalogs = function () {
-          $scope.catalogs = [{value: 1, text: 'Cookies'}, {value: 2, text: 'dsfdsf'}, {value: 3, text: 'hfghgfhhgfh'}, {value: 4, text: 'tretertre'}];
+
       }
 
       $scope.gotodash = function(){

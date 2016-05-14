@@ -15,7 +15,9 @@ var  widgetFeedbacksQuery = 'SELECT f.*, v.display_name, v.avatar_url ' +
     'WHERE f.visitor_id = v.id ' +
     'AND f.app_instance = ? ' +
     'AND f.component_id = ?';
+
 var feedbackQuery = widgetFeedbacksQuery + ' AND f.id = ?';
+
 var widgetDataQuery = 'SELECT COUNT(f.id)  \'feedbacks_count\',ROUND(AVG(f.rating),1) \'avarage_rating\', w.* ' +
     'FROM `feedbacks` f ,`widgets` w ' +
     'WHERE f.app_instance = w.app_instance ' +
@@ -73,7 +75,7 @@ module.exports = {
     },
     widgets: {
         list: function (params, callback) {
-            var sql = "";
+            var sql = "SELECT * FROM `widgets` w WHERE w.app_instance = ?";
             db.query(sql, params, callback);
         },
         view: function (params, callback) {

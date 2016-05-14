@@ -91,9 +91,9 @@
                                 Catalog
                             </span>
                             <div layout="row" layout-align="end center">
-                                <md-select placeholder="Assign to catalog" ng-model="catalog"
-                                           md-on-open="loadCatalogs()" flex="40">
-                                    <md-option ng-value="settings.catalog" ng-repeat="catalog in catalogs">{{catalog.text}}
+                                <md-select placeholder="Assign to catalog" ng-model="catalog" flex="40">
+                                    <md-option ng-value="catalog" ng-repeat="catalog in catalogs">
+                                        {{catalog.name}}
                                     </md-option>
                                 </md-select>
                                 <md-button ng-click="settings.catalog = undefined" ng-disabled="!settings.catalog"

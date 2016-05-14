@@ -1,52 +1,6 @@
 'use strict';
 
 angular.module('widget')
-    .directive('writeFeedback', function () {
-        return {
-            restrict: 'E',
-            scope: {
-                feedback: '=info'
-            },
-            templateUrl: 'partials/templates/writeFeedback.html',
-            controller: function ($scope) {
-
-                $scope.expanded = false;
-                $scope.social_connected=false;
-                $scope.settings;
-
-                $scope.$on('event:google-plus-signin-success', function (event, authResult) {
-                    $scope.social_connected = true;
-                    var authResponse = authResult.getAuthResponse();
-                    var profile = authResult.getBasicProfile();
-
-                    $scope.google_plus_user = {
-                        id_token: authResponse.id_token,
-                        full_name: profile.getName(),
-                        given_name: profile.getGivenName(),
-                        family_name: profile.getFamilyName(),
-                        email: profile.getEmail(),
-                        image_url: profile.getImageUrl()
-                    };
-                    
-                    $scope.$apply()
-                });
-
-                $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
-                    // User has not authorized the G+ App!
-                    console.log('Not signed into Google Plus.');
-                });
-
-                $scope.writeBoxFocus = function(){
-                    $scope.expanded = true;
-                };
-                $scope.writeBoxBlur = function(){
-                    if(!$scope.content){
-                        $scope.expanded = false;
-                    }
-                };
-            },
-        };
-    })
     .directive('feedback', function () {
         return {
             restrict: 'E',
@@ -63,7 +17,7 @@ angular.module('widget')
                 image: '=info'
             },
             templateUrl: 'partials/templates/widget-form.html',
-        controller: function ($scope, $http) {
+        controller: function ($scope, $http, $timeout) {
             $scope.logOut = function() {
                 var auth2 = gapi.auth2.getAuthInstance();
                 auth2.signOut().then(function () {
@@ -80,6 +34,13 @@ angular.module('widget')
 
             $scope.from_expanded = false;
             $scope.settings = $scope.$parent.settings;
+
+            $scope.$watch('settings', function() {
+                $timeout(function() {
+                    $scope.settings.avarage_rating = $scope.$parent.settings.avarage_rating;
+                    $scope.settings.feedbacks_count = $scope.$parent.settings.feedbacks_count;
+                }, 1000);
+            }, true);
 
             if($scope.settings.enable_comments){
                 $scope.writeFeedbackButtonText += "comment"
