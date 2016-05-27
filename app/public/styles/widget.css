@@ -1,10 +1,23 @@
-body {
-    background-color: transparent;
+body, html {
+    background-color: rgba(0, 0, 0, 0) !important;
     margin: 0;
 }
 
+md-content {
+    background-color: rgba(0, 0, 0, 0) !important;
+    margin: 0;
+}
+
+md-card{
+    margin: 0;
+}
+
+md-card:first-of-type{
+    margin-bottom: 10px;
+}
+
 .widget{
-    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0) !important;
     border: 0;
     overflow-y: hidden;
     overflow-x: hidden;
@@ -45,4 +58,31 @@ body {
 .feedback .time-ago {
     font-weight: 400 !important;
     font-size: 0.8em;
+}
+
+.transparent-background { background-color: rgba(0, 0, 0, 0) !important; }
+
+.summary star-rating {
+    font-size: 1.6em;
+}
+.summary span {
+    color: rgb(163, 163, 163);
+    font-size: 1em;
+}
+
+textarea {
+    padding: 5px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.avatar {
+    width: 50px;
+    margin-right: 15px;
+    border: 0;
+    border-radius: 25px;
+}
+
+.scroll-this {
+    overflow: auto;
 }

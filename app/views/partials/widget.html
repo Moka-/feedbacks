@@ -1,28 +1,83 @@
 <div class="widget" ng-controller="WidgetController" flex layout-fill>
-    <md-content layout="column" ng-style="{height: widgetHeight + 'px'}">
-        <feedbacks-interaction></feedbacks-interaction>
-        <div layout="row" layout-align="space-around" ng-if="loading_feedbacks">
-            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-        </div>
-            <md-list ng-if="settings.show_feedbacks"
-                     ng-hide="loading_feedbacks"
-                     layout="column"
-                     layout-align="start start">
-                <md-subheader>
-                    Feedbacks ({{data.length}})
-                </md-subheader>
-                <md-list-item class="md-2-line feedback"
-                              ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
-                    <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"
-                         class="md-avatar"/>
-                    <div class="md-list-item-text">
-                        <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
-                            <span am-time-ago="feedback.created_on" class="time-ago"></span>
-                            <star-rating rating="feedback.rating" max-rating="{{settings.max_rating}}" ng-if="settings.enable_ratings" read-only="true"/>
-                        </h4>
-                        <p>{{feedback.comment}}</p>
+    <md-content layout="column" layout-align="stretch" ng-style="{ height: widgetHeight + 'px' }">
+        <feedbacks-summary></feedbacks-summary>
+
+        <!--<div layout="row" layout-align="space-around" ng-if="loading_feedbacks">-->
+            <!--<md-progress-circular md-mode="indeterminate"></md-progress-circular>-->
+        <!--</div>-->
+            <!--<md-list ng-if="settings.show_feedbacks"-->
+                     <!--ng-hide="loading_feedbacks"-->
+                     <!--layout="column"-->
+                     <!--layout-align="start start">-->
+                <!--<md-subheader>-->
+                    <!--Feedbacks ({{data.length}})-->
+                <!--</md-subheader>-->
+                <!--<md-list-item class="md-2-line feedback"-->
+                              <!--ng-repeat="feedback in data | orderBy:'created_on':true track by $index">-->
+                    <!--<img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"-->
+                         <!--class="md-avatar"/>-->
+                    <!--<div class="md-list-item-text">-->
+                        <!--<h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}-->
+                            <!--<span am-time-ago="feedback.created_on" class="time-ago"></span>-->
+                            <!--<star-rating rating="feedback.rating" max-rating="{{settings.max_rating}}" ng-if="settings.enable_ratings" read-only="true"/>-->
+                        <!--</h4>-->
+                        <!--<p>{{feedback.comment}}</p>-->
+                    <!--</div>-->
+                <!--</md-list-item>-->
+            <!--</md-list>-->
+
+        <md-card class="scroll-this" flex>
+            <!--<md-card-title>-->
+                <!--<md-card-title-text>-->
+                    <!--<span class="md-subhead">Feedbacks</span>-->
+                <!--</md-card-title-text>-->
+            <!--</md-card-title>-->
+
+            <md-card-content>
+                <div layout="row" layout-align="start center" style="margin-bottom: 10px">
+                    <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
+                    <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment" ng-focus="comment_focused = true" ng-blur="comment_focused = false"></textarea>
+                </div>
+                <div layout="row" layout-align="space-between center" ng-show="comment_focused || new_feedback.comment != ''">
+                    <div>
+                        <google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja" ng-show="!logged_in"></google-plus-signin>
+                        <a href="" ng-click="logOut()" ng-show="logged_in">
+                            Not {{logged_user.full_name}}?
+                        </a>
                     </div>
-                </md-list-item>
-            </md-list>
+
+                    <div>
+                        <star-rating rating="new_feedback.rating" max-rating="{{settings.max_rating}}"></star-rating>
+                        <md-button class="md-raised md-primary" ng-click="postComment()">Post</md-button>
+                    </div>
+                </div>
+            </md-card-content>
+            <md-card-content>
+                    <md-progress-circular md-mode="indeterminate" ng-if="loading_feedbacks"></md-progress-circular>
+                <md-list ng-if="settings.show_feedbacks"
+                         ng-hide="loading_feedbacks"
+                         layout="column"
+                         layout-align="start start">
+                    <md-subheader>
+                        Feedbacks ({{data.length}}):
+                    </md-subheader>
+                    <md-list-item class="md-2-line feedback"
+                                  ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
+                        <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"
+                             class="md-avatar"/>
+                        <div class="md-list-item-text">
+                            <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
+                                <span am-time-ago="feedback.created_on" class="time-ago"></span>
+                                <star-rating rating="feedback.rating" max-rating="{{settings.max_rating}}"
+                                             ng-if="settings.enable_ratings" read-only="true"/>
+                            </h4>
+                            <p>{{feedback.comment}}</p>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </md-card-content>
+        </md-card>
+
+
     </md-content>
 </div>

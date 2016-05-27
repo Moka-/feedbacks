@@ -10,6 +10,18 @@ angular.module('widget')
             templateUrl: 'partials/templates/feedback.html'
         };
     })
+    .directive('feedbacksSummary', function () {
+        return {
+            restrict: 'EA',
+            templateUrl: 'partials/templates/feedbacksSummary.html'
+        }
+    })
+    .directive('addFeedback', function () {
+        return {
+            restrict: 'EA',
+            templateUrl: 'partials/templates/addFeedback.html'
+        }
+    })
     .directive('feedbacksInteraction', function () {
         return {
             restrict: 'EA',
@@ -91,8 +103,7 @@ angular.module('widget')
                 $scope.logged_in = true;
                 var authResponse = authResult.getAuthResponse();
                 var profile = authResult.getBasicProfile();
-                console.log(authResponse.id_token);
-                
+
                 $scope.logged_user = {
                     id_token: authResponse.id_token,
                     full_name: profile.getName(),
