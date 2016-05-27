@@ -111,10 +111,5 @@ angular.module('widget')
             });
         };
 
-        // $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
-        //     // User has not authorized the G+ App!
-        //     console.log('Not signed into Google Plus.');
-        // });
-
         $wix.addEventListener($wix.Events.SETTINGS_UPDATED, $scope.handleSettingsApplied);
 });
