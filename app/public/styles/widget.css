@@ -92,8 +92,6 @@ textarea {
     font-size: 0.8em;
     font-weight: 600;
 }
-
-
 /* mouse over link */
 a:hover {
     color: #555555;
@@ -102,4 +100,16 @@ a:hover {
 .logged-user{
     margin-right: 12px;
     white-space: nowrap;
+}
+
+#sign-in-button{
+    color: #dd4933;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+#sign-in-button:hover{
+    color: #c63c27;
+    text-decoration: underline;
+    cursor: pointer;
 }

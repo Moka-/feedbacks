@@ -11,8 +11,9 @@
                             <a href="" ng-click="logOut()" ng-show="logged_in" >
                                 SWITCH USER
                             </a>
+                            <google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja" ng-show="!logged_in"></google-plus-signin>
                         </div>
-                        <google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja" ng-show="!logged_in"></google-plus-signin>
+
                     </div>
                     <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment" ng-focus="comment_focused = true" ng-blur="comment_focused = false"></textarea>
                 </div>
