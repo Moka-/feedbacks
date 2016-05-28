@@ -1,0 +1,9 @@
+<md-card>
+    <md-card-content>
+        <div class="summary" layout="column" layout-align="center center">
+            <star-rating rating="average_rating | number:0" max-rating="{{settings.max_rating}}"
+                         read-only="true"></star-rating>
+            <span>{{average_rating | number:1 }}/{{settings.max_rating}} by {{data.length | number}} users</span>
+        </div>
+    </md-card-content>
+</md-card>
