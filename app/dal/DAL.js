@@ -2,15 +2,8 @@
 
 var db = require('./db');
 
-var widgetAvgQuery = 'SELECT ROUND(AVG(t.rating),1) ' +
-                     'FROM `feedbacks` t ' +
-                     'WHERE ?';
-
-var widgetFeedbacksCountQuery = 'SELECT COUNT(1) ' +
-                                'FROM `feedbacks` f ' +
-                                'WHERE ?';
-
-var  widgetFeedbacksQuery = 'SELECT f.*, v.display_name, v.avatar_url ' +
+var widgetFeedbacksQuery =
+    'SELECT f.*, v.display_name, v.avatar_url ' +
     'FROM `feedbacks` f,`visitors` v ' +
     'WHERE f.visitor_id = v.id ' +
     'AND f.app_instance = ? ' +
@@ -18,14 +11,13 @@ var  widgetFeedbacksQuery = 'SELECT f.*, v.display_name, v.avatar_url ' +
 
 var feedbackQuery = widgetFeedbacksQuery + ' AND f.id = ?';
 
-var widgetDataQuery = 'SELECT COUNT(f.id)  \'feedbacks_count\',ROUND(AVG(f.rating),1) \'avarage_rating\', w.* ' +
+var widgetDataQuery =
+    'SELECT COUNT(f.id)  \'feedbacks_count\',ROUND(AVG(f.rating),1) \'average_rating\', w.* ' +
     'FROM `feedbacks` f ,`widgets` w ' +
     'WHERE f.app_instance = w.app_instance ' +
     'AND f.component_id = w.component_id ' +
     'AND f.app_instance = ? ' +
     'AND f.component_id = ?';
-
-var insertFeedback = 'INSERT INTO feedbacks SET ?';
 
 // In here you should perform all your queries
 module.exports = {

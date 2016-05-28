@@ -27,9 +27,7 @@
                          ng-hide="loading_feedbacks"
                          layout="column"
                          layout-align="start start">
-                    <md-subheader>
-                        Feedbacks ({{data.length}}):
-                    </md-subheader>
+
                     <md-list-item class="md-2-line feedback"
                                   ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
                         <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"

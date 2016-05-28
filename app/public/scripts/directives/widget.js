@@ -49,7 +49,7 @@ angular.module('widget')
 
             $scope.$watch('settings', function() {
                 $timeout(function() {
-                    $scope.settings.avarage_rating = $scope.$parent.settings.avarage_rating;
+                    $scope.settings.average_rating = $scope.$parent.settings.average_rating;
                     $scope.settings.feedbacks_count = $scope.$parent.settings.feedbacks_count;
                 }, 1000);
             }, true);
