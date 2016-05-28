@@ -8,9 +8,12 @@ angular.module('widget')
         $scope.settings = {};
         
         $scope.comment_focused = false;
-        
+
+        var no_user = {
+            full_name: "Not logged in",
+            image_url: "http://1.bp.blogspot.com/-XaPPe3eCMwE/VZSjxETf2OI/AAAAAAAANzE/3uOIgVpxds0/s1600/avatar.png"};
         $scope.logged_in = false;
-        $scope.logged_user = null;
+        $scope.logged_user = no_user;
         
         $wix.getBoundingRectAndOffsets(function(data){
             $scope.widgetHeight = data.rect.height;
@@ -21,17 +24,17 @@ angular.module('widget')
             show_feedbacks: true,
             enable_comments: true,
             enable_ratings: true,
-            max_rating: 5,
-            avarage_rating: 4.3,
-            feedbacks_count: 3000
+            max_rating: 5
         };
 
         $scope.$watch('data', function() {
-            var sum = 0;
-            for(var i = 0; i < $scope.data.length; i++) {
-                sum += $scope.data[i].rating;
+            if ($scope.data){
+                var sum = 0;
+                for(var i = 0; i < $scope.data.length; i++) {
+                    sum += $scope.data[i].rating;
+                }
+                $scope.average_rating = sum / $scope.data.length;
             }
-            $scope.average_rating = sum / $scope.data.length;
         });
         
         feedbacksApp.getWidgetSettings().then(
@@ -107,7 +110,8 @@ angular.module('widget')
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
                 $scope.logged_in = false;
-                $scope.logged_user = null;
+                $scope.logged_user = no_user;
+                $scope.$apply();
             });
         };
 

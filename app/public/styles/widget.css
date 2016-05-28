@@ -86,3 +86,20 @@ textarea {
 .scroll-this {
     overflow: auto;
 }
+
+.log-out a:link,a:visited {
+    color: #a0a0a0;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+
+/* mouse over link */
+a:hover {
+    color: #555555;
+}
+
+.logged-user{
+    margin-right: 12px;
+    white-space: nowrap;
+}
