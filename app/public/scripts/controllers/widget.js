@@ -29,8 +29,8 @@ angular.module('widget')
         $scope.$watchCollection('data', function (obj, listener) {
 
         });
-        
-        feedbacksApp.getWidgetSettings().then(
+
+        feedbacksApp.getWidgetData().then(
             function (response){ // Success loading settings
                 $scope.settings = response.data[0];
             }, function(response){ // Shit's fucked yo

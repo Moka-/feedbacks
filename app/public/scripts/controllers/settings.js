@@ -38,10 +38,8 @@ angular.module('settings')
           $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, $wix.Utils.getOrigCompId());
       }
       $scope.save = function(){
-          alert('save');
-
           var request = $http({
-              method: "post",
+              method: "put",
               url: "/widgets",
               data: $scope.settings
           });

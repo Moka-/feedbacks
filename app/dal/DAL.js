@@ -11,6 +11,12 @@ var widgetFeedbacksQuery =
 
 var feedbackQuery = widgetFeedbacksQuery + ' AND f.id = ?';
 
+var widgetSettingsQuery =
+    'SELECT * ' +
+    'FROM `widgets` w ' +
+    'WHERE w.app_instance = ? ' +
+    'AND w.component_id = ?';
+
 var widgetDataQuery =
     'SELECT COUNT(f.id)  \'feedbacks_count\',ROUND(AVG(f.rating),1) \'average_rating\', w.* ' +
     'FROM `feedbacks` f ,`widgets` w ' +
@@ -72,6 +78,12 @@ module.exports = {
         },
         view: function (params, callback) {
             var sql = widgetDataQuery;
+            db.query(sql, params, function (err, results) {
+                callback(err, results);
+            });
+        },
+        settings: function (params, callback) {
+            var sql = widgetSettingsQuery;
             db.query(sql, params, function(err, results){
                 callback(err, results);
             });
@@ -81,8 +93,10 @@ module.exports = {
             db.query(sql, params, callback);
         },
         update: function (params, callback) {
-            var sql = "";
-            db.query(sql, params, callback);
+            var queryParams = [params, params.app_instance, params.component_id];
+            var sql = "UPDATE `widgets` SET ? WHERE app_instance = ? AND component_id = ?";
+
+            db.query(sql, queryParams, callback);
         },
         delete: function (params, callback) {
             var sql = "";

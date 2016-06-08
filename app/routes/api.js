@@ -136,11 +136,20 @@ module.exports = {
                 res.json(results);
             });
         },
+        settings: function (req, res) {
+            var params = [req.params.app_instance, req.params.component_id];
+            dal.widgets.settings(params, function (err, results) {
+                res.json(results);
+            });
+        },
         add: function (req, res) {
             res.render('widget');
         },
         update: function (req, res) {
-            res.render('widget');
+            console.log(req);
+            dal.widgets.update(req.body, function (err, results) {
+                res.json(results);
+            });
         },
         delete: function (req, res) {
             res.render('widget');
