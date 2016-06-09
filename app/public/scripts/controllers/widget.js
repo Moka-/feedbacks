@@ -37,6 +37,8 @@ angular.module('widget')
                 }
                 $scope.average_rating = sum / $scope.data.length;
             }
+        $scope.$watchCollection('data', function (obj, listener) {
+
         });
 
         feedbacksApp.getWidgetData().then(
@@ -128,24 +130,4 @@ angular.module('widget')
         };
 
         $wix.addEventListener($wix.Events.SETTINGS_UPDATED, $scope.handleSettingsApplied);
-
-        $scope.$on('event:google-plus-signin-success', function (event, authResult) {
-            debugger;
-            $scope.logged_in = true;
-            var authResponse = authResult.getAuthResponse();
-            var profile = authResult.getBasicProfile();
-
-            $scope.logged_user = {
-                id_token: authResponse.id_token,
-                full_name: profile.getName(),
-                given_name: profile.getGivenName(),
-                family_name: profile.getFamilyName(),
-                email: profile.getEmail(),
-                image_url: profile.getImageUrl()
-            };
-
-            $scope.$apply();
-        });
-
-    })
-;
+});

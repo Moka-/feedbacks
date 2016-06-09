@@ -146,7 +146,6 @@ module.exports = {
             res.render('widget');
         },
         update: function (req, res) {
-            console.log(req);
             dal.widgets.update(req.body, function (err, results) {
                 res.json(results);
             });
@@ -202,15 +201,3 @@ module.exports = {
         }
     }
 };
-
-function addFeedback() {
-    var feedback = req.body;
-
-    feedback.id = uuid.v4();
-    feedback.created_on = new Date().toISOString();
-    feedback.visitor_id = googleAttributes.email;
-
-    dal.feedbacks.add(feedback, function (err, results) {
-        res.json(results);
-    });
-}

@@ -8,7 +8,7 @@ angular.module('feedbacksApp', ['wix'])
                 return request = $http.get('/widget-settings/' + this.getAppInstance() + '/' + this.getComponentId());
             },
             getApplicationId: function () {
-                return $wix.Utils.getInstanceId();
+                return this.getAppInstance();
             },
             getAppInstance: function () {
                 return $wix.Utils.getInstanceId();
