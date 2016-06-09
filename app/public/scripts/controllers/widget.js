@@ -24,29 +24,26 @@ angular.module('widget')
             show_feedbacks: true,
             enable_comments: true,
             enable_ratings: true,
-            max_rating: 5
             max_rating: 5,
             average_rating: 0,
             feedbacks_count: 0
         };
 
         $scope.$watch('data', function() {
-            if ($scope.data){
+            if ($scope.data) {
                 var sum = 0;
-                for(var i = 0; i < $scope.data.length; i++) {
+                for (var i = 0; i < $scope.data.length; i++) {
                     sum += $scope.data[i].rating;
                 }
                 $scope.average_rating = sum / $scope.data.length;
             }
-        $scope.$watchCollection('data', function (obj, listener) {
-
         });
 
         feedbacksApp.getWidgetData().then(
-            function (response){ // Success loading settings
+            function (response) { // Success loading settings
                 $scope.settings = response.data[0];
-            }, function(response){ // Shit's fucked yo
-        
+            }, function (response) { // Shit's fucked yo
+
             });
 
         feedbacksDb.getFeedbacks($scope.app_instance, $scope.comp_id).then(function (res) {
@@ -61,7 +58,8 @@ angular.module('widget')
             $scope.loading_feedbacks = false;
         });
 
-        $scope.postComment = function(){
+        $scope.postComment = function () {
+            debugger;
             var request = $http({
                 method: "post",
                 url: "/feedbacks",
@@ -120,7 +118,7 @@ angular.module('widget')
             $scope.$apply();
         });
 
-        $scope.logOut = function() {
+        $scope.logOut = function () {
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
                 $scope.logged_in = false;
@@ -130,4 +128,24 @@ angular.module('widget')
         };
 
         $wix.addEventListener($wix.Events.SETTINGS_UPDATED, $scope.handleSettingsApplied);
-});
+
+        $scope.$on('event:google-plus-signin-success', function (event, authResult) {
+            debugger;
+            $scope.logged_in = true;
+            var authResponse = authResult.getAuthResponse();
+            var profile = authResult.getBasicProfile();
+
+            $scope.logged_user = {
+                id_token: authResponse.id_token,
+                full_name: profile.getName(),
+                given_name: profile.getGivenName(),
+                family_name: profile.getFamilyName(),
+                email: profile.getEmail(),
+                image_url: profile.getImageUrl()
+            };
+
+            $scope.$apply();
+        });
+
+    })
+;
