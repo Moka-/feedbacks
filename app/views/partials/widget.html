@@ -1,15 +1,15 @@
-<div class="widget" ng-controller="WidgetController" flex layout-fill>
+<div class="widget" ng-controller="WidgetController" flex layout-fill md-theme="{{ dynamicTheme }}" md-theme-watch>
     <md-content layout="column" layout-align="stretch" ng-style="{ height: widgetHeight + 'px' }">
         <feedbacks-summary></feedbacks-summary>
         <md-card class="scroll-this" flex>
             <md-card-content>
-                <div layout="row" layout-align="start center" style="margin-bottom: 10px">
+                <div layout="row" layout-align="start center" style="margin-bottom: 10px" ng-hide="loading_summary">
                     <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
                     <div layout="column" layout-align="space-between stretch" class="logged-user">
                         {{logged_user.full_name}}
                         <div class="log-out">
                             <a href="" ng-click="logOut()" ng-show="logged_in" >
-                                SWITCH USER
+                                Logout
                             </a>
                             <google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja" ng-show="!logged_in"></google-plus-signin>
                         </div>
@@ -27,7 +27,10 @@
                 </div>
             </md-card-content>
             <md-card-content>
-                    <md-progress-circular md-mode="indeterminate" ng-if="loading_feedbacks"></md-progress-circular>
+                <div layout="column" layout-align="start center">
+                    <md-progress-circular md-mode="indeterminate" ng-if="loading_feedbacks"
+                                          md-diameter="70"></md-progress-circular>
+                </div>
                 <md-list ng-if="settings.show_feedbacks"
                          ng-hide="loading_feedbacks"
                          layout="column"
@@ -49,7 +52,5 @@
                 </md-list>
             </md-card-content>
         </md-card>
-
-
     </md-content>
 </div>

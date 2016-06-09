@@ -5,8 +5,8 @@ angular.module('widget')
         $scope.app_instance = feedbacksApp.getAppInstance();
         $scope.comp_id = feedbacksApp.getComponentId();
         $scope.loading_feedbacks = true;
+        $scope.loading_summary = true;
         $scope.settings = {};
-        
         $scope.comment_focused = false;
 
         var no_user = {
@@ -20,22 +20,13 @@ angular.module('widget')
         });
 
         $scope.settings = {
-            show_summary: true,
-            show_feedbacks: true,
-            enable_comments: true,
-            enable_ratings: true,
             max_rating: 5,
-            average_rating: 0,
-            feedbacks_count: 0
         };
 
-        $scope.$watchCollection('data', function (obj, listener) {
-
-        });
-
-        feedbacksApp.getWidgetData().then(
+        feedbacksApp.getWidgetSettings().then(
             function (response){ // Success loading settings
                 $scope.settings = response.data[0];
+                $scope.loading_summary = false;
             }, function(response){ // Shit's fucked yo
         
             });
@@ -110,6 +101,12 @@ angular.module('widget')
 
             $scope.$apply();
         });
+
+        $scope.handleSettingsApplied = function (a, b, c) {
+            console.log(a);
+            console.log(b);
+            console.log(c);
+        }
 
         $scope.logOut = function() {
             var auth2 = gapi.auth2.getAuthInstance();

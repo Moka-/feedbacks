@@ -19,9 +19,13 @@ angular.module('widget', [
             .otherwise({
                 redirectTo: '/'
             });
+        $mdThemingProvider.theme('altTheme')
+            .primaryPalette('orange').dark();
 
         $mdThemingProvider.theme('default')
             .primaryPalette('blue-grey')
             .accentPalette('amber');
+
+        //$mdThemingProvider.alwaysWatchTheme(true);
     });
 ;
