@@ -42,16 +42,16 @@ module.exports = {
             });
         },
         add: function (req, res) {
-            req.body = {
+            /*req.body = {
                 id: "fdsfdsfssd",
                 app_instance: '4a8eda33-6035-4c65-9cf6-6befeaf2d2af',
                 component_id: 'comp-inx9esxf',
                 comment_title: "Le Title",
                 comment: "BananasV3",
                 rating: 10,
-                visitor_id: "eyJhbGciOiJSUzI1NiIsImtpZCI6ImU3ZGJmNTI2ZjYzOWMyMTRjZDc3YjM5NmVjYjlkN2Y4MWQ0N2IzODIifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXRfaGFzaCI6Imtfem8tYl90SDFDRjdRQUk3NUdHdnciLCJhdWQiOiI0NjQ0OTIwMjQxLW9yM3JvY2dpcWIzMTU2bjFyNWo3cjQwdGFldG9sa2phLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA5MTUwNzg4NTQ1NzI3NjAxMDcxIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjQ2NDQ5MjAyNDEtb3Izcm9jZ2lxYjMxNTZuMXI1ajdyNDB0YWV0b2xramEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJlbWFpbCI6InN5ZG9ydWsua29zdHlhQGdtYWlsLmNvbSIsImlhdCI6MTQ2MzEzODYwMiwiZXhwIjoxNDYzMTQyMjAyLCJuYW1lIjoiS29zdHlhIFN5ZG9ydWsiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDQuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy0xS24yNXo4UHkxMC9BQUFBQUFBQUFBSS9BQUFBQUFBQUQ0Yy92Sm96SnJqdkpXcy9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiS29zdHlhIiwiZmFtaWx5X25hbWUiOiJTeWRvcnVrIiwibG9jYWxlIjoiZW4ifQ.VAox1RjwVaCHMfQ9LaLHLWyCg2IlAsDbzShejUEQrCPHHYrmPowIG_Osl7Uc8VlYxBtwTETo35JQPjUgirZ_3e_6cwEDB_ksZXZhw_X1AXxYUVuqxTUKqYAHbrs_EGzZQbuGQC-B_PSzAyyH7W4aq83vLaj8dyc_yrfuL_InR9u2xsExoRgMdlIpqLePOi42mGzN_0lHnfnEPr6Ct7w-Or3_bJJG5qBh8YDnNOg7Lw8wKU07_XJHXK59R8pFHqm_sstkTLuv-lJ73drimGWc-YUlbcKEF6MTEDv_ItDVkIQ90vq4YkSNsfDaV_QTpnqWuHSFhMAln3HFZnsioHPTkw"
+                visitor_id: "eyJhbGciOiJSUzI1NiIsImtpZCI6ImU3ZGJmNTI2ZjYzOWMyMTRjZDc3YjM5NmVjYjlkN2Y4MWQ0N2IzODIifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXRfaGFzaCI6Ikdmbm9rS21fdWxqTjhhYU4yRjl0OEEiLCJhdWQiOiI0NjQ0OTIwMjQxLW9yM3JvY2dpcWIzMTU2bjFyNWo3cjQwdGFldG9sa2phLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA5MTUwNzg4NTQ1NzI3NjAxMDcxIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjQ2NDQ5MjAyNDEtb3Izcm9jZ2lxYjMxNTZuMXI1ajdyNDB0YWV0b2xramEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJlbWFpbCI6InN5ZG9ydWsua29zdHlhQGdtYWlsLmNvbSIsImlhdCI6MTQ2MzE0MTkwMywiZXhwIjoxNDYzMTQ1NTAzLCJuYW1lIjoiS29zdHlhIFN5ZG9ydWsiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDQuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy0xS24yNXo4UHkxMC9BQUFBQUFBQUFBSS9BQUFBQUFBQUQ0Yy92Sm96SnJqdkpXcy9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiS29zdHlhIiwiZmFtaWx5X25hbWUiOiJTeWRvcnVrIiwibG9jYWxlIjoiZW4ifQ.CT254AvDtrI2vRuBezrLW8fZB0156TX7jpG_czgds86QKR5E8N4MczlBxGZ5Ven_Q_BsvteEv8oxknJ_guY8XyKopgo36i30T2Y3AS3fLOtQ3rLJYGHhf-ECtNDuLOkvXhekFCEnKSGcI7jYRa4N947TZ_rajVfExwiyzLy-aYjVj_WExWH6CIuw4nqjNRr_918HWmjX5Lx4v8yZQy6Vy0GOCy6iyFXWK6IAFe2RP9mPPuJBNi1NI-GbxsYLy05tnelSbsjLuaS_Orm299SM7NQyOsE9S4Od0nbdqOTr_SoFDe2LNoiaua9czz7lz16EWBTu8KKxqUwq6TVkZzDh6Q"
             }
-            console.log(req.body);
+            console.log(req.body);*/
 
             (new (new googleAuth).OAuth2).verifyIdToken(req.body.visitor_id, null, function (err, googleRes) {
                 if(err) {
@@ -62,14 +62,18 @@ module.exports = {
                 var googleAttributes = googleRes.getPayload();
 
                 dal.visitors.view(googleAttributes.email, function (err, user) {
-                    var feedback = req.body;
-                    feedback.id = uuid.v4();
-                    feedback.created_on = new Date().toISOString();
-                    feedback.visitor_id = googleAttributes.email;
+                    var feedback = {
+                        id: uuid.v4(),
+                        app_instance: req.body.app_instance,
+                        component_id: req.body.component_id,
+                        visitor_id: googleAttributes.email,
+                        created_on: new Date().toISOString(),
+                        rating: req.body.rating,
+                        comment: req.body.comment
+                    };
 
                     if (user.length == 0) {
                         var visitor = {
-                            google_id_token: req.body.visitor_id,
                             display_name: googleAttributes.given_name,
                             avatar_url: googleAttributes.picture,
                             id: googleAttributes.email
@@ -86,9 +90,11 @@ module.exports = {
                                     console.log(err);
                                     console.log(results);
                                     res.json(err);
-                                }else {
+                               } else {
                                     var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-                                    dal.feedbacks.view(widgetParams, res);
+                                    dal.feedbacks.view(widgetParams, function(err, results){
+                                        res.json(results);
+                                    });
                                 }
                             });
                         });
@@ -100,7 +106,9 @@ module.exports = {
                                 res.json(err);
                             } else {
                                 var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-                                dal.feedbacks.view(widgetParams, res);
+                                dal.feedbacks.view(widgetParams, function(err, results){
+                                    res.json(results);
+                                });
                             }
                         });
                     }
@@ -117,12 +125,20 @@ module.exports = {
 
     widgets: {
         list: function (req, res) {
-            res.json(dummy_visitors);
+            var params = [req.params.app_instance];
+            dal.widgets.list(params, function (err, results) {
+                res.json(results);
+            });
         },
         view: function (req, res) {
-            console.log('========================');
             var params = [req.params.app_instance, req.params.component_id];
             dal.widgets.view(params, function (err, results) {
+                res.json(results);
+            });
+        },
+        settings: function (req, res) {
+            var params = [req.params.app_instance, req.params.component_id];
+            dal.widgets.settings(params, function (err, results) {
                 res.json(results);
             });
         },
@@ -130,7 +146,10 @@ module.exports = {
             res.render('widget');
         },
         update: function (req, res) {
-            res.render('widget');
+            console.log(req);
+            dal.widgets.update(req.body, function (err, results) {
+                res.json(results);
+            });
         },
         delete: function (req, res) {
             res.render('widget');
@@ -156,7 +175,7 @@ module.exports = {
     catalogs: {
         list: function (req, res) {
             dal.catalogs.list(req.params, function (err, catalogs) {
-                dal.widgets.view({app_instance: req.params.app_instance}, function (err, widgets) {
+                dal.widgets.list([req.params.app_instance], function (err, widgets) {
                     catalogs.forEach(function(current){
                         current.widgets = widgets.filter(function (value) {
                             return value.app_instance == current.app_instance &&

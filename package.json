@@ -4,6 +4,7 @@
   "dependencies": {
     "angular-drag-and-drop-lists": "^1.4.0",
     "angular-moment": "^1.0.0-beta.5",
+    "d3": "^4.0.0-alpha.40",
     "ejs": "^2.4.1",
     "google-auth-library": "^0.9.7",
     "grunt-contrib-qunit": "^1.2.0",

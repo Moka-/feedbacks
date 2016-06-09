@@ -2,22 +2,28 @@
 
 var db = require('./db');
 
-var widgetAvgQuery = 'SELECT ROUND(AVG(t.rating),1) ' +
-                     'FROM `feedbacks` t ' +
-                     'WHERE ?';
-
-var widgetFeedbacksCountQuery = 'SELECT COUNT(1) ' +
-                                'FROM `feedbacks` f ' +
-                                'WHERE ?';
-
-var  widgetFeedbacksQuery = 'SELECT f.*, v.display_name, v.avatar_url ' +
+var widgetFeedbacksQuery =
+    'SELECT f.*, v.display_name, v.avatar_url ' +
     'FROM `feedbacks` f,`visitors` v ' +
     'WHERE f.visitor_id = v.id ' +
     'AND f.app_instance = ? ' +
     'AND f.component_id = ?';
+
 var feedbackQuery = widgetFeedbacksQuery + ' AND f.id = ?';
 
-var insertFeedback = 'INSERT INTO feedbacks SET ?';
+var widgetSettingsQuery =
+    'SELECT * ' +
+    'FROM `widgets` w ' +
+    'WHERE w.app_instance = ? ' +
+    'AND w.component_id = ?';
+
+var widgetDataQuery =
+    'SELECT COUNT(f.id)  \'feedbacks_count\',ROUND(AVG(f.rating),1) \'average_rating\', w.* ' +
+    'FROM `feedbacks` f ,`widgets` w ' +
+    'WHERE f.app_instance = w.app_instance ' +
+    'AND f.component_id = w.component_id ' +
+    'AND f.app_instance = ? ' +
+    'AND f.component_id = ?';
 
 // In here you should perform all your queries
 module.exports = {
@@ -67,14 +73,18 @@ module.exports = {
     },
     widgets: {
         list: function (params, callback) {
-            var sql = "";
+            var sql = "SELECT * FROM `widgets` w WHERE w.app_instance = ?";
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
-            var sql = 'SELECT * FROM `widgets` WHERE app_instance=? and component_id=?';
+            var sql = widgetDataQuery;
+            db.query(sql, params, function (err, results) {
+                callback(err, results);
+            });
+        },
+        settings: function (params, callback) {
+            var sql = widgetSettingsQuery;
             db.query(sql, params, function(err, results){
-                console.log(results);
-
                 callback(err, results);
             });
         },
@@ -83,8 +93,10 @@ module.exports = {
             db.query(sql, params, callback);
         },
         update: function (params, callback) {
-            var sql = "";
-            db.query(sql, params, callback);
+            var queryParams = [params, params.app_instance, params.component_id];
+            var sql = "UPDATE `widgets` SET ? WHERE app_instance = ? AND component_id = ?";
+
+            db.query(sql, queryParams, callback);
         },
         delete: function (params, callback) {
             var sql = "";

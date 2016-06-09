@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('settings')
-  .controller('SettingsController', function ($scope, $wix, feedbacksApp) {
+  .controller('SettingsController', function ($scope, $wix, $http, feedbacksApp) {
 
       var loadSettings = function(){
           feedbacksApp.getWidgetSettings().then(
@@ -11,14 +11,19 @@ angular.module('settings')
 
               });
       }
-      //loadSettings();
-      $scope.settings = {};
-
+      loadSettings();
 
       $scope.catalogs = []; // Init an empty array
-      
+
+      $http.get('/catalogs/' + feedbacksApp.getApplicationId()).then(
+          function (response){ // Success loading settings
+              $scope.catalogs = response.data;
+          }, function(response){ // Shit's fucked yo
+              debugger;
+          });
+
       $scope.loadCatalogs = function () {
-          $scope.catalogs = [{value: 1, text: 'Cookies'}, {value: 2, text: 'dsfdsf'}, {value: 3, text: 'hfghgfhhgfh'}, {value: 4, text: 'tretertre'}];
+
       }
 
       $scope.gotodash = function(){
@@ -33,10 +38,8 @@ angular.module('settings')
           $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, $wix.Utils.getOrigCompId());
       }
       $scope.save = function(){
-          alert('save');
-
           var request = $http({
-              method: "post",
+              method: "put",
               url: "/widgets",
               data: $scope.settings
           });

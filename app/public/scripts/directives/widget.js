@@ -1,53 +1,6 @@
 'use strict';
 
 angular.module('widget')
-    .directive('writeFeedback', function () {
-        return {
-            restrict: 'E',
-            scope: {
-                feedback: '=info'
-            },
-            templateUrl: 'partials/templates/writeFeedback.html',
-            controller: function ($scope) {
-
-                $scope.expanded = false;
-                $scope.social_connected=false;
-                $scope.settings;
-
-                $scope.$on('event:google-plus-signin-success', function (event, authResult) {
-                    $scope.social_connected = true;
-                    var authResponse = authResult.getAuthResponse();
-                    var profile = authResult.getBasicProfile();
-
-                    $scope.google_plus_user = {
-                        id_token: authResponse.id_token,
-                        full_name: profile.getName(),
-                        given_name: profile.getGivenName(),
-                        family_name: profile.getFamilyName(),
-                        email: profile.getEmail(),
-                        image_url: profile.getImageUrl()
-                    };
-                    
-                    $scope.$apply()
-                });
-
-                $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
-                    // User has not authorized the G+ App!
-                    console.log('Not signed into Google Plus.');
-                });
-
-                $scope.writeBoxFocus = function(){
-                    $scope.expanded = true;
-                };
-                $scope.writeBoxBlur = function(){
-                    if(!$scope.content){
-                        $scope.expanded = false;
-                    }
-                };
-
-            },
-        };
-    })
     .directive('feedback', function () {
         return {
             restrict: 'E',
@@ -57,6 +10,18 @@ angular.module('widget')
             templateUrl: 'partials/templates/feedback.html'
         };
     })
+    .directive('feedbacksSummary', function () {
+        return {
+            restrict: 'EA',
+            templateUrl: 'partials/templates/feedbacksSummary.html'
+        }
+    })
+    .directive('addFeedback', function () {
+        return {
+            restrict: 'EA',
+            templateUrl: 'partials/templates/addFeedback.html'
+        }
+    })
     .directive('feedbacksInteraction', function () {
         return {
             restrict: 'EA',
@@ -64,8 +29,7 @@ angular.module('widget')
                 image: '=info'
             },
             templateUrl: 'partials/templates/widget-form.html',
-        controller: function ($scope, $http) {
-
+        controller: function ($scope, $http, $timeout) {
             $scope.logOut = function() {
                 var auth2 = gapi.auth2.getAuthInstance();
                 auth2.signOut().then(function () {
@@ -74,7 +38,7 @@ angular.module('widget')
                     $scope.$apply();
                 });
             }
-
+ 
             $scope.writeFeedbackButtonText = '';
 
             $scope.logged_in = false;
@@ -83,10 +47,17 @@ angular.module('widget')
             $scope.from_expanded = false;
             $scope.settings = $scope.$parent.settings;
 
-            if($scope.settings.comments_enabled){
+            $scope.$watch('settings', function() {
+                $timeout(function() {
+                    $scope.settings.average_rating = $scope.$parent.settings.average_rating;
+                    $scope.settings.feedbacks_count = $scope.$parent.settings.feedbacks_count;
+                }, 1000);
+            }, true);
+
+            if($scope.settings.enable_comments){
                 $scope.writeFeedbackButtonText += "comment"
             }
-            if($scope.settings.ratings_enabled){
+            if($scope.settings.enable_ratings){
                 $scope.writeFeedbackButtonText += " & rate"
             }
 
@@ -104,29 +75,34 @@ angular.module('widget')
                 });
 
                 return request.then(
-                    function (res) {
-                        $rootScope.$broadcast('event:posted-feedback', res);
-
-                    }, function (err) {
-                        alert('oops');
+                    function (res) { // success
+                        $scope.$parent.data.push(res.data[0]);
                         $scope.new_feedback = {
                             comment: '',
                             rating: 0
                         };
                         $scope.from_expanded = false;
+                    },
+                    function (err) { // error
+                        alert('oops');
+                        $scope.new_feedback = {
+                            comment: '',
+                            rating: 0
+                        };
+
+                        $scope.from_expanded = false;
                     });
-            }
+            };
 
             $scope.new_feedback = {
                 comment: '',
                 rating: 0
-            }
+            };
 
             $scope.$on('event:google-plus-signin-success', function (event, authResult) {
                 $scope.logged_in = true;
                 var authResponse = authResult.getAuthResponse();
                 var profile = authResult.getBasicProfile();
-                console.log(authResponse.id_token);
 
                 $scope.logged_user = {
                     id_token: authResponse.id_token,
