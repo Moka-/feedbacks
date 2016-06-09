@@ -31,9 +31,10 @@ app.post('/provision', function (res1, res2) {
     console.log(res2);
 });
 // serve index and view partials
-app.get('/widget', routes.widget);
-app.get('/settings', routes.settings);
-app.get('/dashboard', routes.dashboard);
+//app.get('/', routes.index);
+app.get('/widget', routes.index);
+app.get('/settings', routes.index);
+app.get('/dashboard', routes.index);
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 

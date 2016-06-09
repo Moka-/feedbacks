@@ -5,10 +5,10 @@ angular.module('widget', [
         'wix',
         'directive.g+signin',
         'angularMoment',
-        'feedbacksApp',
-        'feedbacksData',
+        'application',
+        'data',
         'ngMaterial',
-    'ngAnimate'
+        'ngAnimate'
     ])
     .config(function ($routeProvider, $mdThemingProvider) {
         $routeProvider

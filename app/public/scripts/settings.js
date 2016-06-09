@@ -2,7 +2,7 @@
 
 angular.module('settings', [
         'ngRoute',
-        'wix', 'ngMaterial', 'feedbacksApp'
+        'wix', 'ngMaterial', 'application'
     ])
     .config(function ($routeProvider, $mdThemingProvider) {
         $routeProvider

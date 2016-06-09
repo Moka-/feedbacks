@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('widget')
+angular.module('feedbacks')
     .directive('feedbacksSummary', function () {
         return {
             restrict: 'EA',

@@ -1,5 +1,9 @@
 'use strict';
 
+exports.index = function(req, res){
+    res.render('index');
+};
+
 exports.widget = function(req, res){
     res.render('widget');
 };
