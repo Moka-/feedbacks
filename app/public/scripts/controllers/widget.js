@@ -24,20 +24,11 @@ angular.module('widget')
             show_feedbacks: true,
             enable_comments: true,
             enable_ratings: true,
-            max_rating: 5
             max_rating: 5,
             average_rating: 0,
             feedbacks_count: 0
         };
 
-        $scope.$watch('data', function() {
-            if ($scope.data){
-                var sum = 0;
-                for(var i = 0; i < $scope.data.length; i++) {
-                    sum += $scope.data[i].rating;
-                }
-                $scope.average_rating = sum / $scope.data.length;
-            }
         $scope.$watchCollection('data', function (obj, listener) {
 
         });
