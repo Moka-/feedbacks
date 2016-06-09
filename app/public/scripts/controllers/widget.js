@@ -25,6 +25,9 @@ angular.module('widget')
             enable_comments: true,
             enable_ratings: true,
             max_rating: 5
+            max_rating: 5,
+            average_rating: 0,
+            feedbacks_count: 0
         };
 
         $scope.$watch('data', function() {
@@ -35,22 +38,30 @@ angular.module('widget')
                 }
                 $scope.average_rating = sum / $scope.data.length;
             }
+        $scope.$watchCollection('data', function (obj, listener) {
+
         });
-        
-        feedbacksApp.getWidgetSettings().then(
+
+        feedbacksApp.getWidgetData().then(
             function (response){ // Success loading settings
                 $scope.settings = response.data[0];
             }, function(response){ // Shit's fucked yo
         
             });
 
-        feedbacksDb.getFeedbacks($scope.app_instance, $scope.comp_id).then(function (d) {
-            $scope.data = d.data;
+        feedbacksDb.getFeedbacks($scope.app_instance, $scope.comp_id).then(function (res) {
+            $scope.data = res.data;
+            var sum = 0;
+
+            for (var i = 0; i < res.data.length; i++) {
+                sum += res.data[i].rating;
+            }
+
+            $scope.average_rating = sum / res.data.length;
             $scope.loading_feedbacks = false;
         });
 
         $scope.postComment = function(){
-            debugger;
             var request = $http({
                 method: "post",
                 url: "/feedbacks",
@@ -65,12 +76,15 @@ angular.module('widget')
 
             return request.then(
                 function (res) { // success
-                    debugger;
                     $scope.data.push(res.data[0]);
                     $scope.new_feedback = {
                         comment: '',
                         rating: 0
                     };
+
+                    var newAve = (($scope.average_rating * obj.length - 1) + obj[obj.length - 1]) / (obj.length);
+                    $scope.feedbacks_count = obj.length;
+                    $scope.average_rating = newAve;
                     $scope.from_expanded = false;
                 },
                 function (err) { // error

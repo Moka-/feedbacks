@@ -52,7 +52,8 @@ app.delete('/feedback/:id', api.feedbacks.delete);
 app.get('/widgets', api.widgets.list);
 app.post('/widgets', api.widgets.add);
 app.get('/widgets/:app_instance/:component_id', api.widgets.view);
-app.put('/widget/:id', api.widgets.update);
+app.get('/widget-settings/:app_instance/:component_id', api.widgets.settings);
+app.put('/widgets', api.widgets.update);
 app.delete('/widget/:id', api.widgets.delete);
 
 app.get('/catalogs/:app_instance', api.catalogs.list);
@@ -62,7 +63,7 @@ app.put('/catalogs/:id', api.catalogs.update);
 app.delete('/catalogs/:id', api.catalogs.delete);
 
 /*var req={};
-api.feedbacks.add(req, function (a, b) {
+ api.widgets.update(req, function (a, b) {
     console.log(a);
     console.log(b);
 });*/

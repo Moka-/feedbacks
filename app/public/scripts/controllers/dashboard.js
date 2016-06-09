@@ -23,7 +23,7 @@ angular.module('dashboard')
                 app_instance: feedbacksApp.getApplicationId(),
                 name: "New Catalog",
                 widgets: []
-            })
+            });
         };
 
         // Model to JSON for demo purpose
