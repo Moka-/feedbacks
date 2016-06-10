@@ -1,6 +1,10 @@
 <md-card class="summary-card">
     <md-card-content>
-        <div class="summary" layout="column" layout-align="center center">
+        <div layout="column" layout-align="center center">
+            <md-progress-circular md-mode="indeterminate" ng-if="loading_summary"
+                                  md-diameter="70"></md-progress-circular>
+        </div>
+        <div class="summary" layout="column" layout-align="center center" ng-hide="loading_summary">
             <star-rating rating="average_rating" max-rating="{{settings.max_rating}}"
                          read-only="true"></star-rating>
             <span>{{average_rating | number:1 }}/{{settings.max_rating}} by {{data.length | number}} users</span>

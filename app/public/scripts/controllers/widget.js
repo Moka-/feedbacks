@@ -12,6 +12,7 @@ angular.module('feedbacks')
 
         $scope.comment_focused = false;
         $scope.loading_feedbacks = true;
+        $scope.loading_summary = true;
         $scope.settings = {};
         
         $scope.logged_in = false;
@@ -30,6 +31,15 @@ angular.module('feedbacks')
         };
 
         data.getFeedbacks().then(function (res) {
+        feedbacksApp.getWidgetSettings().then(
+            function (response){ // Success loading settings
+                $scope.settings = response.data[0];
+                $scope.loading_summary = false;
+            }, function(response){ // Shit's fucked yo
+        
+            });
+
+        feedbacksDb.getFeedbacks($scope.app_instance, $scope.comp_id).then(function (res) {
             $scope.data = res.data;
             var sum = 0;
 
