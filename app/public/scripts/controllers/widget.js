@@ -7,7 +7,7 @@ angular.module('feedbacks')
             this.id_token = id_token;
             this.full_name = full_name ? full_name : "Not logged in";
             this.email = email;
-            this.image_url = image_url ? image_url : "http://1.bp.blogspot.com/-XaPPe3eCMwE/VZSjxETf2OI/AAAAAAAANzE/3uOIgVpxds0/s1600/avatar.png";
+            this.image_url = image_url ? image_url : "images/avatar.png";
         }
 
         $scope.comment_focused = false;
@@ -91,7 +91,7 @@ angular.module('feedbacks')
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
                 $scope.logged_in = false;
-                $scope.logged_user = no_user;
+                $scope.logged_user = new User();
                 $scope.$apply();
             });
         };

@@ -22,7 +22,7 @@
                     </div>
                     <div>
                         <star-rating rating="new_feedback.rating" max-rating="{{settings.max_rating}}"></star-rating>
-                        <md-button class="md-raised md-primary" ng-click="postComment()">Post</md-button>
+                        <md-button class="md-raised md-primary" ng-click="postComment()" ng-disabled="!logged_in">Post</md-button>
                     </div>
                 </div>
             </md-card-content>

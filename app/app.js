@@ -30,7 +30,6 @@ app.post('/provision', function (res1, res2) {
     console.log(res1);
     console.log(res2);
 });
-// serve index and view partials
 
 // index.html is reffered at the end
 app.get('/partials/:name', routes.partials);
