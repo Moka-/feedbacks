@@ -31,10 +31,12 @@ app.post('/provision', function (res1, res2) {
     console.log(res2);
 });
 // serve index and view partials
-//app.get('/', routes.index);
-app.get('/widget', routes.index);
-app.get('/settings', routes.index);
-app.get('/dashboard', routes.index);
+
+// app.get('/#/*', routes.index1);
+// app.get('/widget', routes.index2);
+// app.get('/settings', routes.index3);
+// app.get('/dashboard', routes.index4);
+app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
