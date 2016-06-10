@@ -8,7 +8,8 @@ angular.module('widget', [
         'feedbacksApp',
         'feedbacksData',
         'ngMaterial',
-    'ngAnimate'
+    'ngAnimate',
+    'angular-input-stars'
     ])
     .config(function ($routeProvider, $mdThemingProvider) {
         $routeProvider

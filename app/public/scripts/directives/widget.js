@@ -17,6 +17,12 @@ angular.module('feedbacks')
             mouseHover: "&",
             mouseLeave: "&"
         },
+        link: function($scope) {
+            $scope.$watch('rating', function() {
+                $scope.rating = $scope._rating;
+                $scope.$apply();
+            });
+        },
         restrict: 'EA',
         template: "<div style='display: inline-block; margin: 0px; padding: 0px; cursor:pointer;' ng-repeat='idx in maxRatings track by $index'> \
                         <i class='fa fa-star{{((hoverValue + _rating) <= $index) && \"-o\" || \"\" }}' ng-Click='isolatedClick($index + 1)' \

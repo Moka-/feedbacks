@@ -5,8 +5,9 @@
                                   md-diameter="70"></md-progress-circular>
         </div>
         <div class="summary" layout="column" layout-align="center center" ng-hide="loading_summary">
-            <star-rating rating="average_rating" max-rating="{{settings.max_rating}}"
-                         read-only="true"></star-rating>
+            <input-stars max="{{settings.max_rating}}" ng-model="average_rating | number " readonly></input-stars>
+            <!--<star-rating rating="average_rating" max-rating="{{settings.max_rating}}"-->
+                         <!--read-only="true"></star-rating>-->
             <span>{{average_rating | number:1 }}/{{settings.max_rating}} by {{data.length | number}} users</span>
         </div>
     </md-card-content>

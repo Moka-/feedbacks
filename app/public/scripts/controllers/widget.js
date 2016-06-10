@@ -10,7 +10,6 @@ angular.module('feedbacks')
             this.image_url = image_url ? image_url : "images/avatar.png";
         }
 
-        $scope.comment_focused = false;
         $scope.loading_feedbacks = true;
         $scope.loading_summary = true;
         $scope.settings = {};
@@ -30,8 +29,8 @@ angular.module('feedbacks')
             max_rating: 5
         };
 
-        data.getFeedbacks().then(function (res) {
-        feedbacksApp.getWidgetSettings().then(
+
+        application.getWidgetSettings().then(
             function (response){ // Success loading settings
                 $scope.settings = response.data[0];
                 $scope.loading_summary = false;
@@ -39,7 +38,7 @@ angular.module('feedbacks')
         
             });
 
-        feedbacksDb.getFeedbacks($scope.app_instance, $scope.comp_id).then(function (res) {
+        data.getFeedbacks().then(function (res) {
             $scope.data = res.data;
             var sum = 0;
 

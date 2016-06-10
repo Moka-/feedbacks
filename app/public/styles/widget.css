@@ -113,3 +113,17 @@ a:hover {
     text-decoration: underline;
     cursor: pointer;
 }
+
+.summary .angular-input-stars > li {
+    padding: 0;
+    font-size: 2em;
+}
+
+.angular-input-stars > li {
+    padding: 0;
+    font-size: 1em;
+    width:1em;
+    margin-right: 0.1em;
+    margin-left: 0.1em;
+    line-height: 1em;
+}
