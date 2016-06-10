@@ -167,6 +167,7 @@ module.exports = {
     },
     catalogs: {
         list: function (req, res) {
+            console.log(req.params);
             dal.catalogs.list(req.params, function (err, catalogs) {
                 dal.widgets.list([req.params.app_instance], function (err, widgets) {
                     catalogs.forEach(function(current){
@@ -175,6 +176,8 @@ module.exports = {
                                 value.catalog_id == current.id;
                         });
                     });
+
+                    console.log(catalogs);
                     res.json(catalogs);
                 });
             });
@@ -185,7 +188,11 @@ module.exports = {
             });
         },
         add: function (req, res) {
-            res.render('widget');
+            console.log(req.body);
+            for (catalog in req.body) {
+                
+            }
+            
         },
         update: function (req, res) {
             res.render('widget');

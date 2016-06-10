@@ -1,6 +1,6 @@
 <div ng-cloak>
     <div layout="row" layout-align="space-around" ng-if="!settings">
-        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        <md-progress-circular md-mode="indeterminate" md-diameter="120"></md-progress-circular>
     </div>
     <md-content layout="column" layout-align="space-between none" ng-show="settings">
         <md-tabs md-dynamic-height md-border-bottom>
@@ -108,11 +108,11 @@
         <md-divider></md-divider>
         <md-content flex layout-padding layout="row" layout-align="space-between center">
             <div>
-                <md-button ng-click="gotodash()">Go to dashboard</md-button>
+                <md-button ng-click="goToDash()">Go to dashboard</md-button>
             </div>
             <div>
-                <md-button class="md-raised" ng-click="revert()">Revert</md-button>
-                <md-button class="md-raised" ng-click="apply()">Apply</md-button>
+                <md-button class="md-raised" ng-click="revertChanges()">Revert</md-button>
+                <md-button class="md-raised" ng-click="applyChanges()">Apply</md-button>
                 <md-button class="md-raised md-primary" ng-click="save()">Save settings</md-button>
             </div>
         </md-content>

@@ -4,9 +4,10 @@ angular.module('dashboard')
     .controller('DashboardController', function ($scope, $http, $wix, feedbacksApp) {
         $http.get('/catalogs/' + feedbacksApp.getApplicationId()).then(
             function (response){ // Success loading settings
+                console.log(response);
                 $scope.models.catalogs = response.data;
             }, function(response){ // Shit's fucked yo
-                debugger;
+
             });
 
         $scope.models = {
@@ -15,7 +16,11 @@ angular.module('dashboard')
         };
 
         $scope.saveCatalogs = function () {
-            alert('sss');
+            var request = $http({
+                method: "post",
+                url: "/catalogs",
+                data: $scope.models.catalogs
+            });
         };
 
         $scope.addCatalog = function () {

@@ -18,7 +18,11 @@
                     <h1 class="md-display-2">Catalogs</h1>
                     <md-content class="md-padding simpleDemo" layout="row" layout-align="start stretch">
                         <section ng-repeat="catalog in models.catalogs" class="catalog-item">
-                            <md-subheader class="md-primary">{{catalog.name}}</md-subheader>
+                            <md-subheader class="md-primary">
+                                <md-input-container>
+                                    <input ng-model="catalog.name">
+                                </md-input-container>
+                            </md-subheader>
                             <ul dnd-list="catalog.widgets">
                                 <li ng-repeat="widget in catalog.widgets"
                                     dnd-draggable="widget"
@@ -37,6 +41,7 @@
                     </md-content>
 
                     <md-content layout="row" layout-align="start start">
+
                         <md-button class="md-raised md-primary" ng-click="saveCatalogs()">Save</md-button>
                     </md-content>
                 </md-tab>
