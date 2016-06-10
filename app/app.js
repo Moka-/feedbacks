@@ -32,11 +32,7 @@ app.post('/provision', function (res1, res2) {
 });
 // serve index and view partials
 
-// app.get('/#/*', routes.index1);
-// app.get('/widget', routes.index2);
-// app.get('/settings', routes.index3);
-// app.get('/dashboard', routes.index4);
-app.get('/', routes.index);
+// index.html is reffered at the end
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
@@ -64,6 +60,10 @@ app.post('/catalogs', api.catalogs.add);
 //app.get('/catalogs/:id', api.catalogs.view);
 app.put('/catalogs/:id', api.catalogs.update);
 app.delete('/catalogs/:id', api.catalogs.delete);
+
+app.get('*', function(req, res) {
+    res.sendfile('app/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+});
 
 /*var req={};
  api.widgets.update(req, function (a, b) {
@@ -101,13 +101,13 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
+// app.use(function(err, req, res, next) {
+//     res.status(err.status || 500);
+//     res.render('error', {
+//         message: err.message,
+//         error: {}
+//     });
+// });
 
 var server = http.createServer(app).listen( app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));

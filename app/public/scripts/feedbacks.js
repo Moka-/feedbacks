@@ -33,7 +33,7 @@ angular.module('feedbacks', [
                 redirectTo: '/'
             });
 
-        // use the HTML5 History API
+        //use the HTML5 History API
         $locationProvider.html5Mode(true);
 
         $mdThemingProvider.theme('default')

@@ -41,7 +41,6 @@ angular.module('feedbacks')
         });
 
         $scope.postComment = function () {
-            debugger;
             var request = $http({
                 method: "post",
                 url: "/feedbacks",
@@ -62,10 +61,8 @@ angular.module('feedbacks')
                         rating: 0
                     };
 
-                    var newAve = (($scope.average_rating * obj.length - 1) + obj[obj.length - 1]) / (obj.length);
-                    $scope.feedbacks_count = obj.length;
-                    $scope.average_rating = newAve;
-                    $scope.from_expanded = false;
+                    var newAverage = (($scope.average_rating * $scope.data.length - 1) + $scope.data[$scope.data.length - 1].rating) / ($scope.data.length);
+                    $scope.average_rating = newAverage;
                 },
                 function (err) { // error
                     alert('oops');
@@ -73,8 +70,6 @@ angular.module('feedbacks')
                         comment: '',
                         rating: 0
                     };
-
-                    $scope.from_expanded = false;
                 });
         };
 
@@ -84,7 +79,6 @@ angular.module('feedbacks')
         };
 
         $scope.$on('event:google-plus-signin-success', function (event, authResult) {
-            debugger;
             $scope.logged_in = true;
             var authResponse = authResult.getAuthResponse();
             var profile = authResult.getBasicProfile();
