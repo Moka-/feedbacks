@@ -1,28 +1,36 @@
 'use strict';
 
-angular.module('widget')
-    .controller('WidgetController', function ($scope, $wix, $http, feedbacksDb, feedbacksApp) {
-        $scope.app_instance = feedbacksApp.getAppInstance();
-        $scope.comp_id = feedbacksApp.getComponentId();
+angular.module('feedbacks')
+    .controller('WidgetController', function ($scope, $wix, $http, data, application) {
+
+        function User(id_token, full_name, email, image_url) {
+            this.id_token = id_token;
+            this.full_name = full_name ? full_name : "Not logged in";
+            this.email = email;
+            this.image_url = image_url ? image_url : "images/avatar.png";
+        }
+
+        $scope.comment_focused = false;
         $scope.loading_feedbacks = true;
         $scope.loading_summary = true;
         $scope.settings = {};
-        $scope.comment_focused = false;
-
-        var no_user = {
-            full_name: "Not logged in",
-            image_url: "http://1.bp.blogspot.com/-XaPPe3eCMwE/VZSjxETf2OI/AAAAAAAANzE/3uOIgVpxds0/s1600/avatar.png"};
+        
         $scope.logged_in = false;
-        $scope.logged_user = no_user;
+        $scope.logged_user = new User();
         
         $wix.getBoundingRectAndOffsets(function(data){
             $scope.widgetHeight = data.rect.height;
         });
 
         $scope.settings = {
-            max_rating: 5,
+            show_summary: true,
+            show_feedbacks: true,
+            enable_comments: true,
+            enable_ratings: true,
+            max_rating: 5
         };
 
+        data.getFeedbacks().then(function (res) {
         feedbacksApp.getWidgetSettings().then(
             function (response){ // Success loading settings
                 $scope.settings = response.data[0];
@@ -35,21 +43,20 @@ angular.module('widget')
             $scope.data = res.data;
             var sum = 0;
 
-            for (var i = 0; i < res.data.length; i++) {
+            for (var i = 0; i < res.data.length; i++) 
                 sum += res.data[i].rating;
-            }
-
+            
             $scope.average_rating = sum / res.data.length;
             $scope.loading_feedbacks = false;
         });
 
-        $scope.postComment = function(){
+        $scope.postComment = function () {
             var request = $http({
                 method: "post",
                 url: "/feedbacks",
                 data: {
-                    app_instance: $scope.app_instance,
-                    component_id: $scope.comp_id,
+                    app_instance: application.getAppInstance(),
+                    component_id: application.getComponentId(),
                     comment: $scope.new_feedback.comment,
                     rating: $scope.new_feedback.rating,
                     visitor_id: $scope.logged_user.id_token
@@ -64,10 +71,8 @@ angular.module('widget')
                         rating: 0
                     };
 
-                    var newAve = (($scope.average_rating * obj.length - 1) + obj[obj.length - 1]) / (obj.length);
-                    $scope.feedbacks_count = obj.length;
-                    $scope.average_rating = newAve;
-                    $scope.from_expanded = false;
+                    var newAverage = (($scope.average_rating * $scope.data.length - 1) + $scope.data[$scope.data.length - 1].rating) / ($scope.data.length);
+                    $scope.average_rating = newAverage;
                 },
                 function (err) { // error
                     alert('oops');
@@ -75,8 +80,6 @@ angular.module('widget')
                         comment: '',
                         rating: 0
                     };
-
-                    $scope.from_expanded = false;
                 });
         };
 
@@ -90,29 +93,15 @@ angular.module('widget')
             var authResponse = authResult.getAuthResponse();
             var profile = authResult.getBasicProfile();
 
-            $scope.logged_user = {
-                id_token: authResponse.id_token,
-                full_name: profile.getName(),
-                given_name: profile.getGivenName(),
-                family_name: profile.getFamilyName(),
-                email: profile.getEmail(),
-                image_url: profile.getImageUrl()
-            };
-
+            $scope.logged_user = new User(authResponse.id_token, profile.getName(), profile.getEmail(), profile.getImageUrl());
             $scope.$apply();
         });
-
-        $scope.handleSettingsApplied = function (a, b, c) {
-            console.log(a);
-            console.log(b);
-            console.log(c);
-        }
 
         $scope.logOut = function() {
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
                 $scope.logged_in = false;
-                $scope.logged_user = no_user;
+                $scope.logged_user = new User();
                 $scope.$apply();
             });
         };

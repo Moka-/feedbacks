@@ -24,57 +24,9 @@ module.exports = {
                 }
             },
             function (err, rows, fields) {
-                console.log(querySql);
+                // console.log(querySql);
                 if (err) throw err;
                 callback(err, rows);
             });
-        // pool.getConnection(function (err, connection) {
-        //     if (err) {
-        //         console.log('Error opening a connection to the DB');
-        //         callback(err);
-        //         connection.release();
-        //         return;
-        //     }
-        //
-        //     connection.beginTransaction(function (err) {
-        //         if (err) {
-        //             console.log('Error opening a transaction');
-        //             connection.release();
-        //             callback(err);
-        //             return;
-        //         }
-        //
-        //         connection.query(sql, params, function (err, results, fields) {
-        //             if (err) {
-        //                 console.log('Error executing the query');
-        //                 console.log(mysql.format(sql, params));
-        //                 connection.release();
-        //                 callback(err);
-        //                 return;
-        //             }
-        //             if (!results) {
-        //                 console.log('Warning: Your query retrieved no rows');
-        //                 console.log(mysql.format(sql, params));
-        //             }
-        //             console.log(fields);
-        //             connection.commit(function (err) {
-        //                 if (err) {
-        //                     connection.rollback(function () {
-        //                         console.log('Error while committing the following sql:');
-        //                         console.log(mysql.format(sql, params));
-        //                         callback(err);
-        //                         connection.release();
-        //                     });
-        //
-        //                     return;
-        //                 }
-        //
-        //                 console.log(results[0]);
-        //                 callback(err, results); // Success!
-        //                 connection.release();
-        //             });
-        //         });
-        //     });
-        // });
     }
 }

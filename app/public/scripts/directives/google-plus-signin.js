@@ -46,10 +46,9 @@ angular.module('directive.g+signin', []).
                         defaults[propName] = attrs[propName];
                     }
                 });
-                var isAutoRendering = (defaults.autorender !== undefined && (defaults.autorender === 'true' || defaults.autorender === true));
+                // var isAutoRendering = (defaults.autorender !== undefined && (defaults.autorender === 'true' || defaults.autorender === true));
                 var isAutoRendering = false;
                 if (!isAutoRendering && defaults.customtargetid === "sign-in-button") {
-                    console.log("element", element);
                     element[0].innerHTML = //'<i class="fa fa-google-plus"/>';
                         //'<div id="googlebutton">' +
                             // '<i class="fa fa-google-plus"/>' +

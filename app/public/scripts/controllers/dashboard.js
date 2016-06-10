@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('dashboard')
-    .controller('DashboardController', function ($scope, $http, $wix, feedbacksApp) {
-        $http.get('/catalogs/' + feedbacksApp.getApplicationId()).then(
+angular.module('feedbacks')
+    .controller('DashboardController', function ($scope, $http, $wix, application) {
+        $http.get('/catalogs/' + application.getApplicationId()).then(
             function (response){ // Success loading settings
                 console.log(response);
                 $scope.models.catalogs = response.data;
@@ -25,7 +25,7 @@ angular.module('dashboard')
 
         $scope.addCatalog = function () {
             $scope.models.catalogs.push({
-                app_instance: feedbacksApp.getApplicationId(),
+                app_instance: application.getApplicationId(),
                 name: "New Catalog",
                 widgets: []
             });

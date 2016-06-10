@@ -1,4 +1,4 @@
-var app = angular.module('widget');
+var app = angular.module('feedbacks');
 
 app.directive('resize', function ($window) {
     return function (scope, element) {

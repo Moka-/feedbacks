@@ -42,6 +42,8 @@ module.exports = {
             });
         },
         add: function (req, res) {
+            
+            console.log(req.body.visitor_id);
             (new (new googleAuth).OAuth2).verifyIdToken(req.body.visitor_id, null, function (err, googleRes) {
                 if(err) {
                     console.error(err);

@@ -12,7 +12,7 @@ md-card{
     margin: 0;
 }
 
-md-card:first-of-type{
+.summary-card {
     margin-bottom: 10px;
 }
 
