@@ -1,14 +1,11 @@
-angular.module('feedbacksApp', ['wix'])
-    .factory('feedbacksApp', function ($wix, $http) {
+angular.module('application', ['wix'])
+    .factory('application', function ($wix, $http) {
         var app = {
-            getWidgetData: function () {
-                return request = $http.get('/widgets/' + this.getAppInstance() + '/' + this.getComponentId());
-            },
             getWidgetSettings: function () {
                 return request = $http.get('/widget-settings/' + this.getAppInstance() + '/' + this.getComponentId());
             },
             getApplicationId: function () {
-                return $wix.Utils.getInstanceId();
+                return this.getAppInstance();
             },
             getAppInstance: function () {
                 return $wix.Utils.getInstanceId();
@@ -16,10 +13,9 @@ angular.module('feedbacksApp', ['wix'])
             getComponentId: function () {
                 var compId = $wix.Utils.getOrigCompId();
 
-                if(!compId){
+                if(!compId)
                     compId = $wix.Utils.getCompId();
-                }
-
+                
                 return compId;
             }
         };
