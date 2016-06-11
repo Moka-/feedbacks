@@ -128,6 +128,8 @@ module.exports = {
                     dal.widgets.getSettingsCopy(req.params.app_instance, function (err, appWidgetSettings) {
                         var params = appWidgetSettings[0];
                         params.component_id = req.params.component_id;
+                        
+                        params.widget_name = 'Widget '
                         console.log(params);
                         dal.widgets.add(params, function (err, results) {
                             res.json(results);

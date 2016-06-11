@@ -5,7 +5,7 @@ angular.module('widget', [
         'wix',
         'directive.g+signin',
         'angularMoment',
-        'feedbacksApp',
+    'application',
         'feedbacksData',
         'ngMaterial',
     'ngAnimate'
