@@ -3,7 +3,6 @@
         <feedbacks-summary></feedbacks-summary>
         <md-card class="scroll-this" flex>
             <md-card-content layout="row" layout-align="space-between start" style="margin-bottom: 10px">
-
                 <div layout="row" layout-align="start stretch" ng-hide="loading_summary">
                     <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
                     <div layout="column" layout-align="space-around stretch" class="logged-user">
@@ -19,13 +18,13 @@
                 <div layout="column" layout-align="space-between end" style="flex: 1">
                     <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment" ng-if="settings.enable_comments"></textarea>
                     <div style="margin-top: 3px; width:100%" layout="row" layout-align="space-between none">
-                        <div>
+                        <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
                             <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
                                 {{new_feedback.comment.length}}/{{settings.comment_max_length}}
                             </span>
                         </div>
                         <div>
-                            <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating"></input-stars>
+                            <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating" ng-if="settings.enable_ratings"></input-stars>
                             <md-button class="md-raised md-primary" ng-click="postComment()" ng-disabled="!logged_in" style="margin-right: 0">Post</md-button>
                         </div>
                     </div>
@@ -47,11 +46,9 @@
                         <div class="md-list-item-text">
                             <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
                                 <span am-time-ago="feedback.created_on" class="time-ago"></span>
-                                <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating" readonly></input-stars>
-                                <!--<star-rating rating="feedback.rating" max-rating="{{settings.max_rating}}"-->
-                                             <!--ng-if="settings.enable_ratings" read-only="true"/>-->
+                                <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating" readonly ng-if="settings.enable_ratings"></input-stars>
                             </h4>
-                            <p>{{feedback.comment}}</p>
+                            <p ng-if="settings.enable_comments">{{feedback.comment}}</p>
                         </div>
                     </md-list-item>
                 </md-list>

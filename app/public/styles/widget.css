@@ -125,3 +125,8 @@ a:hover {
     margin-left: 0.1em;
     line-height: 1em;
 }
+
+.comment-length{
+    font-size: 0.85em;
+    color: #878787;
+}
