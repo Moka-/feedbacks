@@ -30,13 +30,14 @@ angular.module('feedbacks')
           $wix.Settings.getDashboardAppUrl(function(url) {
               window.open(url, '_blank');
           });
-      }
+      };
       $scope.revert = function(){
           loadSettings();
-      }
+      };
       $scope.apply = function(){
-          $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, $wix.Utils.getOrigCompId());
-      }
+          debugger;
+          $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, application.getComponentId());
+      };
       $scope.save = function(){
           var request = $http({
               method: "put",
@@ -46,14 +47,9 @@ angular.module('feedbacks')
 
           return request.then(
               function (res) {
-                  $wix.Settings.triggerSettingsUpdatedEvent(res, $wix.Utils.getOrigCompId());
+                  $wix.Settings.triggerSettingsUpdatedEvent(res, application.getComponentId());
               }, function (err) {
-                  alert('oops');
-                  $scope.new_feedback = {
-                      comment: '',
-                      rating: 0
-                  };
-                  $scope.from_expanded = false;
+                  alert('Error loading new settings');
               });
-      }
+      };
   });

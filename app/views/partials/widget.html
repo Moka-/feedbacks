@@ -2,10 +2,11 @@
     <md-content layout="column" layout-align="stretch" ng-style="{ height: widgetHeight + 'px' }">
         <feedbacks-summary></feedbacks-summary>
         <md-card class="scroll-this" flex>
-            <md-card-content>
-                <div layout="row" layout-align="start center" style="margin-bottom: 10px" ng-hide="loading_summary">
+            <md-card-content layout="row" layout-align="space-between start" style="margin-bottom: 10px">
+
+                <div layout="row" layout-align="start stretch" ng-hide="loading_summary">
                     <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
-                    <div layout="column" layout-align="space-between stretch" class="logged-user">
+                    <div layout="column" layout-align="space-around stretch" class="logged-user">
                         {{logged_user.full_name}}
                         <div class="log-out">
                             <a href="" ng-click="logOut()" ng-show="logged_in" >
@@ -13,19 +14,23 @@
                             </a>
                             <google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja" ng-show="!logged_in"></google-plus-signin>
                         </div>
-
-                    </div>
-                    <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment" ></textarea>
-                </div>
-                <div layout="row" layout-align="space-between center">
-                    <div>
-                    </div>
-                    <div>
-                        <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating"></input-stars>
-                        <md-button class="md-raised md-primary" ng-click="postComment()" ng-disabled="!logged_in">Post</md-button>
                     </div>
                 </div>
-            </md-card-content>
+                <div layout="column" layout-align="space-between end" style="flex: 1">
+                    <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment" ng-if="settings.enable_comments"></textarea>
+                    <div style="margin-top: 3px; width:100%" layout="row" layout-align="space-between none">
+                        <div>
+                            <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
+                                {{new_feedback.comment.length}}/{{settings.comment_max_length}}
+                            </span>
+                        </div>
+                        <div>
+                            <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating"></input-stars>
+                            <md-button class="md-raised md-primary" ng-click="postComment()" ng-disabled="!logged_in" style="margin-right: 0">Post</md-button>
+                        </div>
+                    </div>
+                </div>
+            </md-card-content><br/>
             <md-card-content>
                 <div layout="column" layout-align="start center">
                     <md-progress-circular md-mode="indeterminate" ng-if="loading_feedbacks"

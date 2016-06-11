@@ -29,7 +29,6 @@ angular.module('feedbacks')
             max_rating: 5
         };
 
-
         application.getWidgetSettings().then(
             function (response){ // Success loading settings
                 $scope.settings = response.data[0];
@@ -96,6 +95,11 @@ angular.module('feedbacks')
             $scope.$apply();
         });
 
+        $wix.addEventListener($wix.Events.SETTINGS_UPDATED,function(settings){
+            $scope.settings = settings;
+            $scope.$apply();
+        });
+
         $scope.logOut = function() {
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
@@ -104,6 +108,4 @@ angular.module('feedbacks')
                 $scope.$apply();
             });
         };
-
-        $wix.addEventListener($wix.Events.SETTINGS_UPDATED, $scope.handleSettingsApplied);
 });
