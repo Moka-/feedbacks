@@ -40,7 +40,7 @@ angular.module('feedbacks')
           console.log('click!');
           $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, $wix.Utils.getOrigCompId());
       };
-
+      
       $scope.save = function(){
           var request = $http({
               method: "put",
@@ -50,7 +50,7 @@ angular.module('feedbacks')
 
           return request.then(
               function (res) {
-                  $wix.Settings.triggerSettingsUpdatedEvent(res, application.getComponentId());
+                  $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, application.getComponentId());
               }, function (err) {
                   alert('Error loading new settings');
               });

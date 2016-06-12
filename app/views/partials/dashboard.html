@@ -7,10 +7,14 @@
                 </h2>
             </div>
         </md-toolbar>
-        <md-tabs md-dynamic-height md-border-bottom>
-            <md-tab label="Overview">
-                <md-content class="md-padding">
-                    <h1 class="md-display-2">Overview</h1>
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Overview">
+                    <md-content class="md-padding">
+                        <h1 class="md-display-2">Overview</h1>
+                        <div layout="row" layout-align="center start">
+                            <div google-chart chart="myChart" flex="0.4"></div>
+                            <div google-chart chart="myChart2" flex="0.4"></div>
+                        </div>
 
                 </md-content>
             </md-tab>
