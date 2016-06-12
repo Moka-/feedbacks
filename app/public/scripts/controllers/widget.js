@@ -30,11 +30,11 @@ angular.module('feedbacks')
         };
 
         application.getWidgetSettings().then(
-            function (response){ // Success loading settings
+            function (response) { // Success loading settings
                 $scope.settings = response.data[0];
                 $scope.loading_summary = false;
-            }, function(response){ // Shit's fucked yo
-        
+            }, function (response) { // Shit's fucked yo
+
             });
 
         data.getFeedbacks().then(function (res) {
@@ -96,12 +96,12 @@ angular.module('feedbacks')
                 $scope.$apply();
             });
 
-        $wix.addEventListener($wix.Events.SETTINGS_UPDATED,function(settings){
+        $wix.addEventListener($wix.Events.SETTINGS_UPDATED, function (settings) {
             $scope.settings = settings;
             $scope.$apply();
         });
 
-        $scope.logOut = function() {
+        $scope.logOut = function () {
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
                 $scope.logged_in = false;
@@ -109,4 +109,4 @@ angular.module('feedbacks')
                 $scope.$apply();
             });
         };
-});
+    });

@@ -63,8 +63,8 @@ app.get('*', function(req, res) {
     res.sendfile('app/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
-/*var req={};
- api.widgets.update(req, function (a, b) {
+/*var req={params : '4a8eda33-6035-4c65-9cf6-6befeaf2d2af'};
+ dal.widgets.nextDefaultName('4a8eda33-6035-4c65-9cf6-6befeaf2d2af', function (a, b) {
     console.log(a);
     console.log(b);
 });*/

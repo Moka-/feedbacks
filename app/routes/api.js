@@ -4,7 +4,7 @@ var dal = require('../dal/dal');
 var uuid = require('node-uuid');
 var https = require('https');
 var googleAuth = require('google-auth-library');
-//noinspection JSUnresolvedVariable
+
 module.exports = {
     visitors: {
         list: function (req, res) {
@@ -125,12 +125,10 @@ module.exports = {
             var params = [req.params.app_instance, req.params.component_id];
             dal.widgets.view(params, function (err, widget) {
                 if (widget.length == 0) {
-                    dal.widgets.getSettingsCopy(req.params.app_instance, function (err, appWidgetSettings) {
+                    dal.widgets.settingsCopy(req.params.app_instance, function (err, appWidgetSettings) {
                         var params = appWidgetSettings[0];
+
                         params.component_id = req.params.component_id;
-                        
-                        params.widget_name = 'Widget '
-                        console.log(params);
                         dal.widgets.add(params, function (err, results) {
                             res.json(results);
                         });

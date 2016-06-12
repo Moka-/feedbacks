@@ -66,7 +66,7 @@ module.exports = {
             db.query(sql, params, callback);
         },
         delete: function (params, callback) {
-            var sql ="";
+            var sql = "";
             db.query(sql, params, callback);
         }
     },
@@ -81,7 +81,7 @@ module.exports = {
                 callback(err, results);
             });
         },
-        getSettingsCopy: function (params, callback) {
+        settingsCopy: function (params, callback) {
             var sql = defaultAppSettings;
             db.query(sql, params, function (err, results) {
                 callback(err, results);
@@ -130,13 +130,13 @@ module.exports = {
     catalogs: {
         list: function (params, callback) {
             var sql = 'SELECT * FROM `catalogs` WHERE ?';
-            db.query(sql, params, function(err, results){
+            db.query(sql, params, function (err, results) {
                 callback(err, results);
             });
         },
         view: function (params, callback) {
             var sql = 'SELECT * FROM `catalogs` WHERE ?';
-            db.query(sql, params, function(err, results){
+            db.query(sql, params, function (err, results) {
                 callback(err, results);
             });
         },
