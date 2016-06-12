@@ -10,7 +10,6 @@ angular.module('feedbacks')
             this.image_url = image_url ? image_url : "images/avatar.png";
         }
 
-        $scope.comment_focused = false;
         $scope.loading_feedbacks = true;
         $scope.loading_summary = true;
         $scope.settings = {};
@@ -30,18 +29,17 @@ angular.module('feedbacks')
             max_rating: 5
         };
 
+        application.getWidgetSettings().then(
+            function (response){ // Success loading settings
+                $scope.settings = response.data[0];
+                $scope.loading_summary = false;
+            }, function(response){ // Shit's fucked yo
+        
+            });
+
         data.getFeedbacks().then(function (res) {
-            application.getWidgetSettings().then(
-                function (response) { // Success loading settings
-                    $scope.settings = response.data[0];
-                    $scope.loading_summary = false;
-                }, function (response) { // Shit's fucked yo
-
-                });
-
-            data.getFeedbacks($scope.app_instance, $scope.comp_id).then(function (res) {
-                $scope.data = res.data;
-                var sum = 0;
+            $scope.data = res.data;
+            var sum = 0;
 
                 for (var i = 0; i < res.data.length; i++)
                     sum += res.data[i].rating;
@@ -98,15 +96,17 @@ angular.module('feedbacks')
                 $scope.$apply();
             });
 
-            $scope.logOut = function () {
-                var auth2 = gapi.auth2.getAuthInstance();
-                auth2.signOut().then(function () {
-                    $scope.logged_in = false;
-                    $scope.logged_user = new User();
-                    $scope.$apply();
-                });
-            };
-
-            $wix.addEventListener($wix.Events.SETTINGS_UPDATED, $scope.handleSettingsApplied);
+        $wix.addEventListener($wix.Events.SETTINGS_UPDATED,function(settings){
+            $scope.settings = settings;
+            $scope.$apply();
         });
-    });
+
+        $scope.logOut = function() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                $scope.logged_in = false;
+                $scope.logged_user = new User();
+                $scope.$apply();
+            });
+        };
+});

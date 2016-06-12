@@ -50,14 +50,9 @@ angular.module('feedbacks')
 
           return request.then(
               function (res) {
-                  $wix.Settings.triggerSettingsUpdatedEvent(res, $wix.Utils.getOrigCompId());
+                  $wix.Settings.triggerSettingsUpdatedEvent(res, application.getComponentId());
               }, function (err) {
-                  alert('oops');
-                  $scope.new_feedback = {
-                      comment: '',
-                      rating: 0
-                  };
-                  $scope.from_expanded = false;
+                  alert('Error loading new settings');
               });
-      }
+      };
   });

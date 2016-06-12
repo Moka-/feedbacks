@@ -9,7 +9,8 @@ angular.module('feedbacks', [
     'data',
     'ngMaterial',
     'ngAnimate',
-    'dndLists'
+    'dndLists',
+    'angular-input-stars'
 ])
     .config(function ($routeProvider, $locationProvider, $mdThemingProvider) {
         $routeProvider
