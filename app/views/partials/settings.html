@@ -39,8 +39,8 @@
                         </div>
                         <div layout="row" layout-align="space-between center">
                             <span flex="40">Rating steps</span>
-                            <md-slider flex md-discrete ng-model="settings.max_rating" step="1" min="3" max="10"
-                                       aria-label="Max rating">
+                            <md-slider flex md-discrete ng-disabled="true" ng-model="settings.max_rating" step="1" min="3" max="10"
+                                       ng-readonly="readonly" aria-label="Max rating">
                             </md-slider>
                         </div>
                     </section>

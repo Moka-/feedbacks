@@ -1,8 +1,8 @@
 <div class="widget" ng-controller="WidgetController" flex layout-fill md-theme="{{ dynamicTheme }}" md-theme-watch>
     <md-content layout="column" layout-align="stretch" ng-style="{ height: widgetHeight + 'px' }">
         <feedbacks-summary></feedbacks-summary>
-        <md-card class="scroll-this" flex>
-            <md-card-content layout="row" layout-align="space-between start" style="margin-bottom: 10px">
+        <md-card class="scroll-this" layout="column" layout-align="start stretch">
+            <md-card-content layout="row" layout-align="space-between start">
                 <div layout="row" layout-align="start stretch" ng-hide="loading_summary">
                     <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
                     <div layout="column" layout-align="space-around stretch" class="logged-user">
@@ -25,18 +25,16 @@
                         </div>
                         <div>
                             <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating" ng-if="settings.enable_ratings"></input-stars>
-                            <md-button class="md-raised md-primary" ng-click="postComment()" ng-disabled="!logged_in" style="margin-right: 0">Post</md-button>
+                            <md-button class="md-raised md-primary post-button" ng-click="postComment()" ng-disabled="!logged_in">Post</md-button>
                         </div>
                     </div>
                 </div>
             </md-card-content><br/>
-            <md-card-content>
-                <div layout="column" layout-align="start center">
-                    <md-progress-circular md-mode="indeterminate" ng-if="loading_feedbacks"
-                                          md-diameter="70"></md-progress-circular>
+            <md-card-content layout="column" layout-align="start stretch" ng-if="settings.show_feedbacks">
+                <div layout="column" layout-align="start center" ng-if="loading_feedbacks">
+                    <md-progress-circular md-mode="indeterminate" md-diameter="70"></md-progress-circular>
                 </div>
-                <md-list ng-if="settings.show_feedbacks"
-                         ng-hide="loading_feedbacks"
+                <md-list ng-hide="loading_feedbacks"
                          layout="column"
                          layout-align="start start">
                     <md-list-item class="md-2-line feedback"
@@ -46,7 +44,7 @@
                         <div class="md-list-item-text">
                             <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
                                 <span am-time-ago="feedback.created_on" class="time-ago"></span>
-                                <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating" readonly ng-if="settings.enable_ratings"></input-stars>
+                                <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating" readonly ng-if="settings.enable_ratings && feedback.rating"></input-stars>
                             </h4>
                             <p ng-if="settings.enable_comments">{{feedback.comment}}</p>
                         </div>

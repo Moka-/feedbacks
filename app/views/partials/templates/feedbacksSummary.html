@@ -4,9 +4,14 @@
             <md-progress-circular md-mode="indeterminate" ng-if="loading_summary"
                                   md-diameter="70"></md-progress-circular>
         </div>
-        <div class="summary" layout="column" layout-align="center center" ng-hide="loading_summary">
-            <input-stars max="{{settings.max_rating}}" ng-model="average_rating" readonly></input-stars>
+        <div class="summary" layout="column" layout-align="center center" ng-if="data.length" ng-hide="loading_summary">
+            <input-stars max="{{settings.max_rating}}" ng-model="average_rating_rounded" readonly></input-stars>
             <span>{{average_rating | number:1 }}/{{settings.max_rating}} by {{data.length | number}} users</span>
         </div>
+        <div layout="column" layout-align="center center" style="font-size: 1.2em;" ng-hide="loading_summary" ng-if="!data.length">
+                No one has yet to comment.<br/>
+                Be the first!
+        </div>
+        <div google-chart chart="myChart"></div>
     </md-card-content>
 </md-card>

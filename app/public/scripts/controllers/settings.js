@@ -35,7 +35,6 @@ angular.module('feedbacks')
           loadSettings();
       };
       $scope.apply = function(){
-          debugger;
           $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, application.getComponentId());
       };
       $scope.save = function(){
@@ -47,9 +46,11 @@ angular.module('feedbacks')
 
           return request.then(
               function (res) {
-                  $wix.Settings.triggerSettingsUpdatedEvent(res, application.getComponentId());
+                  $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, application.getComponentId());
               }, function (err) {
                   alert('Error loading new settings');
               });
+
+
       };
   });
