@@ -40,7 +40,7 @@ angular.module('feedbacks')
           console.log('click!');
           $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, $wix.Utils.getOrigCompId());
       };
-      
+
       $scope.save = function(){
           var request = $http({
               method: "put",

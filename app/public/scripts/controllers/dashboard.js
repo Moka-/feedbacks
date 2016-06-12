@@ -4,7 +4,7 @@ angular.module('feedbacks')
     .controller('DashboardController', function ($scope, $http, $wix, application, uuid) {
         $http.get('/catalogs/' + application.getApplicationId()).then(
             function (response) { // Success loading settings
-                respone.data.forEach(function (current) {
+                response.data.forEach(function (current) {
                     current.deleted = false;
                 });
 

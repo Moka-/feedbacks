@@ -16,7 +16,8 @@
                     </div>
                 </div>
                 <div layout="column" layout-align="space-between end" style="flex: 1">
-                    <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment" ng-if="settings.enable_comments"></textarea>
+                    <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment"
+                              ng-if="settings.enable_comments"></textarea>
                     <div style="margin-top: 3px; width:100%" layout="row" layout-align="space-between none">
                         <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
                             <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
@@ -24,12 +25,20 @@
                             </span>
                         </div>
                         <div>
-                            <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating" ng-if="settings.enable_ratings"></input-stars>
-                            <md-button class="md-raised md-primary post-button" ng-click="postComment()" ng-disabled="!logged_in || new_feedback.comment.length > settings.comment_max_length ">Post</md-button>
+                            <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating"
+                                         ng-if="settings.enable_ratings"></input-stars>
+                            <md-button class="md-raised md-primary post-button" ng-click="postComment()"
+                                       ng-disabled="!logged_in || new_feedback.comment.length > settings.comment_max_length ">
+                                Post
+                            </md-button>
                         </div>
                     </div>
                 </div>
-            </md-card-content><br/>
+            </md-card-content>
+            <br/>
+            <div ng-if="settings.enable_comments">
+                <br/><br/>
+            </div>
             <md-card-content layout="column" layout-align="start stretch" ng-if="settings.show_feedbacks">
                 <div layout="column" layout-align="start center" ng-if="loading_feedbacks">
                     <md-progress-circular md-mode="indeterminate" md-diameter="70"></md-progress-circular>
@@ -43,7 +52,8 @@
                         <div class="md-list-item-text">
                             <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
                                 <span am-time-ago="feedback.created_on" class="time-ago"></span>
-                                <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating" readonly ng-if="settings.enable_ratings && feedback.rating"></input-stars>
+                                <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating" readonly
+                                             ng-if="settings.enable_ratings && feedback.rating"></input-stars>
                             </h4>
                             <p ng-if="settings.enable_comments">{{feedback.comment}}</p>
                         </div>

@@ -11,8 +11,7 @@ angular.module('feedbacks', [
     'ngAnimate',
     'dndLists',
     'angular-input-stars',
-    'angular-uuid'
-    'angular-input-stars',
+    'angular-uuid',
     'googlechart'
 ])
     .config(function ($routeProvider, $locationProvider, $mdThemingProvider) {

@@ -10,11 +10,11 @@ angular.module('feedbacks')
             this.image_url = image_url ? image_url : "images/avatar.png";
         };
 
-        function Feedback(){
+        function Feedback() {
             this.comment = "";
             this.rating = 0;
 
-            this.reset = function(){
+            this.reset = function () {
                 this.comment = "";
                 this.rating = 0;
             };
@@ -54,10 +54,10 @@ angular.module('feedbacks')
 
             for (var i = 0; i < res.data.length; i++) {
                 sum += res.data[i].rating;
-                if(res.data[i].rating != 0)
+                if (res.data[i].rating != 0)
                     actualRates++;
             }
-            
+
             $scope.average_rating = sum / actualRates;
             $scope.average_rating_rounded = Math.round($scope.average_rating);
             $scope.loading_feedbacks = false;
@@ -89,7 +89,7 @@ angular.module('feedbacks')
 
                     for (var i = 0; i < $scope.data.length; i++) {
                         sum += $scope.data[i].rating;
-                        if($scope.data[i].rating != 0)
+                        if ($scope.data[i].rating != 0)
                             actualRates++;
                     }
 
