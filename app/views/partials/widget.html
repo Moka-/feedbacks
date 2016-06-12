@@ -25,7 +25,7 @@
                         </div>
                         <div>
                             <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating" ng-if="settings.enable_ratings"></input-stars>
-                            <md-button class="md-raised md-primary post-button" ng-click="postComment()" ng-disabled="!logged_in">Post</md-button>
+                            <md-button class="md-raised md-primary post-button" ng-click="postComment()" ng-disabled="!logged_in || new_feedback.comment.length > settings.comment_max_length ">Post</md-button>
                         </div>
                     </div>
                 </div>
