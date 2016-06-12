@@ -121,6 +121,10 @@ a:hover {
     font-size: 2em;
 }
 
+.angular-input-stars {
+    margin:0;
+}
+
 .angular-input-stars > li {
     padding: 0;
     font-size: 1em;
