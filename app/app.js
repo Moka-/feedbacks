@@ -7,7 +7,6 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     http = require('http');
 var router = express.Router();
-
 var app = express();
 
 var routes = require('./routes/widget');
@@ -63,11 +62,11 @@ app.get('*', function(req, res) {
     res.sendfile('app/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
-/*var req={params : '4a8eda33-6035-4c65-9cf6-6befeaf2d2af'};
- dal.widgets.nextDefaultName('4a8eda33-6035-4c65-9cf6-6befeaf2d2af', function (a, b) {
-    console.log(a);
-    console.log(b);
-});*/
+// var req={params : {app_instance: 'bcac1c8a-3b11-4374-aff7-e865a14c2681'}};
+//  api.catalogs.list(req, function (a, b) {
+//     console.log(a);
+//     console.log(b);
+// });
 /*var req = {};
 req.params = {app_instance : "4a8eda33-6035-4c65-9cf6-6befeaf2d2af",
                 component_id : "comp-inx9esxf"}

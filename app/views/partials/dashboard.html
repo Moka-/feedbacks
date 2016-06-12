@@ -7,20 +7,37 @@
                 </h2>
             </div>
         </md-toolbar>
-            <md-tabs md-dynamic-height md-border-bottom>
-                <md-tab label="Overview">
-                    <md-content class="md-padding">
-                        <h1 class="md-display-2">Overview</h1>
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="Overview">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Overview</h1>
 
-                    </md-content>
-                </md-tab>
-                <md-tab label="Catalogs">
-                    <h1 class="md-display-2">Catalogs</h1>
-                    <md-content class="md-padding simpleDemo" layout="row" layout-align="start stretch">
+                </md-content>
+            </md-tab>
+            <md-tab label="Catalogs">
+                <md-content class="md-padding">
+                    <p>Here you can categorize your widgets by adding them to catalogs. You may add more catalogs or
+                        delete them if so you wish.
+                        The "Default Catalog" contains all the widgets which haven't been added to a catalog.</p>
+                    <!--<h1 class="md-display-2">Catalogs</h1>-->
+                    <md-progress-circular md-mode="indeterminate" ng-if="loading_catalogs"
+                                          md-diameter="70"></md-progress-circular>
+
+                    <md-content class="md-padding simpleDemo" layout="row" layout-align="start stretch"
+                                ng-hide="loading_catalogs">
                         <section ng-repeat="catalog in models.catalogs" class="catalog-item">
                             <md-subheader class="md-primary">
-                                <md-input-container>
-                                    <input ng-model="catalog.name">
+                                <md-input-container class="md-block" flex-gt-sm>
+                                    <label>Catalog Name</label>
+                                    <input ng-model="catalog.name" md-maxlength="45"
+                                           ng-disabled="catalog.name == 'Default Catalog'" md-select-on-focus>
+                                    <md-button ng-click="removeCatalog(catalog.id, catalog.widgets)"
+                                               class="md-icon-button" ng-hide="catalog.name == 'Default Catalog'">
+                                        <md-tooltip md-direction="left">
+                                            Delete
+                                        </md-tooltip>
+                                        <md-icon md-svg-src="images/ic_delete_black_18px.svg"></md-icon>
+                                    </md-button>
                                 </md-input-container>
                             </md-subheader>
                             <ul dnd-list="catalog.widgets">
@@ -38,24 +55,28 @@
                     </md-content>
 
                     <md-content layout="row" layout-align="start start">
-                        <section class="catalog-item" layout="column" layout-align="space-around stretch">
+                        <section class="catalog-item" layout="row" layout-align="space-around stretch">
                             <md-button ng-click="addCatalog()">Add catalog</md-button>
+                            <md-button ng-click="undo()">Undo</md-button>
+                            <md-button class="md-raised md-primary" ng-click="saveCatalogs()">Save</md-button>
+
                         </section>
-                        <md-button class="md-raised md-primary" ng-click="saveCatalogs()">Save</md-button>
+
                     </md-content>
-                </md-tab>
-                <md-tab label="FAQ">
-                    <md-content class="md-padding">
-                        <h1 class="md-display-2">FAQ</h1>
-                        <p>
-                            Question?
-                        </p>
-                        <p>
-                            Answer
-                        </p>
-                    </md-content>
-                </md-tab>
-            </md-tabs>
+                </md-content>
+            </md-tab>
+            <md-tab label="FAQ">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">FAQ</h1>
+                    <p>
+                        Question?
+                    </p>
+                    <p>
+                        Answer
+                    </p>
+                </md-content>
+            </md-tab>
+        </md-tabs>
     </md-content>
 </div>
 

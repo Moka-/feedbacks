@@ -57,7 +57,6 @@ module.exports = {
             db.query(sql, params, callback);
         },
         add: function (params, callback) {
-            console.log(params);
             var sql = 'INSERT INTO `feedbacks` SET ?';
             db.query(sql, params, callback);
         },
@@ -72,7 +71,7 @@ module.exports = {
     },
     widgets: {
         list: function (params, callback) {
-            var sql = "SELECT * FROM `widgets` w WHERE w.app_instance = ?";
+            var sql = "SELECT * FROM `widgets` w WHERE ?";
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
@@ -99,6 +98,10 @@ module.exports = {
             var sql = "UPDATE `widgets` SET ? WHERE app_instance = ? AND component_id = ?";
 
             db.query(sql, queryParams, callback);
+        },
+        updateCatalog: function (params, callback) {
+            var sql = 'UPDATE `widgets` SET catalog_id = ? WHERE app_instance = ? and component_id in (?)';
+
         },
         delete: function (params, callback) {
             var sql = "";
@@ -141,8 +144,14 @@ module.exports = {
             });
         },
         add: function (params, callback) {
-            var sql = "";
-            db.query(sql, params, callback);
+            var sql = "INSERT INTO `catalogs` (app_instance, name) VALUES ";
+
+            for (var i = 0; i < params.length; i++) {
+                sql += "('" + params[i].app_instance + "','" + params[i].name + "'),";
+            }
+
+            sql = sql.slice(0, -1);
+            db.query(sql, null, callback);
         },
         update: function (params, callback) {
             var sql = "";
