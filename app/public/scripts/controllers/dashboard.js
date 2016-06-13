@@ -25,12 +25,19 @@ angular.module('feedbacks')
             var request = $http({
                 method: "post",
                 url: "/catalogs",
-                data: $scope.models.catalogs
+                data: {
+                    catalogs: $scope.models.catalogs,
+                    app_instance: application.getApplicationId()
+                }
             });
+
+            return request.then(
+                function (res) { // success
+                    debugger;
+                });
         };
 
         $scope.removeCatalog = function (id, widgets) {
-
             $scope.models.catalogs = $scope.models.catalogs.filter(function (obj) {
                 if (widgets.length > 0 && obj.id == 0) {
                     for (var i = 0; i < widgets.length; i++) {
@@ -38,12 +45,17 @@ angular.module('feedbacks')
                     }
                 }
 
-                return id != obj.id;
+                if (obj.id == id && !obj.new) {
+                    obj.deleted = true;
+
+                    return true;
+                } else {
+                    return id != obj.id;
+                }
             });
         };
 
-        $scope.undo = function () {
-            console.log('click');
+        $scope.undoChanges = function () {
             $scope.models.catalogs = JSON.parse(JSON.stringify($scope.originalCatalogs));
         };
 
@@ -53,6 +65,7 @@ angular.module('feedbacks')
                 app_instance: application.getApplicationId(),
                 name: "New Catalog",
                 new: true,
+                deleted: false,
                 widgets: []
             });
         };

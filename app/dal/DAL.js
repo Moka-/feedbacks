@@ -71,7 +71,7 @@ module.exports = {
     },
     widgets: {
         list: function (params, callback) {
-            var sql = "SELECT * FROM `widgets` w WHERE ?";
+            var sql = "SELECT component_id, catalog_id, widget_name FROM `widgets` w WHERE ?";
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
@@ -100,8 +100,9 @@ module.exports = {
             db.query(sql, queryParams, callback);
         },
         updateCatalog: function (params, callback) {
-            var sql = 'UPDATE `widgets` SET catalog_id = ? WHERE app_instance = ? and component_id in (?)';
-
+            var sql = "UPDATE `widgets` SET catalog_id = '" + params.catalog_id +
+                "' WHERE app_instance = '" + params.app_instance + "' AND component_id IN ('" + params.widgetIds + "')";
+            
         },
         delete: function (params, callback) {
             var sql = "";
@@ -132,7 +133,7 @@ module.exports = {
     },
     catalogs: {
         list: function (params, callback) {
-            var sql = 'SELECT * FROM `catalogs` WHERE ?';
+            var sql = 'SELECT id, name FROM `catalogs` WHERE ?';
             db.query(sql, params, function (err, results) {
                 callback(err, results);
             });
@@ -144,10 +145,10 @@ module.exports = {
             });
         },
         add: function (params, callback) {
-            var sql = "INSERT INTO `catalogs` (app_instance, name) VALUES ";
+            var sql = "INSERT INTO `catalogs` (id, app_instance, name) VALUES ";
 
-            for (var i = 0; i < params.length; i++) {
-                sql += "('" + params[i].app_instance + "','" + params[i].name + "'),";
+            for (var i = 0; i < params.catalogs.length; i++) {
+                sql = sql.concat("('" + params.catalogs[i].id + "', '" + params.app_instance + "', '" + params.catalogs[i].name + "'),");
             }
 
             sql = sql.slice(0, -1);
@@ -158,8 +159,8 @@ module.exports = {
             db.query(sql, params, callback);
         },
         delete: function (params, callback) {
-            var sql = "";
-            db.query(sql, params, callback);
+            var sql = "DELETE FROM `catalogs` WHERE app_instance = '" + params.app_instance + "' AND id IN ('" + params.catalogs.join("','") + "')";
+            db.query(sql, null, callback);
         }
     }
 };

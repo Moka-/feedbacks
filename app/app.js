@@ -67,6 +67,24 @@ app.get('*', function(req, res) {
 //     console.log(a);
 //     console.log(b);
 // });
+/*var data = {body:
+ { catalogs:
+ [ { id: '4776c145-82ed-42c0-a45d-6fda6255bf4d',
+ name: 'My catalog1',
+ widgets: [],
+ deleted: false },
+ { id: '7d66aecb-c324-4634-931c-4a31d1344a8f',
+ name: 'catalog2',
+ widgets: [],
+ deleted: true },
+ { name: 'Default Catalog',
+ id: 0,
+ widgets: [Object],
+ deleted: false } ],
+ app_instance: '4a8eda33-6035-4c65-9cf6-6befeaf2d2af' }};
+ api.catalogs.add(data,function (req, res) {
+
+ });*/
 /*var req = {};
 req.params = {app_instance : "4a8eda33-6035-4c65-9cf6-6befeaf2d2af",
                 component_id : "comp-inx9esxf"}

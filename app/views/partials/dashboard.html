@@ -29,14 +29,15 @@
 
                     <md-content class="md-padding simpleDemo" layout="row" layout-align="start stretch"
                                 ng-hide="loading_catalogs">
-                        <section ng-repeat="catalog in models.catalogs" class="catalog-item">
+                        <div ng-repeat="catalog in models.catalogs">
+                            <section ng-if="catalog.deleted == false" class="catalog-item">
                             <md-subheader class="md-primary">
                                 <md-input-container class="md-block" flex-gt-sm>
                                     <label>Catalog Name</label>
                                     <input ng-model="catalog.name" md-maxlength="45"
                                            ng-disabled="catalog.name == 'Default Catalog'" md-select-on-focus>
                                     <md-button ng-click="removeCatalog(catalog.id, catalog.widgets)"
-                                               class="md-icon-button" ng-hide="catalog.name == 'Default Catalog'">
+                                               class="md-icon-button" ng-if="catalog.name != 'Default Catalog'">
                                         <md-tooltip md-direction="left">
                                             Delete
                                         </md-tooltip>
@@ -55,13 +56,13 @@
                                 </li>
                             </ul>
                         </section>
-
+                        </div>
                     </md-content>
 
                     <md-content layout="row" layout-align="start start">
                         <section class="catalog-item" layout="row" layout-align="space-around stretch">
                             <md-button ng-click="addCatalog()">Add catalog</md-button>
-                            <md-button ng-click="undo()">Undo</md-button>
+                            <md-button ng-click="undoChanges()">Undo Changes</md-button>
                             <md-button class="md-raised md-primary" ng-click="saveCatalogs()">Save</md-button>
 
                         </section>

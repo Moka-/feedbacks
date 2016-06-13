@@ -25,7 +25,11 @@ module.exports = {
             },
             function (err, rows, fields) {
                 console.log(querySql);
-                if (err) throw err;
+
+                if (err) {
+                    console.error(err);
+                }
+
                 callback(err, rows);
             });
     }

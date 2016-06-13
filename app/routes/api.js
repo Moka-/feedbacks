@@ -198,53 +198,49 @@ module.exports = {
             });
         },
         add: function (req, res) {
-            var newCatalogs = [];
+            var catalogs = req.body.catalogs;
+            var newCatalogsData = {app_instance: req.body.app_instance, catalogs: []};
+            var deletedCatalogsData = {app_instance: req.body.app_instance, catalogs: []};
+            var updatedCatalogsData = {app_instance: req.body.app_instance, catalogs: []};
 
-            req.body.filter(function (catalog) {
-                return catalog.new == true;
-            }).forEach(function (catalog) {
-                newCatalogs.push({
-                    app_instance: catalog.app_instance,
-                    name: catalog.name
-                });
+            newCatalogsData.catalogs = catalogs.filter(function (catalog) {
+                if (catalog.new != true) {
+                    updatedCatalogsData.catalogs.push(catalog);
+                } else {
+                    return true;
+                }
             });
 
-            if (newCatalogs.length > 0) {
-                dal.catalogs.add(newCatalogs, function (err, results) {
-                    console.log(results);
-                    for (var i = 0; i < req.body.length; i++) {
-                        var updateParameters = [req.body[i].catalog_id];
-                        dal.widgets.updateCatalog(req.body[i].widgets, function (err, results) {
+            deletedCatalogsData.catalogs = catalogs.filter(function (catalog) {
+                if (catalog.deleted != true) {
+                    updatedCatalogsData.catalogs.push(catalog);
+                } else {
+                    return true;
+                }
+            }).map(function (catalog) {
+                return catalog.id;
+            });
 
-                        });
+            if (newCatalogsData.catalogs.length > 0) {
+                dal.catalogs.add(newCatalogsData, function (err) {
+                    if (err) {
+                        console.error(err);
                     }
+
+                    updateWidgets(newCatalogsData);
                 });
             }
-            /*for (var i = 0; i < req.body.length; i++) {
-             if(req.body[i].new == true){
 
-             }
+            updateWidgets(updatedCatalogsData);
 
-             dal.widgets.update(req.body[i].widgets);
-             }
-             dal.catalogs.add(req.body.filter(function (catalog) {
-             return catalog.new == true;
-             }), function (err, result) {
-             if(err){
-             throw err;
-             }
-
-             for (var i = 0; i < req.body.length; i++) {
-             dal.widgets.update(req.body[i].widgets);
-             }
-
-             });
-
-             for (var i = 0; i < req.body.length; i++) {
-             if (req.body[i].new == true) {
-
-             }
-             }*/
+            if (deletedCatalogsData.catalogs.length > 0) {
+                dal.catalogs.delete(deletedCatalogsData, function (err, result) {
+                    if (err) {
+                        console.error(err);
+                    }
+                    console.log(result);
+                });
+            }
         },
         update: function (req, res) {
             res.render('widget');
@@ -254,3 +250,24 @@ module.exports = {
         }
     }
 };
+
+function updateWidgets(catalogsData) {
+    for (var i = 0; i < catalogsData.catalogs.length; i++) {
+        if (catalogsData.catalogs[i].deleted == false && catalogsData.catalogs[i].id != 0 && catalogsData.catalogs[i].widgets.length > 1) {
+            var widgetIds = catalogsData.catalogs[i].widgets.map(function (obj) {
+                return obj.component_id;
+            }).join(",");
+
+            var updateParameters = {
+                catalog_id: catalogsData.catalogs[i].catalog_id,
+                app_instance: catalogsData.app_instance,
+                widgetIds: widgetIds
+            };
+            dal.widgets.updateCatalog(updateParameters, function (err, results) {
+                if (err) {
+                    console.error(err);
+                }
+            });
+        }
+    }
+}
