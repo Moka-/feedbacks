@@ -24,19 +24,23 @@ angular.module('feedbacks')
 
       $scope.loadCatalogs = function () {
 
-      }
+      };
 
-      $scope.gotodash = function(){
+      $scope.goToDash = function () {
           $wix.Settings.getDashboardAppUrl(function(url) {
               window.open(url, '_blank');
           });
       };
-      $scope.revert = function(){
+
+      $scope.revertChanges = function () {
           loadSettings();
       };
-      $scope.apply = function(){
-          $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, application.getComponentId());
+
+      $scope.applyChanges = function () {
+          console.log('click!');
+          $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, $wix.Utils.getOrigCompId());
       };
+
       $scope.save = function(){
           var request = $http({
               method: "put",
@@ -50,7 +54,5 @@ angular.module('feedbacks')
               }, function (err) {
                   alert('Error loading new settings');
               });
-
-
       };
   });

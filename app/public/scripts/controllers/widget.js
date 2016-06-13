@@ -10,11 +10,11 @@ angular.module('feedbacks')
             this.image_url = image_url ? image_url : "images/avatar.png";
         };
 
-        function Feedback(){
+        function Feedback() {
             this.comment = "";
             this.rating = 0;
 
-            this.reset = function(){
+            this.reset = function () {
                 this.comment = "";
                 this.rating = 0;
             };
@@ -23,11 +23,11 @@ angular.module('feedbacks')
         $scope.loading_feedbacks = true;
         $scope.loading_summary = true;
         $scope.settings = {};
-        
+
         $scope.logged_in = false;
         $scope.logged_user = new User();
-        
-        $wix.getBoundingRectAndOffsets(function(data){
+
+        $wix.getBoundingRectAndOffsets(function (data) {
             $scope.widgetHeight = data.rect.height;
         });
 
@@ -40,11 +40,11 @@ angular.module('feedbacks')
         };
 
         application.getWidgetSettings().then(
-            function (response){ // Success loading settings
+            function (response) { // Success loading settings
                 $scope.settings = response.data[0];
                 $scope.loading_summary = false;
-            }, function(response){ // Shit's fucked yo
-        
+            }, function (response) { // Shit's fucked yo
+
             });
 
         data.getFeedbacks().then(function (res) {
@@ -54,10 +54,10 @@ angular.module('feedbacks')
 
             for (var i = 0; i < res.data.length; i++) {
                 sum += res.data[i].rating;
-                if(res.data[i].rating != 0)
+                if (res.data[i].rating != 0)
                     actualRates++;
             }
-            
+
             $scope.average_rating = sum / actualRates;
             $scope.average_rating_rounded = Math.round($scope.average_rating);
             $scope.loading_feedbacks = false;
@@ -89,7 +89,7 @@ angular.module('feedbacks')
 
                     for (var i = 0; i < $scope.data.length; i++) {
                         sum += $scope.data[i].rating;
-                        if($scope.data[i].rating != 0)
+                        if ($scope.data[i].rating != 0)
                             actualRates++;
                     }
 
@@ -122,12 +122,12 @@ angular.module('feedbacks')
             $scope.$apply();
         });
 
-        $wix.addEventListener($wix.Events.SETTINGS_UPDATED,function(settings){
+        $wix.addEventListener($wix.Events.SETTINGS_UPDATED, function (settings) {
             $scope.settings = settings;
             $scope.$apply();
         });
 
-        $scope.logOut = function() {
+        $scope.logOut = function () {
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
                 $scope.logged_in = false;
@@ -135,4 +135,4 @@ angular.module('feedbacks')
                 $scope.$apply();
             });
         };
-});
+    });

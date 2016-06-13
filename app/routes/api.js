@@ -4,7 +4,7 @@ var dal = require('../dal/dal');
 var uuid = require('node-uuid');
 var https = require('https');
 var googleAuth = require('google-auth-library');
-//noinspection JSUnresolvedVariable
+
 module.exports = {
     visitors: {
         list: function (req, res) {
@@ -42,10 +42,10 @@ module.exports = {
             });
         },
         add: function (req, res) {
-            
+
             console.log(req.body.visitor_id);
             (new (new googleAuth).OAuth2).verifyIdToken(req.body.visitor_id, null, function (err, googleRes) {
-                if(err) {
+                if (err) {
                     console.error(err);
                     throw err;
                 }
@@ -71,19 +71,19 @@ module.exports = {
                         };
 
                         dal.visitors.add(visitor, function (err) {
-                            if (err){
+                            if (err) {
                                 console.error(err);
                                 throw err;
                             }
 
                             dal.feedbacks.add(feedback, function (err, results) {
-                               if (err){
+                                if (err) {
                                     console.log(err);
                                     console.log(results);
                                     res.json(err);
-                               } else {
+                                } else {
                                     var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-                                    dal.feedbacks.view(widgetParams, function(err, results){
+                                    dal.feedbacks.view(widgetParams, function (err, results) {
                                         res.json(results);
                                     });
                                 }
@@ -91,13 +91,13 @@ module.exports = {
                         });
                     } else {
                         dal.feedbacks.add(feedback, function (err, results) {
-                            if (err){
+                            if (err) {
                                 console.log(err);
                                 console.log(results);
                                 res.json(err);
                             } else {
                                 var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-                                dal.feedbacks.view(widgetParams, function(err, results){
+                                dal.feedbacks.view(widgetParams, function (err, results) {
                                     res.json(results);
                                 });
                             }
@@ -125,10 +125,11 @@ module.exports = {
             var params = [req.params.app_instance, req.params.component_id];
             dal.widgets.view(params, function (err, widget) {
                 if (widget.length == 0) {
-                    dal.widgets.getSettingsCopy(req.params.app_instance, function (err, appWidgetSettings) {
+                    dal.widgets.settingsCopy(req.params.app_instance, function (err, appWidgetSettings) {
                         var params = appWidgetSettings[0];
+
                         params.component_id = req.params.component_id;
-                        console.log(params);
+                        params.catalog_id = null;
                         dal.widgets.add(params, function (err, results) {
                             res.json(results);
                         });
@@ -169,14 +170,24 @@ module.exports = {
     },
     catalogs: {
         list: function (req, res) {
+            console.log(req.params);
             dal.catalogs.list(req.params, function (err, catalogs) {
-                dal.widgets.list([req.params.app_instance], function (err, widgets) {
-                    catalogs.forEach(function(current){
+                dal.widgets.list(req.params, function (err, widgets) {
+                    catalogs.forEach(function (current) {
                         current.widgets = widgets.filter(function (value) {
-                            return value.app_instance == current.app_instance &&
-                                value.catalog_id == current.id;
+                            return value.catalog_id == current.id;
                         });
                     });
+
+                    var defaultCatalog = {
+                        name: "Default Catalog",
+                        id: 0,
+                        widgets: widgets.filter(function (value) {
+                            return value.catalog_id == null;
+                        })
+                    };
+
+                    catalogs.push(defaultCatalog);
                     res.json(catalogs);
                 });
             });
@@ -187,7 +198,53 @@ module.exports = {
             });
         },
         add: function (req, res) {
-            res.render('widget');
+            var newCatalogs = [];
+
+            req.body.filter(function (catalog) {
+                return catalog.new == true;
+            }).forEach(function (catalog) {
+                newCatalogs.push({
+                    app_instance: catalog.app_instance,
+                    name: catalog.name
+                });
+            });
+
+            if (newCatalogs.length > 0) {
+                dal.catalogs.add(newCatalogs, function (err, results) {
+                    console.log(results);
+                    for (var i = 0; i < req.body.length; i++) {
+                        var updateParameters = [req.body[i].catalog_id];
+                        dal.widgets.updateCatalog(req.body[i].widgets, function (err, results) {
+
+                        });
+                    }
+                });
+            }
+            /*for (var i = 0; i < req.body.length; i++) {
+             if(req.body[i].new == true){
+
+             }
+
+             dal.widgets.update(req.body[i].widgets);
+             }
+             dal.catalogs.add(req.body.filter(function (catalog) {
+             return catalog.new == true;
+             }), function (err, result) {
+             if(err){
+             throw err;
+             }
+
+             for (var i = 0; i < req.body.length; i++) {
+             dal.widgets.update(req.body[i].widgets);
+             }
+
+             });
+
+             for (var i = 0; i < req.body.length; i++) {
+             if (req.body[i].new == true) {
+
+             }
+             }*/
         },
         update: function (req, res) {
             res.render('widget');
