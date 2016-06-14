@@ -6,13 +6,12 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     http = require('http');
-var router = express.Router();
 var app = express();
 
-var routes = require('./routes/widget');
+var routes = require('./routes/views');
 var api = require('./routes/api');
 var dal = require('./dal/dal');
-// view engine setup
+
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
@@ -24,40 +23,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/node', express.static(path.join(__dirname, '../node_modules')));
-app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
+
 app.post('/provision', function (res1, res2) {
     console.log(res1);
     console.log(res2);
 });
 
-// index.html is reffered at the end
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
-app.get('/visitors', api.visitors.list);
-app.post('/visitors', api.visitors.add);
-app.get('/visitor/:id', api.visitors.view);
-app.put('/visitor/:id', api.visitors.update);
-app.delete('/visitor/:id', api.visitors.delete);
-
-app.get('/feedbacks/:app_instance/:component_id', api.feedbacks.list);
-app.post('/feedbacks', api.feedbacks.add);
-app.get('/feedback/:id', api.feedbacks.view);
-app.put('/feedback/:id', api.feedbacks.update);
-app.delete('/feedback/:id', api.feedbacks.delete);
-
-app.get('/widgets', api.widgets.list);
-app.post('/widgets', api.widgets.add);
-app.get('/widgets/:app_instance/:component_id', api.widgets.view);
-app.put('/widgets', api.widgets.update);
-app.delete('/widget/:id', api.widgets.delete);
-
-app.get('/catalogs/:app_instance', api.catalogs.list);
-app.post('/catalogs', api.catalogs.add);
-//app.get('/catalogs/:id', api.catalogs.view);
-app.put('/catalogs/:id', api.catalogs.update);
-app.delete('/catalogs/:id', api.catalogs.delete);
-
+app.use('/api', api);
 app.get('*', function(req, res) {
     res.sendfile('app/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
