@@ -4,7 +4,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         express: {
             options: {
-                // Override defaults here
                 port: 9000
             },
             web: {
@@ -25,10 +24,12 @@ module.exports = function (grunt) {
                     livereload: true
                 },
                 files: [
+                    'app/public/**/*.html',
                     'app/public/styles/**/*.css',
                     'app/views/**/*.html',
                     'app/public/scripts/**/*.js',
                     'app/public/images/**/*'
+
                 ],
                 tasks: ['jshint']
             },
