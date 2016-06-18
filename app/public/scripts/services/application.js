@@ -2,7 +2,7 @@ angular.module('application', ['wix'])
     .factory('application', function ($wix, $http) {
         var app = {
             getWidgetSettings: function () {
-                return $http.get('/widgets/' + this.getAppInstance() + '/' + this.getComponentId());
+                return $http.get('/api/widgets/' + this.getAppInstance() + '/' + this.getComponentId());
             },
             getApplicationId: function () { // obsolete
                 return this.getAppInstance();

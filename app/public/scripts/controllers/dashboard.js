@@ -2,7 +2,7 @@
 
 angular.module('feedbacks')
     .controller('DashboardController', function ($scope, $http, $wix, application, uuid) {
-        $http.get('/catalogs/' + application.getApplicationId()).then(
+        $http.get('/api/catalogs/' + application.getApplicationId()).then(
             function (response) { // Success loading settings
                 response.data.forEach(function (current) {
                     current.deleted = false;
@@ -24,7 +24,7 @@ angular.module('feedbacks')
         $scope.saveCatalogs = function () {
             var request = $http({
                 method: "post",
-                url: "/catalogs",
+                url: "/api/catalogs",
                 data: $scope.models.catalogs
             });
         };

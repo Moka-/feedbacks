@@ -57,7 +57,7 @@ module.exports = {
             db.query(sql, params, callback);
         },
         add: function (params, callback) {
-            var sql = 'INSERT INTO `feedbacks` SET ?';
+            var sql = 'INSERT INTO `feedbacks2` SET ?';
             db.query(sql, params, callback);
         },
         update: function (params, callback) {

@@ -5,51 +5,31 @@ var express = require('express'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
-    http = require('http');
-var app = express();
+    http = require('http'),
+    app = express(),
+    routes = require('./routes/views'),
+    api = require('./routes/api'),
+    dal = require('./dal/dal');
 
-var routes = require('./routes/views');
-var api = require('./routes/api');
-var dal = require('./dal/dal');
-
+app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-app.set('port', process.env.PORT || 9000);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use('/node', express.static(path.join(__dirname, '../node_modules')));
-
-app.post('/provision', function (res1, res2) {
-    console.log(res1);
-    console.log(res2);
-});
-
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
 app.use('/api', api);
 app.get('*', function(req, res) {
-    res.sendfile('app/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+    res.sendFile(path.join(__dirname, 'public/index.html')); // load the single view file (angular will handle the page changes on the front-end)
 });
-
-// var req={params : {app_instance: 'bcac1c8a-3b11-4374-aff7-e865a14c2681'}};
-//  api.catalogs.list(req, function (a, b) {
-//     console.log(a);
-//     console.log(b);
-// });
-/*var req = {};
-req.params = {app_instance : "4a8eda33-6035-4c65-9cf6-6befeaf2d2af",
-                component_id : "comp-inx9esxf"}
- api.widgets.view(req);*/
-
-
-// redirect all others to the index (HTML5 history)
-//app.get('*', widget_routes.widget);
 
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
