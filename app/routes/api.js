@@ -315,46 +315,38 @@ router.route('/feedbacks/:app_instance/:component_id')
 
                         callback(null, publisher);
                     })
-                }],
+                },
+                function (callback) { // add the publisher to visitors
+                    dal.visitors.view(feedback.visitor_id, function (err, user) {
+                        if (user.length == 0) {
+                            dal.visitors.add(publisher, function (err) {
+                                callback(err);
+                            });
+                        } else {
+                            callback();
+                        }
+                    });
+                },
+                function (callback) { // add the feedback
+                    dal.feedbacks.add(feedback, function (err, results) {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
+                            dal.feedbacks.view(widgetParams, function (err, results) {
+                                callback(err);
+                            });
+                        }
+                    });
+                }
+            ],
             function (err, results) {
                 if (err) {
-                    callback(err)
+                    console.log(err);
+                    console.log(results);
+                    res.status(500).json({error: "Internal server error"});
                 } else {
-                    async.parallel([ // add publisher and feedback in parallel
-                            function (callback) { // add the publisher to visitors
-                                dal.visitors.view(feedback.visitor_id, function (err, user) {
-                                    if (user.length == 0) {
-                                        dal.visitors.add(publisher, function (err) {
-                                            callback(err);
-                                        });
-                                    } else {
-                                        callback();
-                                    }
-                                });
-                            },
-                            function (callback) { // add the feedback
-                                dal.feedbacks.add(feedback, function (err, results) {
-                                    if (err) {
-                                        callback(err);
-                                    } else {
-                                        var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-                                        dal.feedbacks.view(widgetParams, function (err, results) {
-                                            callback(err);
-                                        });
-                                    }
-                                });
-                            }
-                        ],
-                        function (err, results) {
-                            if (err) {
-                                console.log(err);
-                                console.log(results);
-                                res.status(500).json({error: "Internal server error"});
-                            } else {
-                                res.sendStatus(200);
-                            }
-                        }
-                    );
+                    res.sendStatus(200);
                 }
             }
         );
