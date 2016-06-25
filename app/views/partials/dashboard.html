@@ -31,31 +31,34 @@
                                 ng-hide="loading_catalogs">
                         <div ng-repeat="catalog in models.catalogs">
                             <section ng-if="catalog.deleted == false" class="catalog-item">
-                            <md-subheader class="md-primary">
-                                <md-input-container class="md-block" flex-gt-sm>
-                                    <label>Catalog Name</label>
-                                    <input ng-model="catalog.name" md-maxlength="45"
-                                           ng-disabled="catalog.name == 'Default Catalog'" md-select-on-focus>
-                                    <md-button ng-click="removeCatalog(catalog.id, catalog.widgets)"
-                                               class="md-icon-button" ng-if="catalog.name != 'Default Catalog'">
-                                        <md-tooltip md-direction="left">
-                                            Delete
-                                        </md-tooltip>
-                                        <md-icon md-svg-src="images/ic_delete_black_18px.svg"></md-icon>
-                                    </md-button>
-                                </md-input-container>
-                            </md-subheader>
-                            <ul dnd-list="catalog.widgets">
-                                <li ng-repeat="widget in catalog.widgets"
-                                    dnd-draggable="widget"
-                                    dnd-moved="catalog.widgets.splice($index, 1)"
-                                    dnd-effect-allowed="move"
-                                    dnd-selected="models.selected = widget"
-                                    ng-class="{'selected': models.selected === item}">
-                                    {{widget.widget_name}}
-                                </li>
-                            </ul>
-                        </section>
+                                <md-subheader class="md-primary">
+                                    <div layout="row" layout-align="space-between start">
+                                        <md-input-container layout-fill>
+                                            <label>Catalog Name</label>
+                                            <input ng-model="catalog.name" md-maxlength="45"
+                                                   ng-disabled="catalog.name == 'Default Catalog'" md-select-on-focus>
+                                        </md-input-container>
+                                        <md-button ng-click="removeCatalog(catalog.id, catalog.widgets)"
+                                                   class="md-icon-button md-primary"
+                                                   ng-if="catalog.name != 'Default Catalog'">
+                                            <md-tooltip md-direction="right">
+                                                Delete
+                                            </md-tooltip>
+                                            <md-icon md-svg-src="images/ic_delete_black_18px.svg"></md-icon>
+                                        </md-button>
+                                    </div>
+                                </md-subheader>
+                                <ul dnd-list="catalog.widgets">
+                                    <li ng-repeat="widget in catalog.widgets"
+                                        dnd-draggable="widget"
+                                        dnd-moved="catalog.widgets.splice($index, 1)"
+                                        dnd-effect-allowed="move"
+                                        dnd-selected="models.selected = widget"
+                                        ng-class="{'selected': models.selected === item}">
+                                        {{widget.widget_name}}
+                                    </li>
+                                </ul>
+                            </section>
                         </div>
                     </md-content>
 

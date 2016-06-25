@@ -260,22 +260,22 @@ var router = express.Router();
 // };
 
 router.route('/visitors')
-    .get(function(req, res, next) {
+    .get(function (req, res, next) {
         dal.visitors.list(req.params, function (err, result) {
             res.json(result);
         });
     })
-    .post(function(req, res, next) {
+    .post(function (req, res, next) {
         next(new Error('not implemented'));
     });
 
 router.route('/visitors/:id')
-    .get(function(req, res, next) {
+    .get(function (req, res, next) {
         dal.visitors.view(req.params, function (err, result) {
             res.json(result);
         });
     })
-    .put(function(req, res, next) {
+    .put(function (req, res, next) {
         next(new Error('not implemented'));
     })
     .delete(function (req, res, next) {
@@ -283,7 +283,7 @@ router.route('/visitors/:id')
     });
 
 router.route('/feedbacks/:app_instance/:component_id')
-    .get(function(req, res, next) {
+    .get(function (req, res, next) {
         var params = [req.params.app_instance, req.params.component_id];
         dal.feedbacks.list(params, function (err, results) {
             res.json(results);
@@ -353,39 +353,45 @@ router.route('/feedbacks/:app_instance/:component_id')
     });
 
 router.route('/feedbacks/:app_instance/:component_id/:feedback_id')
-    .get(function(req, res, next) {
+    .get(function (req, res, next) {
         dal.feedbacks.view(req.params, function (err, results) {
             res.json(results);
         });
     })
-    .put(function(req, res, next) {
+    .put(function (req, res, next) {
         next(new Error('not implemented'));
     })
-    .delete(function(req, res, next) {
+    .delete(function (req, res, next) {
         next(new Error('not implemented'));
     });
 
 router.route('/widgets/:app_instance')
-    .get(function(req, res, next){
+    .get(function (req, res, next) {
         var params = [req.params.app_instance];
+
         dal.widgets.list(params, function (err, results) {
             res.json(results);
         });
     })
-    .post(function(req, res, next){
+    .post(function (req, res, next) {
         next(new Error('not implemented'));
     });
 
 router.route('/widgets/:app_instance/:component_id')
-    .get(function(req, res, next){
-        var params = [req.params.app_instance, req.params.component_id];
-        dal.widgets.view(params, function (err, widget) {
+    .get(function (req, res, next) {
+        var viewParams = [req.params.app_instance, req.params.component_id];
+
+        dal.widgets.view(viewParams, function (err, widget) {
             if (widget.length == 0) {
                 dal.widgets.settingsCopy(req.params.app_instance, function (err, appWidgetSettings) {
-                    var params = appWidgetSettings[0];
+                    var params = req.params;
 
-                    params.component_id = req.params.component_id;
-                    params.catalog_id = null;
+                    if (appWidgetSettings.length > 0) {
+                        params = appWidgetSettings[0];
+                        params.component_id = req.params.component_id;
+                        params.catalog_id = null;
+                    }
+
                     dal.widgets.add(params, function (err, results) {
                         res.json(results);
                     });
@@ -395,17 +401,50 @@ router.route('/widgets/:app_instance/:component_id')
             }
         });
     })
-    .put(function(req, res, next){
+    .put(function (req, res, next) {
         dal.widgets.update(req.body, function (err, results) {
             res.json(results);
         });
     })
-    .delete(function(req, res, next){
+    .delete(function (req, res, next) {
         next(new Error('not implemented'));
     });
 
 router.route('/catalogs/:app_instance')
-    .get(function(req, res, next){
+    .get(function (req, res, next) {
+        // async.series([
+        //         function (callback) { // add the publisher to visitors
+        //             dal.catalogs.list(req.params, function (err, catalogs) {
+        //                 if (err) {
+        //                     next(new Error(err));
+        //                 } else {
+        //                     callback(err, catalogs);
+        //                 }
+        //             });
+        //         },
+        //         function (callback) { // add the feedback
+        //             dal.widgets.list(req.params, function (err, widgets) {
+        //                 if (err) {
+        //                     callback(err);
+        //                 } else {
+        //                     var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
+        //                     dal.feedbacks.view(widgetParams, function (err, results) {
+        //                         callback(err);
+        //                     });
+        //                 }
+        //             });
+        //         }
+        //     ],
+        //     function (err, results) {
+        //         if (err) {
+        //             console.log(err);
+        //             console.log(results);
+        //             res.status(500).json({error: "Internal server error"});
+        //         } else {
+        //             res.sendStatus(200);
+        //         }
+        //     });
+
         dal.catalogs.list(req.params, function (err, catalogs) {
             dal.widgets.list(req.params, function (err, widgets) {
                 catalogs.forEach(function (current) {
@@ -427,7 +466,7 @@ router.route('/catalogs/:app_instance')
             });
         });
     })
-    .post(function(req, res, next){
+    .post(function (req, res, next) {
         var catalogs = req.body.catalogs;
         var newCatalogsData = {app_instance: req.body.app_instance, catalogs: []};
         var deletedCatalogsData = {app_instance: req.body.app_instance, catalogs: []};
@@ -474,13 +513,13 @@ router.route('/catalogs/:app_instance')
     });
 
 router.route('/catalogs/:app_instance/:catalog_id')
-    .get(function(req, res, next){
+    .get(function (req, res, next) {
         next(new Error('not implemented'));
     })
-    .put(function(req, res, next) {
+    .put(function (req, res, next) {
         next(new Error('not implemented'));
     })
-    .delete(function(req, res, next){
+    .delete(function (req, res, next) {
         next(new Error('not implemented'));
     });
 

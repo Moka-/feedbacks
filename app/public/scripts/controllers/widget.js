@@ -96,7 +96,7 @@ angular.module('feedbacks')
                 });
         };
 
-        function recalculateAverage(){
+        function recalculateAverage() {
             var sum = 0;
             var actualRates = 0;
 

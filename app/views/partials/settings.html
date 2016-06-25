@@ -1,6 +1,6 @@
 <div ng-cloak>
-    <div layout="row" layout-align="space-around" ng-if="!settings">
-        <md-progress-circular md-mode="indeterminate" md-diameter="120"></md-progress-circular>
+    <div layout="column" layout-align="center center" ng-if="!settings" style="height:600px">
+        <md-progress-circular md-mode="indeterminate" md-diameter="70"></md-progress-circular>
     </div>
     <md-content layout="column" layout-align="space-between none" ng-show="settings">
         <md-tabs md-dynamic-height md-border-bottom>
@@ -23,7 +23,8 @@
                             <md-slider flex ng-model="settings.comment_max_length" min="10" max="300"
                                        aria-label="Comment maximum length"></md-slider>
                             <md-input-container class="md-block" flex="10">
-                                <input required type="number" step="any" name="rate" ng-model="settings.comment_max_length" min="10"
+                                <input required type="number" step="any" name="rate"
+                                       ng-model="settings.comment_max_length" min="10"
                                        max="300" aria-label="Comment maximum length"/>
                             </md-input-container>
                         </div>
