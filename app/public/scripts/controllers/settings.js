@@ -15,7 +15,7 @@ angular.module('feedbacks')
 
       $scope.catalogs = []; // Init an empty array
 
-      $http.get('/catalogs/' + application.getApplicationId()).then(
+      $http.get('/api/catalogs/' + application.getApplicationId()).then(
           function (response){ // Success loading settings
               $scope.catalogs = response.data;
           }, function(response){ // Shit's fucked yo
@@ -37,14 +37,13 @@ angular.module('feedbacks')
       };
 
       $scope.applyChanges = function () {
-          console.log('click!');
           $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, $wix.Utils.getOrigCompId());
       };
 
       $scope.save = function(){
           var request = $http({
               method: "put",
-              url: "/widgets",
+              url: "/api/widgets",
               data: $scope.settings
           });
 

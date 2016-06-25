@@ -5,61 +5,30 @@ var express = require('express'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
-    http = require('http');
-var router = express.Router();
-var app = express();
+    http = require('http'),
+    app = express(),
+    routes = require('./routes/views'),
+    api = require('./routes/api'),
+    dal = require('./dal/dal');
 
-var routes = require('./routes/widget');
-var api = require('./routes/api');
-var dal = require('./dal/dal');
-// view engine setup
+app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-app.set('port', process.env.PORT || 9000);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/node', express.static(path.join(__dirname, '../node_modules')));
-app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
-app.post('/provision', function (res1, res2) {
-    console.log(res1);
-    console.log(res2);
-});
 
-// index.html is reffered at the end
+app.use('/node', express.static(path.join(__dirname, '../node_modules')));
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
-app.get('/visitors', api.visitors.list);
-app.post('/visitors', api.visitors.add);
-app.get('/visitor/:id', api.visitors.view);
-app.put('/visitor/:id', api.visitors.update);
-app.delete('/visitor/:id', api.visitors.delete);
-
-app.get('/feedbacks/:app_instance/:component_id', api.feedbacks.list);
-app.post('/feedbacks', api.feedbacks.add);
-app.get('/feedback/:id', api.feedbacks.view);
-app.put('/feedback/:id', api.feedbacks.update);
-app.delete('/feedback/:id', api.feedbacks.delete);
-
-app.get('/widgets', api.widgets.list);
-app.post('/widgets', api.widgets.add);
-app.get('/widgets/:app_instance/:component_id', api.widgets.view);
-app.put('/widgets', api.widgets.update);
-app.delete('/widget/:id', api.widgets.delete);
-
-app.get('/catalogs/:app_instance', api.catalogs.list);
-app.post('/catalogs', api.catalogs.add);
-//app.get('/catalogs/:id', api.catalogs.view);
-app.put('/catalogs/:id', api.catalogs.update);
-app.delete('/catalogs/:id', api.catalogs.delete);
-
+app.use('/api', api);
 app.get('*', function(req, res) {
-    res.sendfile('app/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+    res.sendFile(path.join(__dirname, 'public/index.html')); // load the single view file (angular will handle the page changes on the front-end)
 });
 
 // var req={params : {app_instance: 'bcac1c8a-3b11-4374-aff7-e865a14c2681'}};

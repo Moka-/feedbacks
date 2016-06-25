@@ -9,7 +9,7 @@ var widgetFeedbacksQuery =
     'AND f.app_instance = ? ' +
     'AND f.component_id = ?';
 
-var feedbackQuery = widgetFeedbacksQuery + ' AND f.id = ?';
+var feedbackQuery = widgetFeedbacksQuery + ' AND f.feedback_id = ?';
 
 var defaultAppSettings =
     'SELECT * ' +

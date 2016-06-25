@@ -86,7 +86,8 @@ md-card{
 }
 
 .post-button {
-    margin-right: 0
+    margin-right: 0;
+    margin-bottom: 0;
 }
 
 .log-out a:link,a:visited {
