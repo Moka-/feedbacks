@@ -465,7 +465,9 @@ router.route('/catalogs/:app_instance')
                 res.json(catalogs);
             });
         });
-    })
+    });
+
+router.route('/catalogs')
     .post(function (req, res, next) {
         var catalogs = req.body.catalogs;
         var newCatalogsData = {app_instance: req.body.app_instance, catalogs: []};
@@ -490,26 +492,38 @@ router.route('/catalogs/:app_instance')
             return catalog.id;
         });
 
-        if (newCatalogsData.catalogs.length > 0) {
-            dal.catalogs.add(newCatalogsData, function (err) {
-                if (err) {
-                    console.error(err);
+        async.series([function (callback) {
+                if (newCatalogsData.catalogs.length > 0) {
+                    dal.catalogs.add(newCatalogsData, function (err) {
+                        if (err) {
+                            console.error(err);
+                        }
+
+                        updateWidgets(newCatalogsData, callback);
+                    });
                 }
+            },
+                function (err, callback) {
+                    updateWidgets(updatedCatalogsData, callback);
+                },
+                function (err, callback) {
+                    if (deletedCatalogsData.catalogs.length > 0) {
+                        dal.catalogs.delete(deletedCatalogsData, function (err, result) {
+                            if (err) {
+                                console.error(err);
+                            }
 
-                updateWidgets(newCatalogsData);
-            });
-        }
-
-        updateWidgets(updatedCatalogsData);
-
-        if (deletedCatalogsData.catalogs.length > 0) {
-            dal.catalogs.delete(deletedCatalogsData, function (err, result) {
+                            callback(err);
+                        });
+                    }
+                }],
+            function (err, result) {
                 if (err) {
-                    console.error(err);
+                    res.json(err);
+                } else {
+                    res.json(result);
                 }
-                console.log(result);
             });
-        }
     });
 
 router.route('/catalogs/:app_instance/:catalog_id')
@@ -525,9 +539,11 @@ router.route('/catalogs/:app_instance/:catalog_id')
 
 module.exports = router;
 
-function updateWidgets(catalogsData) {
+function updateWidgets(catalogsData, callback) {
     for (var i = 0; i < catalogsData.catalogs.length; i++) {
-        if (catalogsData.catalogs[i].deleted == false && catalogsData.catalogs[i].id != 0 && catalogsData.catalogs[i].widgets.length > 1) {
+        if (catalogsData.catalogs[i].deleted == false &&
+            catalogsData.catalogs[i].id != 0 &&
+            catalogsData.catalogs[i].widgets.length > 1) {
             var widgetIds = catalogsData.catalogs[i].widgets.map(function (obj) {
                 return obj.component_id;
             }).join(",");
@@ -540,8 +556,13 @@ function updateWidgets(catalogsData) {
             dal.widgets.updateCatalog(updateParameters, function (err, results) {
                 if (err) {
                     console.error(err);
+                    callback(err);
+
+                    return;
                 }
             });
         }
     }
+
+    callback();
 }

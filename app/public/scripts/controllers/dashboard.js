@@ -34,6 +34,9 @@ angular.module('feedbacks')
             return request.then(
                 function (res) { // success
                     debugger;
+                },
+                function (err) {
+                    debugger;
                 });
         };
 

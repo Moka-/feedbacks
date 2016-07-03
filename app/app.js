@@ -16,7 +16,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-app.use(logger('dev'));
+app.use(logger('dev', {
+    skip: function (req, res) {
+        return req.baseUrl == '/node' && res.statusCode < 400;
+    }
+}));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
