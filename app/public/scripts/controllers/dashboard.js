@@ -24,7 +24,7 @@ angular.module('feedbacks')
         $scope.saveCatalogs = function () {
             var request = $http({
                 method: "post",
-                url: "/catalogs",
+                url: "/api/catalogs",
                 data: {
                     catalogs: $scope.models.catalogs,
                     app_instance: application.getApplicationId()

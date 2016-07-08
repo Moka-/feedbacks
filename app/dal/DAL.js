@@ -101,7 +101,9 @@ module.exports = {
         },
         updateCatalog: function (params, callback) {
             var sql = "UPDATE `widgets` SET catalog_id = '" + params.catalog_id +
-                "' WHERE app_instance = '" + params.app_instance + "' AND component_id IN ('" + params.widgetIds + "')";
+                "' WHERE app_instance = '" + params.app_instance + "' AND component_id IN (" + params.widgetIds + ")";
+
+            db.query(sql, null, callback);
             
         },
         delete: function (params, callback) {

@@ -461,7 +461,7 @@ router.route('/catalogs/:app_instance')
                     })
                 };
 
-                catalogs.push(defaultCatalog);
+                catalogs.unshift(defaultCatalog);
                 res.json(catalogs);
             });
         });
@@ -492,29 +492,38 @@ router.route('/catalogs')
             return catalog.id;
         });
 
-        async.series([function (callback) {
-                if (newCatalogsData.catalogs.length > 0) {
-                    dal.catalogs.add(newCatalogsData, function (err) {
-                        if (err) {
-                            console.error(err);
-                        }
-
-                        updateWidgets(newCatalogsData, callback);
-                    });
-                }
-            },
-                function (err, callback) {
-                    updateWidgets(updatedCatalogsData, callback);
+        async.series([
+                function (callback) {
+                    if (newCatalogsData.catalogs.length > 0) {
+                        dal.catalogs.add(newCatalogsData, function (err) {
+                            if (err) {
+                                console.error(err);
+                            }
+                            updateWidgets(newCatalogsData, callback);
+                        });
+                    } else {
+                        callback();
+                    }
                 },
-                function (err, callback) {
+                function (callback) {
+                    if (updatedCatalogsData.catalogs.length > 0) {
+                        updateWidgets(updatedCatalogsData, callback);
+                    } else {
+                        callback();
+                    }
+                },
+                function (callback) {
                     if (deletedCatalogsData.catalogs.length > 0) {
                         dal.catalogs.delete(deletedCatalogsData, function (err, result) {
                             if (err) {
                                 console.error(err);
+                                callback(err);
+                            } else {
+                                callback();
                             }
-
-                            callback(err);
                         });
+                    } else {
+                        callback();
                     }
                 }],
             function (err, result) {
@@ -540,23 +549,25 @@ router.route('/catalogs/:app_instance/:catalog_id')
 module.exports = router;
 
 function updateWidgets(catalogsData, callback) {
+    console.log(catalogsData.catalogs);
     for (var i = 0; i < catalogsData.catalogs.length; i++) {
         if (catalogsData.catalogs[i].deleted == false &&
             catalogsData.catalogs[i].id != 0 &&
             catalogsData.catalogs[i].widgets.length > 1) {
             var widgetIds = catalogsData.catalogs[i].widgets.map(function (obj) {
-                return obj.component_id;
+                return '\'' + obj.component_id + '\'';
             }).join(",");
 
             var updateParameters = {
-                catalog_id: catalogsData.catalogs[i].catalog_id,
+                catalog_id: catalogsData.catalogs[i].id,
                 app_instance: catalogsData.app_instance,
                 widgetIds: widgetIds
             };
             dal.widgets.updateCatalog(updateParameters, function (err, results) {
+                console.log(results);
                 if (err) {
                     console.error(err);
-                    callback(err);
+                    callback();
 
                     return;
                 }
