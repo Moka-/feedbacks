@@ -8,10 +8,8 @@
                     <div layout="column" layout-align="space-around stretch" class="logged-user">
                         {{logged_user.full_name}}
                         <div class="log-out">
-                            <a href="" ng-click="logOut()" ng-show="logged_in" >
-                                Logout
-                            </a>
-                            <google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja" ng-show="!logged_in"></google-plus-signin>
+                            <div id="sign-in-button" ng-click="signIn()" ng-show="!logged_in">GOOGLE SIGN IN</div>
+                            <a href="" ng-click="signOut()" ng-show="logged_in" >Logout</a>
                         </div>
                     </div>
                 </div>

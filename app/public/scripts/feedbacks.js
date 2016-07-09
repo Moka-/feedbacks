@@ -3,7 +3,6 @@
 angular.module('feedbacks', [
     'ngRoute',
     'wix',
-    'directive.g+signin',
     'angularMoment',
     'application',
     'data',
