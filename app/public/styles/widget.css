@@ -33,6 +33,12 @@ md-card{
     padding: 5px;
     border-radius: 5px;
     width: 100%;
+    border: 1px solid #a1a1a1;
+    outline: none;
+}
+
+.widget textarea:focus {
+    border: 1px solid #4D90FE;
 }
 
 .message {
@@ -138,4 +144,14 @@ a:hover {
 .comment-length{
     font-size: 0.85em;
     color: #878787;
+}
+
+md-icon {
+    padding-left: 4px;
+}
+
+.reply {
+    color: #a0a0a0;
+    font-size: 0.9em;
+    font-weight: 500;
 }

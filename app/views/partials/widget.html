@@ -9,13 +9,15 @@
                         {{logged_user.full_name}}
                         <div class="log-out">
                             <div id="sign-in-button" ng-click="signIn()" ng-show="!logged_in">GOOGLE SIGN IN</div>
-                            <a href="" ng-click="signOut()" ng-show="logged_in" >Logout</a>
+                            <a href="" ng-click="signOut()" ng-show="logged_in">Logout</a>
                         </div>
                     </div>
                 </div>
                 <div layout="column" layout-align="space-between end" style="flex: 1">
-                    <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment"
-                              ng-if="settings.enable_comments"></textarea>
+
+                        <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment"
+                                  ng-if="settings.enable_comments" maxlength="{{settings.comment_max_length}}">
+                        </textarea>
                     <div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"
                          layout-align="space-between none">
                         <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
@@ -42,9 +44,9 @@
                 </div>
 
                 <md-list ng-hide="loading_feedbacks">
-                    <md-list-item class="md-2-line feedback"
+                    <md-list-item class="md-3-line md-long-text feedback"
                                   ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
-                        <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"
+                        <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'images/avatar.png'}}"
                              class="md-avatar"/>
                         <div class="md-list-item-text">
                             <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
@@ -53,6 +55,13 @@
                                              ng-if="settings.enable_ratings && feedback.rating"></input-stars>
                             </h4>
                             <p ng-if="settings.enable_comments">{{feedback.comment}}</p>
+
+                            <div>
+                                <a href="" class="reply" ng-click="signOut()" ng-show="logged_in">Reply</a>
+                                <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
+                                <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
+                                <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
+                            </div>
                         </div>
                     </md-list-item>
                 </md-list>
