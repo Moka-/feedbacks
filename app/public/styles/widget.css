@@ -1,9 +1,4 @@
-body, html {
-    background-color: rgba(0, 0, 0, 0) !important;
-    margin: 0;
-}
-
-md-content {
+body, html, md-content {
     background-color: rgba(0, 0, 0, 0) !important;
     margin: 0;
 }
@@ -27,12 +22,22 @@ md-card{
     border-radius: 6px;
 }
 
+.md-button.md-small {
+    /*min-width: 1%;*/
+    /*min-height: 1%;*/
+    font-size: 0.8em;
+    line-height: 20px;
+    min-height: 25px;
+    min-width: 50px;
+}
+
 .widget textarea{
     box-sizing: border-box;
     resize: none;
-    padding: 5px;
-    border-radius: 5px;
+    padding: 5px 8px 5px 8px;
+    border-radius: 3px;
     width: 100%;
+    border-color: #e1e1e2;
 }
 
 .message {
@@ -58,7 +63,7 @@ md-card{
     font-weight: 600 !important;
 }
 
-.feedback .time-ago {
+.time-ago {
     font-weight: 400 !important;
     font-size: 0.8em;
 }
@@ -74,11 +79,41 @@ md-card{
 }
 
 .avatar {
-    width: 50px;
-    height: 50px;
+    width: 50px !important;
+    height: 50px !important;
     margin-right: 15px;
     border: 0;
     border-radius: 25px;
+}
+
+.login{
+    text-transform: uppercase;
+    font-size: 0.85em;
+    color: rgba(163, 163, 163, 1) !important;
+}
+.login .avatar {
+    margin: 0 0 5px 0 ;
+}
+
+.login .fa {
+    font-size: 1.1em;
+    margin: 6px ;
+}
+
+p .comment{
+    margin: 0 !important;
+}
+
+a.google {
+    color: #e84236 !important;
+}
+
+a:hover.google {
+    color: #c6382e !important;
+}
+
+.unavailable {
+    color: rgba(163, 163, 163, 1) !important;
 }
 
 .scroll-this {
@@ -138,4 +173,8 @@ a:hover {
 .comment-length{
     font-size: 0.85em;
     color: #878787;
+}
+
+.widget .highlighted{
+    border-bottom: 1px solid #e9e9e9;
 }

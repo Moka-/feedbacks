@@ -6,4 +6,17 @@ angular.module('data', ['application'])
             var promise = $http.get('/api/feedbacks/' + application.getAppInstance() + '/' + application.getComponentId());
             return promise;
         };
+        this.editFeedback = function(user_id_token, feedback) {
+            var promise = $http({
+                method: "put",
+                url:'/api/feedbacks/' + application.getAppInstance() + '/' + application.getComponentId() + '/' + feedback.feedback_id,
+                data: { user_id_token, feedback }});
+            return promise;
+        };
+        this.deleteFeedback = function(user_id_token, feedback_id) {
+            var promise = $http({
+                method: "delete",
+                url: '/api/feedbacks/' + application.getAppInstance() + '/' + application.getComponentId() + '/' + feedback_id + '/' + user_id_token});
+            return promise;
+        };
     }]);

@@ -1,5 +1,5 @@
 'use strict';
-
+process.execArgv = [];
 module.exports = function (grunt) {
     grunt.initConfig({
         express: {

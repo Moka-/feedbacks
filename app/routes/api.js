@@ -4,10 +4,16 @@ var dal = require('../dal/dal');
 var uuid = require('node-uuid');
 var https = require('https');
 var googleAuth = require('google-auth-library');
+var verifier = require('google-id-token-verifier');
 var async = require('async');
-
 var express = require('express');
 var router = express.Router();
+
+var request = require('request');
+
+
+// app's client IDs to check with audience in ID Token.
+var clientId = '4644920241-or3rocgiqb3156n1r5j7r40taetolkja.apps.googleusercontent.com';
 
 // TODO: remove previous implementation
 // module.exports = {
@@ -259,6 +265,14 @@ var router = express.Router();
 //     }
 // };
 
+function verifyToken(token, callback) {
+    request('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + token, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            callback(error, JSON.parse(body));
+        }
+    })
+}
+
 router.route('/visitors')
     .get(function (req, res, next) {
         dal.visitors.list(req.params, function (err, result) {
@@ -332,21 +346,21 @@ router.route('/feedbacks/:app_instance/:component_id')
                         if (err) {
                             callback(err);
                         } else {
-                            var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-                            dal.feedbacks.view(widgetParams, function (err, results) {
-                                callback(err);
-                            });
+                            console.log(results);
+                            callback(null, results);
+                            // var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
+                            // dal.feedbacks.view(widgetParams, function (err, results) {
+                            //     callback(err);
+                            // });
                         }
                     });
                 }
             ],
             function (err, results) {
                 if (err) {
-                    console.log(err);
-                    console.log(results);
                     res.status(500).json({error: "Internal server error"});
                 } else {
-                    res.sendStatus(200);
+                    res.json(results);
                 }
             }
         );
@@ -359,10 +373,48 @@ router.route('/feedbacks/:app_instance/:component_id/:feedback_id')
         });
     })
     .put(function (req, res, next) {
-        next(new Error('not implemented'));
-    })
+        var app_instance = req.params.app_instance;
+        var component_id = req.params.component_id;
+        var feedback_id = req.params.feedback_id;
+
+        verifyToken(req.body.user_id_token, function(err, tokenInfo){
+            dal.feedbacks.update(
+                app_instance,
+                component_id,
+                feedback_id,
+                tokenInfo.email, 
+                req.body.feedback.comment, 
+                req.body.feedback.rating,
+            function (err, results) {
+                if (err)
+                    res.error();
+                else
+                    res.json(results);
+            });
+        });
+    });
+
+router.route('/feedbacks/:app_instance/:component_id/:feedback_id/:id_token')
     .delete(function (req, res, next) {
-        next(new Error('not implemented'));
+        
+        var app_instance = req.params.app_instance;
+        var component_id = req.params.component_id;
+        var feedback_id = req.params.feedback_id;
+        var id_token = req.params.id_token;
+        
+        verifyToken(id_token, function(err, tokenInfo){
+            dal.feedbacks.delete(
+                app_instance,
+                component_id,
+                feedback_id,
+                tokenInfo.email,
+                function (err, results) {
+                    if (err)
+                        res.error();
+                    else
+                        res.json(results);
+                });
+        });
     });
 
 router.route('/widgets/:app_instance')

@@ -60,13 +60,26 @@ module.exports = {
             var sql = 'INSERT INTO `feedbacks` SET ?';
             db.query(sql, params, callback);
         },
-        update: function (params, callback) {
-            var sql = "";
-            db.query(sql, params, callback);
+        update: function (app_instance,
+                          component_id,
+                          feedback_id,
+                          visitor_id,
+                          comment,
+                          rating,
+                          callback) {
+
+            var queryParams = [{comment, rating}, app_instance, component_id, feedback_id, visitor_id];
+            var sql = "UPDATE `feedbacks` SET ? WHERE app_instance = ? AND component_id = ? AND feedback_id = ? AND visitor_id = ?";
+            db.query(sql, queryParams, callback);
         },
-        delete: function (params, callback) {
-            var sql = "";
-            db.query(sql, params, callback);
+        delete: function (app_instance,
+                          component_id,
+                          feedback_id,
+                          visitor_id,
+                          callback) {
+            var queryParams = [app_instance, component_id, feedback_id, visitor_id];
+            var sql = "DELETE FROM `feedbacks` WHERE app_instance = ? AND component_id = ? AND feedback_id = ? AND visitor_id = ?";
+            db.query(sql, queryParams, callback);
         }
     },
     widgets: {

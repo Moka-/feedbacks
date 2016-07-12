@@ -2,39 +2,10 @@
     <md-content layout="column" layout-align="stretch" ng-style="{ height: widgetHeight + 'px' }">
         <feedbacks-summary></feedbacks-summary>
         <md-card class="scroll-this" layout="column" layout-align="start stretch">
-            <md-card-content layout="row" layout-align="space-between start">
-                <div layout="row" layout-align="start stretch" ng-hide="loading_summary">
-                    <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
-                    <div layout="column" layout-align="space-around stretch" class="logged-user">
-                        {{logged_user.full_name}}
-                        <div class="log-out">
-                            <div id="sign-in-button" ng-click="signIn()" ng-show="!logged_in">GOOGLE SIGN IN</div>
-                            <a href="" ng-click="signOut()" ng-show="logged_in" >Logout</a>
-                        </div>
-                    </div>
-                </div>
-                <div layout="column" layout-align="space-between end" style="flex: 1">
-                    <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment"
-                              ng-if="settings.enable_comments"></textarea>
-                    <div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"
-                         layout-align="space-between none">
-                        <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
-                            <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
-                                {{new_feedback.comment.length}}/{{settings.comment_max_length}}
-                            </span>
-                        </div>
-                        <div>
-                            <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating"
-                                         ng-if="settings.enable_ratings"></input-stars>
-                            <md-button class="md-raised md-primary post-button" ng-click="postComment()"
-                                       ng-disabled="!logged_in || new_feedback.comment.length > settings.comment_max_length ">
-                                Post
-                            </md-button>
-                        </div>
-                    </div>
-                </div>
-            </md-card-content>
+            <feedback-input></feedback-input>
 
+<!--TODO: following md-card-content should be a directive-->
+            <md-subheader class="md-sticky">Feedbacks • {{data.length}}</md-subheader>
             <md-card-content layout="column" layout-align="start stretch"
                              ng-if="settings.show_feedbacks && data && data.length > 0">
                 <div layout="column" layout-align="center center" ng-if="loading_feedbacks">
