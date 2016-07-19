@@ -1,0 +1,164 @@
+<!--login-->
+<md-card-content class="highlighted" layout="row" layout-align="space-between start" ng-if="!logged_in">
+    <div class="login" layout="row" layout-align="center none" ng-hide="loading_summary" flex>
+        <div layout="column" layout-align="center center" flex="25">
+            <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
+            <p>not logged in</p>
+        </div>
+
+        <div layout="column" layout-align="center center" flex="15">
+            <div layout="row" layout-align="center none">
+                <a href="" class="google" ng-click="signIn()"><i class="fa fa-google" aria-hidden="true"></i></a>
+                <i class="fa fa-facebook unavailable" aria-hidden="true"></i>
+            </div>
+            <div layout="row" layout-align="center none">
+                <i class="fa fa-twitter unavailable" aria-hidden="true"></i>
+                <i class="fa fa-tumblr unavailable" aria-hidden="true"></i>
+            </div>
+        </div>
+
+    </div>
+</md-card-content>
+
+<!--previous feedback-->
+<md-card-content class="highlighted" layout="row" layout-align="space-between start" ng-if="logged_in">
+    <!--image and logout-->
+    <div layout="row" layout-align="start stretch" ng-hide="loading_summary">
+        <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
+        <div layout="column" layout-align="space-around stretch" class="logged-user">
+            {{logged_user.full_name}}
+            <a href="" class="logout" ng-click="signOut()" ng-show="logged_in">Logout</a>
+        </div>
+    </div>
+    <!--new feedback editor-->
+    <div layout="column" layout-align="space-between end" flex="100" ng-show="!my_feedback">
+                    <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment"
+                              ng-if="settings.enable_comments"></textarea>
+        <div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"
+             layout-align="space-between none">
+            <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
+                            <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
+                                {{new_feedback.comment.length}}/{{settings.comment_max_length}}
+                            </span>
+            </div>
+            <div>
+                <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating"
+                             ng-if="settings.enable_ratings"></input-stars>
+                <md-button class="md-raised md-primary md-small post-button" ng-click="postComment()"
+                           ng-disabled="!logged_in || new_feedback.comment.length > settings.comment_max_length ">
+                    Post
+                </md-button>
+            </div>
+        </div>
+    </div>
+    <!-- existing feedback editor-->
+    <div layout="column" layout-align="space-between end" flex="100" ng-show="my_feedback && edit_mode">
+                    <textarea rows="2" placeholder="Say something!" ng-model="edited_feedback.comment"
+                              ng-if="settings.enable_comments"></textarea>
+        <div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"
+             layout-align="space-between none">
+            <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
+                            <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
+                                {{edited_feedback.comment.length}}/{{settings.comment_max_length}}
+                            </span>
+            </div>
+            <div>
+                <input-stars max="{{settings.max_rating}}" ng-model="edited_feedback.rating"
+                             ng-if="settings.enable_ratings"></input-stars>
+                <md-button class="md-raised md-primary md-small post-button" ng-click="postFeedbackEdit()"
+                           ng-disabled="edited_feedback.comment.length == 0 || edited_feedback.comment.length > settings.comment_max_length ||
+                                        (edited_feedback.comment == my_feedback.comment && edited_feedback.rating == my_feedback.rating)">
+                    Save
+                </md-button>
+                <md-button class="md-small post-button" ng-click="cancelFeedbackEdit()">
+                    Cancel
+                </md-button>
+
+            </div>
+        </div>
+    </div>
+    <!--my feedback viewer-->
+    <div layout="row" layout-align="space-between center" flex="100" ng-show="my_feedback && !edit_mode">
+        <div layout="column" layout-align="center none" flex="100" style="padding: 5px;">
+            <div layout="row" layout-align="space-between start">
+                <div>
+                    <span class="username">Your comment</span>
+                    <span am-time-ago="my_feedback.created_on" class="time-ago"></span>
+                    <input-stars max="{{settings.max_rating}}" ng-model="my_feedback.rating" readonly
+                                 ng-if="settings.enable_ratings && my_feedback.rating"></input-stars>
+                </div>
+
+            </div>
+            <p class="comment" flex="100">
+                {{my_feedback.comment}}
+            </p>
+        </div>
+        <div layout="row" layout-align="space-between center">
+            <md-button class="md-icon-button" aria-label="Edit" ng-click="editFeedback()">
+                <md-tooltip md-direction="bottom">
+                    Edit
+                </md-tooltip>
+                <md-icon md-svg-src="images/icons/ic_mode_edit_black_18px.svg" style="width: 12px; height: 12px;">
+                </md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Delete" ng-click="deleteFeedback()">
+                <md-tooltip md-direction="bottom">
+                    Delete
+                </md-tooltip>
+                <md-icon md-svg-src="images/icons/ic_delete_black_18px.svg" style="width: 12px; height: 12px;">
+                </md-icon>
+            </md-button>
+        </div>
+
+        <!--<div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"-->
+        <!--layout-align="space-between none">-->
+            <!--<div class="comment-length">&lt;!&ndash; div for the sake of alignment in case of ng-if == false &ndash;&gt;-->
+                            <!--<span layout="column" layout-align="start start" ng-if="settings.enable_comments">-->
+                                <!--{{new_feedback.comment.length}}/{{settings.comment_max_length}}-->
+                            <!--</span>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating"-->
+                             <!--ng-if="settings.enable_ratings"></input-stars>-->
+                <!--<md-button class="md-raised md-primary post-button" ng-click="postComment()"-->
+                           <!--ng-disabled="!logged_in || new_feedback.comment.length > settings.comment_max_length ">-->
+                    <!--Post-->
+                <!--</md-button>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+</md-card-content>
+
+<!--&lt;!&ndash;new feedback&ndash;&gt;-->
+<!--<md-card-content layout="row" layout-align="space-between start" ng-if="logged_in && !my_feedback">-->
+    <!--<div layout="row" layout-align="start stretch" ng-hide="loading_summary">-->
+        <!--<img class="avatar" ng-src="{{ logged_user.image_url }}"/>-->
+        <!--<div layout="column" layout-align="space-around stretch" class="logged-user">-->
+            <!--{{logged_user.full_name}}-->
+            <!--<div class="log-out">-->
+                <!--<div id="sign-in-button" ng-click="signIn()" ng-show="!logged_in">GOOGLE SIGN IN</div>-->
+                <!--<a href="" ng-click="signOut()" ng-show="logged_in" >Logout</a>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div layout="column" layout-align="space-between end" style="flex: 1">-->
+                    <!--<textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment"-->
+                              <!--ng-if="settings.enable_comments"></textarea>-->
+        <!--<div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"-->
+             <!--layout-align="space-between none">-->
+            <!--<div class="comment-length">&lt;!&ndash; div for the sake of alignment in case of ng-if == false &ndash;&gt;-->
+                            <!--<span layout="column" layout-align="start start" ng-if="settings.enable_comments">-->
+                                <!--{{new_feedback.comment.length}}/{{settings.comment_max_length}}-->
+                            <!--</span>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating"-->
+                             <!--ng-if="settings.enable_ratings"></input-stars>-->
+                <!--<md-button class="md-raised md-primary post-button" ng-click="postComment()"-->
+                           <!--ng-disabled="!logged_in || new_feedback.comment.length > settings.comment_max_length ">-->
+                    <!--Post-->
+                <!--</md-button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</md-card-content>-->

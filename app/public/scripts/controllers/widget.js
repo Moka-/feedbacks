@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('feedbacks')
-    .controller('WidgetController', function ($scope, $wix, $http, data, application) {
+    .controller('WidgetController', function ($scope, $wix, $http, $filter, data, application) {
 
         function User(id_token, full_name, email, image_url) {
             this.id_token = id_token;
@@ -23,10 +23,10 @@ angular.module('feedbacks')
         $scope.logged_in = false;
         $scope.logged_user = new User();
 
-        var initSigninV2 = function() {
+        var initSigninV2 = function () {
             auth2 = gapi.auth2.getAuthInstance();
 
-            if(!auth2){
+            if (!auth2) {
                 auth2 = gapi.auth2.init({
                     client_id: '4644920241-or3rocgiqb3156n1r5j7r40taetolkja.apps.googleusercontent.com',
                     scope: 'profile'
@@ -41,7 +41,6 @@ angular.module('feedbacks')
                 auth2.signIn();
             }
         };
-
         var userChanged = function (user) {
             if (user && user.isSignedIn()) {
                 var authResponse = user.getAuthResponse();
@@ -61,6 +60,9 @@ angular.module('feedbacks')
         $scope.loading_feedbacks = true;
         $scope.loading_summary = true;
         $scope.settings = {};
+
+        $scope.my_feedback = {};
+        $scope.edit_mode = false;
 
         $wix.getBoundingRectAndOffsets(function (data) {
             $scope.widgetHeight = data.rect.height;
@@ -88,6 +90,18 @@ angular.module('feedbacks')
             recalculateAverage();
         });
 
+        $scope.$watchGroup(['logged_user.email', 'data'], function (newValues, oldValues) {
+            if (newValues[0] && newValues[1]) {
+                var my_comments = $filter('filter')(newValues[1], {visitor_id: newValues[0]}, true);
+                if (my_comments && my_comments.length > 0) {
+                    $scope.my_feedback = my_comments[0];
+                }
+            }
+            else {
+                $scope.my_feedback = null;
+            }
+        });
+
         $scope.postComment = function () {
             var request = $http({
                 method: "post",
@@ -102,6 +116,7 @@ angular.module('feedbacks')
             return request.then(
                 function (res) { // success
                     var feedback = {
+                        feedback_id: res.data[2].insertId,
                         app_instance: application.getAppInstance(),
                         avatar_url: $scope.logged_user.image_url,
                         comment: $scope.new_feedback.comment,
@@ -113,6 +128,7 @@ angular.module('feedbacks')
                     }
 
                     $scope.data.push(feedback);
+                    $scope.my_feedback = feedback;
 
                     $scope.new_feedback = {
                         comment: '',
@@ -130,6 +146,40 @@ angular.module('feedbacks')
                 });
         };
 
+        $scope.postFeedbackEdit = function () {
+            data.editFeedback($scope.logged_user.id_token, $scope.edited_feedback).then(function (res) {
+                if (res.status == 200 && res.data.affectedRows == 1){
+                    $scope.edit_mode = false;
+                    $scope.my_feedback.comment = $scope.edited_feedback.comment;
+                    $scope.my_feedback.rating = $scope.edited_feedback.rating;
+                }
+            });
+        }
+
+        $scope.deleteFeedback = function(){
+            data.deleteFeedback($scope.logged_user.id_token, $scope.my_feedback.feedback_id).then(function (res) {
+                if (res.status == 200 && res.data.affectedRows == 1){
+                    var index = $scope.data.indexOf($scope.my_feedback);
+                    $scope.data.splice(index, 1);
+                    $scope.my_feedback = null;
+                }
+            });
+        }
+
+        $scope.editFeedback = function () {
+            $scope.edit_mode = true;
+            $scope.edited_feedback =
+            {
+                feedback_id: $scope.my_feedback.feedback_id,
+                comment: $scope.my_feedback.comment,
+                rating: $scope.my_feedback.rating
+            };
+        }
+
+        $scope.cancelFeedbackEdit = function () {
+            $scope.edit_mode = false;
+        }
+
         function recalculateAverage() {
             var sum = 0;
             var actualRates = 0;
@@ -143,34 +193,16 @@ angular.module('feedbacks')
             $scope.average_rating = sum / actualRates;
             $scope.average_rating_rounded = Math.round($scope.average_rating);
         };
-        
+
         $scope.new_feedback = {
             comment: '',
             rating: 0
         };
 
-        // $scope.$on('event:google-plus-signin-success', function (event, authResult) {
-        //     debugger;
-        //     $scope.logged_in = true;
-        //     var authResponse = authResult.getAuthResponse();
-        //     var profile = authResult.getBasicProfile();
-        //     $scope.logged_user = new User(authResponse.id_token, profile.getName(), profile.getEmail(), profile.getImageUrl());
-        //     $scope.$apply();
-        // });
-
         $wix.addEventListener($wix.Events.SETTINGS_UPDATED, function (settings) {
             $scope.settings = settings;
             $scope.$apply();
         });
-
-        // function onSignIn(googleUser) {
-        //     debugger;
-        //     var profile = googleUser.getBasicProfile();
-        //     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        //     console.log('Name: ' + profile.getName());
-        //     console.log('Image URL: ' + profile.getImageUrl());
-        //     console.log('Email: ' + profile.getEmail());
-        // }
 
         $scope.signIn = function () {
             auth2.signIn();

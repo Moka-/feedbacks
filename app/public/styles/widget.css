@@ -1,15 +1,14 @@
-body, html {
+body, html, md-content {
     background-color: rgba(0, 0, 0, 0) !important;
     margin: 0;
 }
 
-md-content {
-    background-color: rgba(0, 0, 0, 0) !important;
+md-card {
     margin: 0;
 }
 
-md-card{
-    margin: 0;
+.feedback-list {
+    padding-top: 0;
 }
 
 .summary-card {
@@ -27,13 +26,22 @@ md-card{
     border-radius: 6px;
 }
 
+.md-button.md-small {
+    /*min-width: 1%;*/
+    /*min-height: 1%;*/
+    font-size: 0.8em;
+    line-height: 20px;
+    min-height: 25px;
+    min-width: 50px;
+}
+
 .widget textarea{
     box-sizing: border-box;
     resize: none;
-    padding: 5px;
-    border-radius: 5px;
+    padding: 5px 8px 5px 8px;
+    border-radius: 3px;
     width: 100%;
-    border: 1px solid #a1a1a1;
+    border: 1px solid #e1e1e2;
     outline: none;
 }
 
@@ -60,11 +68,11 @@ md-card{
     margin-top: 10px;
 }
 
-.feedback h4 {
+.feedback-list-item h4 {
     font-weight: 600 !important;
 }
 
-.feedback .time-ago {
+.time-ago {
     font-weight: 400 !important;
     font-size: 0.8em;
 }
@@ -74,17 +82,50 @@ md-card{
 .summary star-rating {
     font-size: 1.6em;
 }
+
 .summary span {
     color: rgb(163, 163, 163);
     font-size: 1em;
 }
 
 .avatar {
-    width: 50px;
-    height: 50px;
+    width: 50px !important;
+    height: 50px !important;
     margin-right: 15px;
     border: 0;
     border-radius: 25px;
+}
+
+.login {
+    text-transform: uppercase;
+    font-size: 0.85em;
+    color: rgba(163, 163, 163, 1) !important;
+}
+
+.login .avatar {
+    margin: 0 0 5px 0;
+}
+
+.login .fa {
+    font-size: 1.1em;
+    margin: 6px;
+}
+
+p .comment {
+    width: 95%;
+    margin: 0 !important;
+}
+
+a.google {
+    color: #e84236 !important;
+}
+
+a:hover.google {
+    color: #c6382e !important;
+}
+
+.unavailable {
+    color: rgba(163, 163, 163, 1) !important;
 }
 
 .scroll-this {
@@ -132,6 +173,11 @@ a:hover {
     margin: 0;
 }
 
+.fa-star {
+    outline: none;
+}
+
+
 .angular-input-stars > li {
     padding: 0;
     font-size: 1em;
@@ -146,12 +192,41 @@ a:hover {
     color: #878787;
 }
 
-md-icon {
+.scroll-this md-icon {
     padding-left: 4px;
+    min-width: 18px;
+    min-height: 18px;
+    width: 18px;
+    height: 18px;
 }
 
-.reply {
+.reply-button {
     color: #a0a0a0;
     font-size: 0.9em;
     font-weight: 500;
+}
+
+.post-reply {
+    padding-top: 8px;
+    margin-bottom: -8px;
+}
+
+.feedback-avatar {
+    margin-top: 0 !important;
+    margin-left: 4px !important;
+}
+
+.feedback-list-item {
+    padding-left: 0px !important;
+}
+
+.reply-list-item {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-left: 0 !important;
+    min-height: 44px !important;
+}
+
+.widget .highlighted {
+    border-bottom: 1px solid #e9e9e9;
 }

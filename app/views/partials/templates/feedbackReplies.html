@@ -1,0 +1,24 @@
+<md-list >
+    <md-list-item class="md-3-line md-long-text" ng-repeat="reply in feedback.replies">
+        <img ng-src="{{reply.avatar_url ? reply.avatar_url : 'images/avatar.png'}}"
+             class="md-avatar"/>
+        <div class="md-list-item-text">
+            <h4>{{reply.display_name ? reply.display_name : 'Anonymous'}}
+                <span am-time-ago="reply.created_on" class="time-ago"></span>
+            </h4>
+            <p ng-if="settings.enable_comments">{{reply.comment}}</p>
+        </div>
+        <md-list-item class="md-3-line md-long-text" ng-repeat="reply in replies.replies">
+            <img ng-src="{{reply.avatar_url ? reply.avatar_url : 'images/avatar.png'}}"
+                 class="md-avatar"/>
+            <div class="md-list-item-text">
+                <h4>{{reply.display_name ? reply.display_name : 'Anonymous'}}
+                    <span am-time-ago="reply.created_on" class="time-ago"></span>
+                </h4>
+                <p ng-if="settings.enable_comments">{{reply.comment}}</p>
+            </div>
+
+        </md-list-item>
+    </md-list-item>
+</md-list>
+

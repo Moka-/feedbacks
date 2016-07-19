@@ -24,7 +24,7 @@ angular.module('angular-input-stars', [])
 
             scope.items = new Array(+attrs.max);
 
-            var emptyIcon = attrs.iconEmpty || 'fa-star-o';
+            var emptyIcon = attrs.iconEmpty || 'fa-star';
             var iconHover = attrs.iconHover || 'angular-input-stars-hover';
             var fullIcon = attrs.iconFull || 'fa-star';
             var iconBase = attrs.iconBase || 'fa fa-fw';
