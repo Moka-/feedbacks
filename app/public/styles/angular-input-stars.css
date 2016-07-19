@@ -1,6 +1,5 @@
 /* <input-star></input-star> directive */
-.angular-input-stars
-{
+.angular-input-stars {
     display: inline-block;
     padding: 0;
     padding-left: -5px;
@@ -8,8 +7,7 @@
     color: #e1e1e2;
 }
 
-.angular-input-stars > li
-{
+.angular-input-stars > li {
     font-size: 17px;
     display: inline-block;
     padding-right: 5px;
@@ -17,8 +15,7 @@
     cursor: pointer;
 }
 
-.angular-input-stars > li .active
-{
+.angular-input-stars > li .active {
     color: #727273;
     /*text-shadow: black 0 0 1px, 0 0 1px;*/
 }

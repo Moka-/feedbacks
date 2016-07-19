@@ -377,32 +377,32 @@ router.route('/feedbacks/:app_instance/:component_id/:feedback_id')
         var component_id = req.params.component_id;
         var feedback_id = req.params.feedback_id;
 
-        verifyToken(req.body.user_id_token, function(err, tokenInfo){
+        verifyToken(req.body.user_id_token, function (err, tokenInfo) {
             dal.feedbacks.update(
                 app_instance,
                 component_id,
                 feedback_id,
-                tokenInfo.email, 
-                req.body.feedback.comment, 
+                tokenInfo.email,
+                req.body.feedback.comment,
                 req.body.feedback.rating,
-            function (err, results) {
-                if (err)
-                    res.error();
-                else
-                    res.json(results);
-            });
+                function (err, results) {
+                    if (err)
+                        res.error();
+                    else
+                        res.json(results);
+                });
         });
     });
 
 router.route('/feedbacks/:app_instance/:component_id/:feedback_id/:id_token')
     .delete(function (req, res, next) {
-        
+
         var app_instance = req.params.app_instance;
         var component_id = req.params.component_id;
         var feedback_id = req.params.feedback_id;
         var id_token = req.params.id_token;
-        
-        verifyToken(id_token, function(err, tokenInfo){
+
+        verifyToken(id_token, function (err, tokenInfo) {
             dal.feedbacks.delete(
                 app_instance,
                 component_id,
@@ -464,39 +464,6 @@ router.route('/widgets/:app_instance/:component_id')
 
 router.route('/catalogs/:app_instance')
     .get(function (req, res, next) {
-        // async.series([
-        //         function (callback) { // add the publisher to visitors
-        //             dal.catalogs.list(req.params, function (err, catalogs) {
-        //                 if (err) {
-        //                     next(new Error(err));
-        //                 } else {
-        //                     callback(err, catalogs);
-        //                 }
-        //             });
-        //         },
-        //         function (callback) { // add the feedback
-        //             dal.widgets.list(req.params, function (err, widgets) {
-        //                 if (err) {
-        //                     callback(err);
-        //                 } else {
-        //                     var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-        //                     dal.feedbacks.view(widgetParams, function (err, results) {
-        //                         callback(err);
-        //                     });
-        //                 }
-        //             });
-        //         }
-        //     ],
-        //     function (err, results) {
-        //         if (err) {
-        //             console.log(err);
-        //             console.log(results);
-        //             res.status(500).json({error: "Internal server error"});
-        //         } else {
-        //             res.sendStatus(200);
-        //         }
-        //     });
-
         dal.catalogs.list(req.params, function (err, catalogs) {
             dal.widgets.list(req.params, function (err, widgets) {
                 catalogs.forEach(function (current) {
@@ -598,7 +565,60 @@ router.route('/catalogs/:app_instance/:catalog_id')
         next(new Error('not implemented'));
     });
 
+router.route('reply')
+    .post(function (req, res, next) {
+        dal.replies.add(req.body.params, function (err, results) {
+            if (err) {
+                res.json(err);
+            } else {
+                res.json(results);
+            }
+        })
+    });
+router.route('/replies/:feedback_ids')
+    .get(function (req, res, next) {
+        dal.replies.list(req.params.feedback_ids, function (err, results) {
+            if (err) {
+                res.json(err);
+            } else {
+                var repliesTree = listToTree(results);
+                res.json(repliesTree);
+            }
+        });
+    });
+
 module.exports = router;
+
+
+function listToTree(data) {
+    var tree = {},
+        childrenOf = {};
+    var item, id, parentId;
+
+    for (var i = 0, length = data.length; i < length; i++) {
+        item = data[i];
+        id = item['id'];
+        parentId = item['recipient_id'];
+        // every item may have children
+        childrenOf[id] = childrenOf[id] || [];
+        // init its children
+        item['replies'] = childrenOf[id];
+        if (parentId) {
+            // init its parent's children object
+            childrenOf[parentId] = childrenOf[parentId] || [];
+            // push it into its parent's children object
+            childrenOf[parentId].push(item);
+        } else {
+            if (!tree[item.feedback_id]) {
+                tree[item.feedback_id] = [];
+            }
+
+            tree[item.feedback_id].push(item);
+        }
+    }
+
+    return tree;
+}
 
 function updateWidgets(catalogsData, callback) {
     console.log(catalogsData.catalogs);

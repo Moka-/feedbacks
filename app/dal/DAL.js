@@ -2,14 +2,14 @@
 
 var db = require('./db');
 
-var widgetFeedbacksQuery =
-    'SELECT f.*, v.display_name, v.avatar_url ' +
-    'FROM `feedbacks` f,`visitors` v ' +
-    'WHERE f.visitor_id = v.id ' +
-    'AND f.app_instance = ? ' +
-    'AND f.component_id = ?';
+var widgetDataQuery =
+    'SELECT fb.*, v.display_name, v.avatar_url, (select count(*) from `flagged` f where fb.feedback_id =  f.item_id) "times_flagged" ' +
+    'FROM `feedbacks` fb,`visitors` v ' +
+    'WHERE fb.visitor_id = v.id ' +
+    'AND fb.app_instance = ? ' +
+    'AND fb.component_id = ?';
 
-var feedbackQuery = widgetFeedbacksQuery + ' AND f.feedback_id = ?';
+var feedbackQuery = widgetDataQuery + ' AND f.feedback_id = ?';
 
 var defaultAppSettings =
     'SELECT * ' +
@@ -47,9 +47,24 @@ module.exports = {
             db.query(sql, params, callback);
         }
     },
+    replies: {
+        list: function (params, callback) {
+            var sql =
+                'SELECT r.*, v.display_name, v.avatar_url, (select count(*) from `flagged` f where r.id =  f.item_id) "times_flagged" ' +
+                'FROM `replies` r, `visitors` v ' +
+                'WHERE r.visitor_id = v.id ' +
+                'AND   r.feedback_id in (' + params + ')';
+            db.query(sql, params, callback);
+        },
+        add: function (params, callback) {
+            var sql = 'INSERT INTO `replies` SET ?';
+            db.query(sql, params, callback);
+        }
+    },
+
     feedbacks: {
         list: function (params, callback) {
-            var sql = widgetFeedbacksQuery;
+            var sql = widgetDataQuery;
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
@@ -117,7 +132,7 @@ module.exports = {
                 "' WHERE app_instance = '" + params.app_instance + "' AND component_id IN (" + params.widgetIds + ")";
 
             db.query(sql, null, callback);
-            
+
         },
         delete: function (params, callback) {
             var sql = "";

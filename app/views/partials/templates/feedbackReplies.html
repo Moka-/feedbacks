@@ -1,24 +1,26 @@
-<md-list >
-    <md-list-item class="md-3-line md-long-text" ng-repeat="reply in feedback.replies">
-        <img ng-src="{{reply.avatar_url ? reply.avatar_url : 'images/avatar.png'}}"
-             class="md-avatar"/>
-        <div class="md-list-item-text">
-            <h4>{{reply.display_name ? reply.display_name : 'Anonymous'}}
-                <span am-time-ago="reply.created_on" class="time-ago"></span>
-            </h4>
-            <p ng-if="settings.enable_comments">{{reply.comment}}</p>
-        </div>
-        <md-list-item class="md-3-line md-long-text" ng-repeat="reply in replies.replies">
+<md-list>
+    <md-list-item class="md-3-line md-long-text reply-list-item" ng-repeat="reply in feedback.replies">
+        <div layout="row" layout-align="start start">
             <img ng-src="{{reply.avatar_url ? reply.avatar_url : 'images/avatar.png'}}"
                  class="md-avatar"/>
-            <div class="md-list-item-text">
-                <h4>{{reply.display_name ? reply.display_name : 'Anonymous'}}
-                    <span am-time-ago="reply.created_on" class="time-ago"></span>
-                </h4>
-                <p ng-if="settings.enable_comments">{{reply.comment}}</p>
+            <div layout="column" layout-align="space-around stretch">
+                <div class="md-list-item-text">
+                    <h4>{{reply.display_name ? reply.display_name : 'Anonymous'}}
+                        <span am-time-ago="reply.created_on" class="time-ago"></span>
+                    </h4>
+                    <p ng-if="settings.enable_comments">{{reply.comment}}</p>
+                </div>
+                <div>
+                    <a href="" class="reply-button" ng-click="toggleReply(reply)">Reply</a> •
+                    <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
+                    <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
+                    <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
+                </div>
+                <post-reply></post-reply>
+                <!--<reply></reply>-->
             </div>
 
-        </md-list-item>
+        </div>
     </md-list-item>
 </md-list>
 

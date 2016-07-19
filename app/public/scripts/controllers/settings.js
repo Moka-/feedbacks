@@ -43,7 +43,7 @@ angular.module('feedbacks')
       $scope.save = function(){
           var request = $http({
               method: "put",
-              url: "/api/widgets",
+              url: "/api/widgets/" + application.getAppInstance() + "/" + application.getComponentId(),
               data: $scope.settings
           });
 

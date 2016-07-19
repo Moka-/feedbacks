@@ -60,13 +60,22 @@ angular.module('feedbacks')
         $scope.loading_feedbacks = true;
         $scope.loading_summary = true;
         $scope.settings = {};
-
+        $scope.data = {};
         $scope.my_feedback = {};
         $scope.edit_mode = false;
 
-        $wix.getBoundingRectAndOffsets(function (data) {
-            $scope.widgetHeight = data.rect.height;
-        });
+        function updateWidgetHeight() {
+            $wix.getBoundingRectAndOffsets(function (data) {
+                $scope.widgetHeight = data.rect.height;
+            });
+        }
+
+        updateWidgetHeight();
+
+        /*Wix.addEventListener(Wix.Events.SITE_SAVED,function (data) {
+         console.log(data);
+
+         });*/
 
         $scope.settings = {
             show_summary: true,
@@ -88,6 +97,16 @@ angular.module('feedbacks')
             $scope.data = res.data;
             $scope.loading_feedbacks = false;
             recalculateAverage();
+
+            var ids = res.data.map(function (feedback) {
+                return feedback.feedback_id;
+            });
+
+            data.getReplies(ids.join(',')).then(function (res) {
+                for (var i in $scope.data) {
+                    $scope.data[i].replies = res.data[$scope.data[i].feedback_id];
+                }
+            });
         });
 
         $scope.$watchGroup(['logged_user.email', 'data'], function (newValues, oldValues) {
@@ -125,7 +144,7 @@ angular.module('feedbacks')
                         display_name: $scope.logged_user.full_name,
                         rating: $scope.new_feedback.rating,
                         visitor_id: $scope.logged_user.email
-                    }
+                    };
 
                     $scope.data.push(feedback);
                     $scope.my_feedback = feedback;
@@ -148,23 +167,23 @@ angular.module('feedbacks')
 
         $scope.postFeedbackEdit = function () {
             data.editFeedback($scope.logged_user.id_token, $scope.edited_feedback).then(function (res) {
-                if (res.status == 200 && res.data.affectedRows == 1){
+                if (res.status == 200 && res.data.affectedRows == 1) {
                     $scope.edit_mode = false;
                     $scope.my_feedback.comment = $scope.edited_feedback.comment;
                     $scope.my_feedback.rating = $scope.edited_feedback.rating;
                 }
             });
-        }
+        };
 
-        $scope.deleteFeedback = function(){
+        $scope.deleteFeedback = function () {
             data.deleteFeedback($scope.logged_user.id_token, $scope.my_feedback.feedback_id).then(function (res) {
-                if (res.status == 200 && res.data.affectedRows == 1){
+                if (res.status == 200 && res.data.affectedRows == 1) {
                     var index = $scope.data.indexOf($scope.my_feedback);
                     $scope.data.splice(index, 1);
                     $scope.my_feedback = null;
                 }
             });
-        }
+        };
 
         $scope.editFeedback = function () {
             $scope.edit_mode = true;
@@ -174,11 +193,11 @@ angular.module('feedbacks')
                 comment: $scope.my_feedback.comment,
                 rating: $scope.my_feedback.rating
             };
-        }
+        };
 
         $scope.cancelFeedbackEdit = function () {
             $scope.edit_mode = false;
-        }
+        };
 
         function recalculateAverage() {
             var sum = 0;
@@ -199,8 +218,29 @@ angular.module('feedbacks')
             rating: 0
         };
 
+        $scope.toggleReply = function (obj) {
+            obj.show_reply = true;
+        };
+
+        $scope.cancelReply = function (obj) {
+            obj.show_reply = false;
+        };
+
+        $scope.postReply = function (feedback_id) {
+            var request = $http({
+                method: "post",
+                url: "/api/reply/" + feedback_id,
+                data: {
+                    comment: $scope.new_feedback.comment,
+                    rating: $scope.new_feedback.rating,
+                    publisher_token: $scope.logged_user.id_token
+                }
+            });
+        };
+
         $wix.addEventListener($wix.Events.SETTINGS_UPDATED, function (settings) {
             $scope.settings = settings;
+            updateWidgetHeight();
             $scope.$apply();
         });
 

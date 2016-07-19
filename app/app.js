@@ -17,9 +17,9 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 app.use(logger('dev', {
-    skip: function (req, res) {
+    /* skip: function (req, res) {
         return req.baseUrl == '/node' && res.statusCode < 400;
-    }
+     }*/
 }));
 
 app.use(bodyParser.json());
@@ -36,38 +36,50 @@ app.get('*', function(req, res) {
     res.sendFile(path.join(__dirname, 'public/index.html')); // load the single view file (angular will handle the page changes on the front-end)
 });
 
-// var req={params : {app_instance: 'bcac1c8a-3b11-4374-aff7-e865a14c2681'}};
-//  api.catalogs.list(req, function (a, b) {
-//     console.log(a);
-//     console.log(b);
-// });
-/*var data = {body:
- { catalogs:
- [ { id: '4776c145-82ed-42c0-a45d-6fda6255bf4d',
- name: 'My catalog1',
- widgets: [],
- deleted: false },
- { id: '7d66aecb-c324-4634-931c-4a31d1344a8f',
- name: 'catalog2',
- widgets: [],
- deleted: true },
- { name: 'Default Catalog',
- id: 0,
- widgets: [Object],
- deleted: false } ],
- app_instance: '4a8eda33-6035-4c65-9cf6-6befeaf2d2af' }};
- api.catalogs.add(data,function (req, res) {
+//////////////////////////////DEBUG AREA/////////////////////////////////////
+/*var req = {params : {feedback_id : [16 ,17] }};
+ dal.replies.list(req.params.feedback_id.join(","), function (err, results) {
+ if (err) {
+ res.json(err);
+ } else {
+ var repliesTree = listToTree(results);
+ }
+ });
 
- });*/
-/*var req = {};
-req.params = {app_instance : "4a8eda33-6035-4c65-9cf6-6befeaf2d2af",
-                component_id : "comp-inx9esxf"}
- api.widgets.view(req);*/
 
+ function listToTree(data) {
+ var tree = [],
+ childrenOf = {};
+ var item, id, parentId;
+
+ for (var i = 0, length = data.length; i < length; i++) {
+ item = data[i];
+ id = item['id'];
+ parentId = item['recipient_id'];
+ // every item may have children
+ childrenOf[id] = childrenOf[id] || [];
+ // init its children
+ item['replies'] = childrenOf[id];
+ if (parentId) {
+ // init its parent's children object
+ childrenOf[parentId] = childrenOf[parentId] || [];
+ // push it into its parent's children object
+ childrenOf[parentId].push(item);
+ } else {
+ if (!tree[item.feedback_id]){
+ tree[item.feedback_id] = [];
+ }
+
+ tree[item.feedback_id].push(item);
+ }
+ }
+
+ return tree;
+ }
+
+ /////////////*////////DEBUG AREA END////////////////////////
 
 // redirect all others to the index (HTML5 history)
-//app.get('*', widget_routes.widget);
-
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;

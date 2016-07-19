@@ -1,35 +1,44 @@
-<div class="widget" ng-controller="WidgetController" flex layout-fill md-theme="{{ dynamicTheme }}" md-theme-watch>
+<div class="widget" ng-controller="WidgetController" flex layout-fill>
     <md-content layout="column" layout-align="stretch" ng-style="{ height: widgetHeight + 'px' }">
         <feedbacks-summary></feedbacks-summary>
+        <feedback-input></feedback-input>
+        <md-divider></md-divider>
         <md-card class="scroll-this" layout="column" layout-align="start stretch">
-            <feedback-input></feedback-input>
-
-<!--TODO: following md-card-content should be a directive-->
+            <!--TODO: following md-card-content should be a directive-->
             <md-subheader class="md-sticky">Feedbacks • {{data.length}}</md-subheader>
             <md-card-content layout="column" layout-align="start stretch"
-                             ng-if="settings.show_feedbacks && data && data.length > 0">
+                             ng-if="settings.show_feedbacks && data && data.length > 0" class="feedback-list">
                 <div layout="column" layout-align="center center" ng-if="loading_feedbacks">
                     <md-progress-circular md-mode="indeterminate" md-diameter="70"></md-progress-circular>
                 </div>
 
                 <md-list ng-hide="loading_feedbacks">
-                    <md-list-item class="md-3-line md-long-text feedback"
+                    <md-list-item class="md-3-line md-long-text feedback-list-item"
                                   ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
-                        <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'images/avatar.png'}}"
-                             class="md-avatar"/>
-                        <div class="md-list-item-text">
-                            <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
-                                <span am-time-ago="feedback.created_on" class="time-ago"></span>
-                                <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating" readonly
-                                             ng-if="settings.enable_ratings && feedback.rating"></input-stars>
-                            </h4>
-                            <p ng-if="settings.enable_comments">{{feedback.comment}}</p>
+                        <div layout="row" layout-align="space-around start">
+                            <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'images/avatar.png'}}"
+                                 class="md-avatar feedback-avatar"/>
+                            <div layout="column" layout-align="space-around stretch">
+                                <div class="md-list-item-text">
+                                    <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
+                                        <span am-time-ago="feedback.created_on" class="time-ago"></span>
+                                        <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating"
+                                                     readonly
+                                                     ng-if="settings.enable_ratings && feedback.rating"></input-stars>
+                                    </h4>
+                                    <p ng-if="settings.enable_comments">{{feedback.comment}}</p>
 
-                            <div>
-                                <a href="" class="reply" ng-click="signOut()" ng-show="logged_in">Reply</a>
-                                <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
-                                <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
-                                <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
+                                    <div>
+                                        <a href="" class="reply-button"
+                                           ng-click="toggleReply(feedback)">Reply</a> •
+                                        <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
+                                        <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
+                                        <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
+                                    </div>
+
+                                </div>
+                                <post-reply flex="100"></post-reply>
+                                <feedback-replies></feedback-replies>
                             </div>
                         </div>
                     </md-list-item>
