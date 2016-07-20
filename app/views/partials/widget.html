@@ -2,7 +2,7 @@
     <md-content layout="column" layout-align="stretch" ng-style="{ height: widgetHeight + 'px' }">
         <feedbacks-summary></feedbacks-summary>
         <feedback-input></feedback-input>
-        <md-divider></md-divider>
+        <!--<md-divider></md-divider>-->
         <md-card class="scroll-this" layout="column" layout-align="start stretch">
             <!--TODO: following md-card-content should be a directive-->
             <md-subheader class="md-sticky">Feedbacks • {{data.length}}</md-subheader>
@@ -15,11 +15,11 @@
                 <md-list ng-hide="loading_feedbacks">
                     <md-list-item class="md-3-line md-long-text feedback-list-item"
                                   ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
-                        <div layout="row" layout-align="space-around start">
+                        <div layout="row" layout-align="start start" flex="100">
                             <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'images/avatar.png'}}"
                                  class="md-avatar feedback-avatar"/>
-                            <div layout="column" layout-align="space-around stretch">
-                                <div class="md-list-item-text">
+                            <div layout="column" layout-align="start start" flex="100">
+                                <div class="md-list-item-text comment-content">
                                     <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
                                         <span am-time-ago="feedback.created_on" class="time-ago"></span>
                                         <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating"
@@ -37,7 +37,7 @@
                                     </div>
 
                                 </div>
-                                <post-reply flex="100"></post-reply>
+                                <post-reply flex="100" style="width: 100%"></post-reply>
                                 <feedback-replies></feedback-replies>
                             </div>
                         </div>

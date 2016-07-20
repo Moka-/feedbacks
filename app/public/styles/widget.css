@@ -116,7 +116,16 @@ md-card {
 }
 
 p .comment {
-    width: 95%;
+    /*width: 95%;*/
+    margin: 0 !important;
+}
+
+p.comment {
+    margin: 0 !important;
+    word-wrap: break-word;
+}
+
+.comment-content{
     margin: 0 !important;
 }
 

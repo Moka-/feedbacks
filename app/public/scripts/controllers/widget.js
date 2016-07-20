@@ -23,39 +23,42 @@ angular.module('feedbacks')
         $scope.logged_in = false;
         $scope.logged_user = new User();
 
-        var initSigninV2 = function () {
-            auth2 = gapi.auth2.getAuthInstance();
+        function signInInit(){
+            var initSigninV2 = function () {
+                auth2 = gapi.auth2.getAuthInstance();
 
-            if (!auth2) {
-                auth2 = gapi.auth2.init({
-                    client_id: '4644920241-or3rocgiqb3156n1r5j7r40taetolkja.apps.googleusercontent.com',
-                    scope: 'profile'
-                });
-            }
+                if (!auth2) {
+                    auth2 = gapi.auth2.init({
+                        client_id: '4644920241-or3rocgiqb3156n1r5j7r40taetolkja.apps.googleusercontent.com',
+                        scope: 'profile'
+                    });
+                }
 
-            // Listen for changes to current user.
-            auth2.currentUser.listen(userChanged);
+                // Listen for changes to current user.
+                auth2.currentUser.listen(userChanged);
 
-            // Sign in the user if they are currently signed in.
-            if (auth2.isSignedIn.get() == true) {
-                auth2.signIn();
-            }
-        };
-        var userChanged = function (user) {
-            if (user && user.isSignedIn()) {
-                var authResponse = user.getAuthResponse();
-                var profile = user.getBasicProfile();
-                $scope.logged_in = true;
-                $scope.logged_user = new User(authResponse.id_token, profile.getName(), profile.getEmail(), profile.getImageUrl());
-            } else {
-                $scope.logged_in = false;
-                $scope.logged_user = new User();
-            }
+                // Sign in the user if they are currently signed in.
+                if (auth2.isSignedIn.get() == true) {
+                    auth2.signIn();
+                }
+            };
+            var userChanged = function (user) {
+                if (user && user.isSignedIn()) {
+                    var authResponse = user.getAuthResponse();
+                    var profile = user.getBasicProfile();
+                    $scope.logged_in = true;
+                    $scope.logged_user = new User(authResponse.id_token, profile.getName(), profile.getEmail(), profile.getImageUrl());
+                } else {
+                    $scope.logged_in = false;
+                    $scope.logged_user = new User();
+                }
 
-            $scope.$apply();
-        };
+                $scope.$apply();
+            };
 
-        gapi.load('auth2', initSigninV2);
+            gapi.load('auth2', initSigninV2);
+        }
+        signInInit(); // Magic. Do not touch
 
         $scope.loading_feedbacks = true;
         $scope.loading_summary = true;
