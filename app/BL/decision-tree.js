@@ -1,27 +1,13 @@
 var _ = require('lodash');
 
-/**
- * ID3 Decision Tree Algorithm
- * @module DecisionTreeID3
- */
-
 module.exports = (function() {
 
-  /**
-   * Map of valid tree node types
-   * @constant
-   * @static
-   */
   const NODE_TYPES = DecisionTreeID3.NODE_TYPES = {
     RESULT: 'result',
     FEATURE: 'feature',
     FEATURE_VALUE: 'feature_value'
   };
 
-  /**
-   * Underlying model
-   * @private
-   */
   var model;
 
   /**

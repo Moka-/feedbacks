@@ -4,10 +4,10 @@ var dal = require('../dal/dal');
 var uuid = require('node-uuid');
 var https = require('https');
 var googleAuth = require('google-auth-library');
-var verifier = require('google-id-token-verifier');
 var async = require('async');
 var express = require('express');
 var router = express.Router();
+var analysis = require('../bl/analysis');
 
 var request = require('request');
 
@@ -575,6 +575,7 @@ router.route('reply')
             }
         })
     });
+
 router.route('/replies/:feedback_ids')
     .get(function (req, res, next) {
         dal.replies.list(req.params.feedback_ids, function (err, results) {
@@ -586,6 +587,17 @@ router.route('/replies/:feedback_ids')
             }
         });
     });
+
+router.route('/analysis/highlights/:app_instance/:component_id')
+    .get(function (req, res, next) {
+        var params = [req.params.app_instance, req.params.component_id];
+        dal.feedbacks.list(params, function (err, results) {
+            analysis.highlights(results, function (err, results) {
+                res.json(results);
+            });
+        });
+    });
+
 
 module.exports = router;
 

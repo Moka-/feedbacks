@@ -27,7 +27,7 @@ angular.module('feedbacks')
                 // analysis.feedbacksHighlights($scope.widget.component_id).then(function (response) {
                 //     $scope.feedbacksHighlights = response.data;
                 // });
-                $scope.feedbacksHighlights = analysis.feedbacksHighlight($scope.widget.component_id).data;
+                $scope.feedbacksHighlights = analysis.feedbacksHighlights($scope.widget.component_id).data;
 
             }],
             templateUrl: 'partials/templates/widgetOverview.html'
