@@ -113,7 +113,7 @@ angular.module('feedbacks')
         });
 
         $scope.$watchGroup(['logged_user.email', 'data'], function (newValues, oldValues) {
-            if (newValues[0] && newValues[1]) {
+            if (newValues[0] && newValues[1] && Array.isArray(newValues[1])) {
                 var my_comments = $filter('filter')(newValues[1], {visitor_id: newValues[0]}, true);
                 if (my_comments && my_comments.length > 0) {
                     $scope.my_feedback = my_comments[0];

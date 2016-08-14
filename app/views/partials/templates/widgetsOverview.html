@@ -1,0 +1,7 @@
+<md-content class="md-padding">
+    <md-tabs md-border-bottom md-autoselect md-dynamic-height>
+        <md-tab ng-repeat="widget in widgets" label="{{widget.widget_name}}">
+            <widget-overview widget="widget"></widget-overview>
+        </md-tab>
+    </md-tabs>
+</md-content>

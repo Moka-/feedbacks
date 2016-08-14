@@ -61,17 +61,17 @@
                             </section>
                         </div>
                     </md-content>
-
                     <md-content layout="row" layout-align="start start" ng-hide="loading_catalogs">
                         <section class="catalog-item" layout="row" layout-align="space-around stretch">
                             <md-button ng-click="addCatalog()">Add catalog</md-button>
                             <md-button ng-click="undoChanges()">Undo Changes</md-button>
                             <md-button class="md-raised md-primary" ng-click="saveCatalogs()">Save</md-button>
-
                         </section>
-
                     </md-content>
                 </md-content>
+            </md-tab>
+            <md-tab label="Widgets">
+                <widgets-overview>
             </md-tab>
             <md-tab label="FAQ">
                 <md-content class="md-padding">

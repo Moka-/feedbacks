@@ -5,6 +5,7 @@ angular.module('feedbacks', [
     'wix',
     'angularMoment',
     'application',
+    'analysis',
     'data',
     'ngMaterial',
     'ngAnimate',

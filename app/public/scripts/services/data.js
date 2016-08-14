@@ -1,9 +1,12 @@
 'use strict';
 
 angular.module('data', ['application'])
-    .service('data', ['$http', 'application', function ($http, application) {
-        this.getFeedbacks = function getFeedbacks() {
-            var promise = $http.get('/api/feedbacks/' + application.getAppInstance() + '/' + application.getComponentId());
+    .service('data', ['$http', '$q', 'application', function ($http, $q, application) {
+        this.getFeedbacks = function getFeedbacks(component_id) {
+            if (!component_id)
+                component_id = application.getComponentId();
+
+            var promise = $http.get('/api/feedbacks/' + application.getAppInstance() + '/' + component_id);
             return promise;
         };
         this.getReplies = function getReplies(feedback_ids) {
@@ -23,6 +26,10 @@ angular.module('data', ['application'])
                 method: "delete",
                 url: '/api/feedbacks/' + application.getAppInstance() + '/' + application.getComponentId() + '/' + feedback_id + '/' + user_id_token
             });
+            return promise;
+        };
+        this.getWidgets = function (){
+            var promise = $http.get('/api/widgets/' + application.getAppInstance());
             return promise;
         };
     }]);

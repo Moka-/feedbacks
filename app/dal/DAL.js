@@ -99,7 +99,7 @@ module.exports = {
     },
     widgets: {
         list: function (params, callback) {
-            var sql = "SELECT component_id, catalog_id, widget_name FROM `widgets` w WHERE ?";
+            var sql = "SELECT component_id, catalog_id, widget_name FROM `widgets` w WHERE app_instance = ?";
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
