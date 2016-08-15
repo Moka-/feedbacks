@@ -8,6 +8,8 @@ module.exports = (function() {
     FEATURE_VALUE: 'feature_value'
   };
 
+  var igs = {};
+
   var model;
 
   /**
@@ -18,7 +20,9 @@ module.exports = (function() {
     this.data = data;
     this.target = target;
     this.features = features;
-    model = createTree(data, target, features);
+    var depth = 1;
+
+    model = createTree(data, target, features, depth);
   }
 
   /**
@@ -81,14 +85,29 @@ module.exports = (function() {
      */
     toJSON: function() {
       return model;
-    }
+    },
+
+      /**
+       * Returns JSON of aggregated IGs
+       */
+      igRanks: function() {
+          var res = [];
+
+          for (var key in igs) {
+              if (igs.hasOwnProperty(key)) {
+                  res.push({word: key, score: igs[key]});
+              }
+          }
+
+          return res;
+      }
   };
 
   /**
    * Creates a new tree
    * @private
    */
-  function createTree(data, target, features) {
+  function createTree(data, target, features, depth) {
     var targets = _.unique(_.pluck(data, target));
     if (targets.length == 1) {
       return {
@@ -109,7 +128,7 @@ module.exports = (function() {
       };
     }
 
-    var bestFeature = maxGain(data, target, features);
+    var bestFeature = maxGain(data, target, features, depth);
     var remainingFeatures = _.without(features, bestFeature);
     var possibleValues = _.unique(_.pluck(data, bestFeature));
     
@@ -130,7 +149,7 @@ module.exports = (function() {
         type: NODE_TYPES.FEATURE_VALUE
       };
 
-      child_node.child = createTree(_newS, target, remainingFeatures);
+      child_node.child = createTree(_newS, target, remainingFeatures, depth + 1);
       return child_node;
     });
 
@@ -160,7 +179,7 @@ module.exports = (function() {
    * Computes gain
    * @private
    */
-  function gain(data, target, feature) {
+  function gain(data, target, feature, depth) {
     var attrVals = _.unique(_.pluck(data, feature));
     var setEntropy = entropy(_.pluck(data, target));
     var setSize = _.size(data);
@@ -178,17 +197,23 @@ module.exports = (function() {
     }, 0);
 
     var ig = setEntropy - sumOfEntropies;
+    if (!igs[feature]){
+      igs[feature] = ig * Math.pow(setSize, 2);
+    } else {
+      igs[feature] += ig * Math.pow(setSize, 2);
+    }
+
     console.log(feature + " " + ig);
-    return setEntropy - sumOfEntropies;
+    return ig;
   }
 
   /**
    * Computes Max gain across features to determine best split
    * @private
    */
-  function maxGain(data, target, features) {
+  function maxGain(data, target, features, depth) {
     return _.max(features, function(element) {
-      return gain(data, target, element)
+      return gain(data, target, element, depth)
     });
   }
 
