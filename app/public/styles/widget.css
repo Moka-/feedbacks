@@ -213,12 +213,6 @@ a:hover {
     height: 18px;
 }
 
-.reply-button {
-    color: #a0a0a0;
-    font-size: 0.9em;
-    font-weight: 500;
-}
-
 .post-reply {
     padding-top: 8px;
     margin-bottom: -8px;
@@ -242,4 +236,40 @@ a:hover {
 
 .widget .highlighted {
     border-bottom: 1px solid #e9e9e9;
+}
+
+.action-buttons:hover {
+
+}
+
+.action-buttons button {
+    opacity: 0.5;
+    padding: 0 !important;
+    height: 18px !important;
+    width: 18px !important;
+    min-height: 18px;
+    margin: 0px 4px 0px 0px !important;
+}
+
+.action-buttons:hover button {
+    opacity: 0.75;
+}
+
+.action-buttons button:hover {
+    opacity: 1;
+}
+
+.reply-button {
+    opacity: 0.75;
+    color: #a0a0a0;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.action-buttons:hover .reply-button {
+    opacity: 1;
+}
+
+.flagged {
+    font-style: italic;
 }

@@ -2,14 +2,14 @@
 
 var db = require('./db');
 
-var widgetDataQuery =
-    'SELECT fb.*, v.display_name, v.avatar_url, (select count(*) from `flagged` f where fb.feedback_id =  f.item_id) "times_flagged" ' +
+var widgetFeedbacksQuery =
+    'SELECT fb.*, v.display_name, v.avatar_url, (select count(*) from `flagged` f where fb.id =  f.item_id) "times_flagged" ' +
     'FROM `feedbacks` fb,`visitors` v ' +
     'WHERE fb.visitor_id = v.id ' +
     'AND fb.app_instance = ? ' +
     'AND fb.component_id = ?';
 
-var feedbackQuery = widgetDataQuery + ' AND f.feedback_id = ?';
+var feedbackQuery = widgetFeedbacksQuery + ' AND f.id = ?';
 
 var defaultAppSettings =
     'SELECT * ' +
@@ -61,10 +61,21 @@ module.exports = {
             db.query(sql, params, callback);
         }
     },
-
+    votes: {
+        add: function (params, callback) {
+            var sql = 'INSERT INTO `votes` SET ?';
+            db.query(sql, params, callback);
+        }
+    },
+    flagged: {
+        add: function (params, callback) {
+            var sql = 'INSERT INTO `flagged` SET ?';
+            db.query(sql, params, callback);
+        }
+    },
     feedbacks: {
         list: function (params, callback) {
-            var sql = widgetDataQuery;
+            var sql = widgetFeedbacksQuery;
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
@@ -84,7 +95,7 @@ module.exports = {
                           callback) {
 
             var queryParams = [{comment, rating}, app_instance, component_id, feedback_id, visitor_id];
-            var sql = "UPDATE `feedbacks` SET ? WHERE app_instance = ? AND component_id = ? AND feedback_id = ? AND visitor_id = ?";
+            var sql = "UPDATE `feedbacks` SET ? WHERE app_instance = ? AND component_id = ? AND id = ? AND visitor_id = ?";
             db.query(sql, queryParams, callback);
         },
         delete: function (app_instance,
@@ -93,7 +104,7 @@ module.exports = {
                           visitor_id,
                           callback) {
             var queryParams = [app_instance, component_id, feedback_id, visitor_id];
-            var sql = "DELETE FROM `feedbacks` WHERE app_instance = ? AND component_id = ? AND feedback_id = ? AND visitor_id = ?";
+            var sql = "DELETE FROM `feedbacks` WHERE app_instance = ? AND component_id = ? AND id = ? AND visitor_id = ?";
             db.query(sql, queryParams, callback);
         }
     },

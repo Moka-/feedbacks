@@ -1,5 +1,6 @@
 function getWidgetScore(maxRating, dateAdded, feedbacks) {
     var ratingValues = new Array(maxRating);
+
     if (maxRating % 2 == 1) {
         var intervals = round(MaxRating / 2);
         var zeroValueIndex = round(MaxRating / 2) + 1;

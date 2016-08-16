@@ -2,13 +2,13 @@
     <img ng-src="{{logged_user.image_url ? logged_user.image_url : 'images/avatar.png'}}"
          class="md-avatar"/>
     <div layout="column" layout-align="space-between end" flex="100">
-        <textarea rows="2" placeholder="Reply..." ng-model="new_feedback.comment"></textarea>
+        <textarea rows="2" placeholder="Reply..." ng-model="replyText"></textarea>
         <div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"
              layout-align="space-between none">
 
             <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
                 <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
-                {{new_feedback.comment.length}}/{{settings.comment_max_length}}
+                {{replyText.length}}/{{settings.comment_max_length}}
             </span>
             </div>
             <div>
@@ -16,7 +16,7 @@
                     Cancel
                 </md-button>
                 <md-button class="md-raised md-primary md-small post-button" ng-click="postReply(feedback)"
-                           ng-disabled="!logged_in || new_feedback.comment.length > settings.comment_max_length ">
+                           ng-disabled="!logged_in || replyText.length > settings.comment_max_length ">
                     Reply
                 </md-button>
             </div>
@@ -28,13 +28,13 @@
     <img ng-src="{{logged_user.image_url ? logged_user.image_url : 'images/avatar.png'}}"
          class="md-avatar"/>
     <div layout="column" layout-align="space-between end" flex="100">
-        <textarea rows="2" placeholder="Reply..." ng-model="new_feedback.comment"></textarea>
+        <textarea rows="2" placeholder="Reply..." ng-model="replyText"></textarea>
         <div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"
              layout-align="space-between none">
 
             <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
                 <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
-                {{new_feedback.comment.length}}/{{settings.comment_max_length}}
+                {{replyText.length}}/{{settings.comment_max_length}}
             </span>
             </div>
             <div>
@@ -42,7 +42,7 @@
                     Cancel
                 </md-button>
                 <md-button class="md-raised md-primary md-small post-button" ng-click="postReply(reply)"
-                           ng-disabled="!logged_in || new_feedback.comment.length > settings.comment_max_length ">
+                           ng-disabled="!logged_in || replyText.length > settings.comment_max_length ">
                     Reply
                 </md-button>
             </div>

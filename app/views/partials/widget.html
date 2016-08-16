@@ -26,16 +26,41 @@
                                                      readonly
                                                      ng-if="settings.enable_ratings && feedback.rating"></input-stars>
                                     </h4>
-                                    <p ng-if="settings.enable_comments">{{feedback.comment}}</p>
+                                    <div ng-if="settings.enable_comments">
+                                        <div class="flagged" ng-if="feedback.times_flagged > 4">This has been flagged as
+                                            inappropriate •
+                                            <a href="" class="flagged-toggle"
+                                               ng-click="toggleFlagged(feedback)">
+                                        <span ng-switch on="feedback.showFlagged">
+                                            <span ng-switch-when="true">Hide</span>
+                                            <span ng-switch-default>Show</span>
+                                        </span></a>
+                                        </div>
+                                        <div ng-show="feedback.times_flagged < 4 || feedback.showFlagged">
+                                            {{feedback.comment}}
 
-                                    <div>
-                                        <a href="" class="reply-button"
-                                           ng-click="toggleReply(feedback)">Reply</a> •
-                                        <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
-                                        <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
-                                        <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
+
+                                            <div class="action-buttons" layout="row" layout-align="start center">
+                                            <span><a href="" class="reply-button"
+                                                     ng-click="toggleReply(feedback)">Reply</a> •</span>
+                                                <md-button ng-click="showFlagDialog($event,feedback.id)"
+                                                           class="md-icon-button"
+                                                           ng-if="catalog.name != 'Default Catalog'">
+                                                    <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
+                                                </md-button>
+                                                <md-button ng-click="toggleVote(feedback, 1)"
+                                                           class="md-icon-button"
+                                                           ng-if="catalog.name != 'Default Catalog'">
+                                                    <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
+                                                </md-button>
+                                                <md-button ng-click="toggleVote(feedback, -1)"
+                                                           class="md-icon-button"
+                                                           ng-if="catalog.name != 'Default Catalog'">
+                                                    <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
                                     </div>
-
                                 </div>
                                 <post-reply flex="100" style="width: 100%"></post-reply>
                                 <feedback-replies></feedback-replies>

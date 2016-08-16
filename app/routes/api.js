@@ -375,7 +375,7 @@ router.route('/feedbacks/:app_instance/:component_id/:feedback_id')
     .put(function (req, res, next) {
         var app_instance = req.params.app_instance;
         var component_id = req.params.component_id;
-        var feedback_id = req.params.feedback_id;
+        var feedback_id = req.params.id;
 
         verifyToken(req.body.user_id_token, function (err, tokenInfo) {
             dal.feedbacks.update(
@@ -565,9 +565,9 @@ router.route('/catalogs/:app_instance/:catalog_id')
         next(new Error('not implemented'));
     });
 
-router.route('reply')
+router.route('/reply')
     .post(function (req, res, next) {
-        dal.replies.add(req.body.params, function (err, results) {
+        dal.replies.add(req.body, function (err, results) {
             if (err) {
                 res.json(err);
             } else {
@@ -583,6 +583,28 @@ router.route('/replies/:feedback_ids')
             } else {
                 var repliesTree = listToTree(results);
                 res.json(repliesTree);
+            }
+        });
+    });
+
+router.route('/flagged')
+    .post(function (req, res, next) {
+        dal.flagged.add(req.body, function (err, result) {
+            if (err) {
+                res.json(err);
+            } else {
+                res.json(result);
+            }
+        });
+    });
+
+router.route('/vote')
+    .post(function (req, res, next) {
+        dal.votes.add(req.body, function (err, results) {
+            if (err) {
+                res.json(err);
+            } else {
+                res.json(results);
             }
         });
     });
