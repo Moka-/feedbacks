@@ -1,39 +1,23 @@
-<div class="ratings-summary">
-    {{averageRating | number: 1}}
-    <i class="fa fa-star"></i>
 
-    {{feedbacks.length}}
-    <i class="fa fa-user"></i>
+<div class="ratings-summary" layout="row" layout-align="center center" ng-show="feedbacks.length > 0">
+    <div layout="column" layout-align="center center">
+        <div class="average">
+            <span>
+            {{averageRating | number: 1}}
+                </span>
+            <i class="fa fa-star"></i>
+        </div>
 
-    <!--<div google-chart chart="feedbacksChart" flex="0.4"></div>-->
+        <div class="users">
+            {{feedbacks.length | number}}
+            <i class="fa fa-user"></i>
+        </div>
+    </div>
 
-    <div id="feedbacksChart"></div>
+    <div google-chart chart="ratingsChart"></div>
 </div>
 
-<script type="text/javascript">
-        debugger;
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-        function drawChart() {
+<div class="ratings-summary" layout="row" layout-align="center center" ng-show="feedbacks.length == 0">
+    No one has yet to leave a feedback
+</div>
 
-            var data = google.visualization.arrayToDataTable([
-                ['Task', 'Hours per Day'],
-                ['Work',     11],
-                ['Eat',      2],
-                ['Commute',  2],
-                ['Watch TV', 2],
-                ['Sleep',    7]
-            ]);
-
-            var options = {
-                title: 'My Daily Activities'
-            };
-
-            var chart = new google.visualization.PieChart(document.getElementById('feedbacksChart'));
-            chart.draw(data, options);
-
-        };
-
-
-
-</script>

@@ -1,8 +1,16 @@
 <div class="widget" ng-controller="WidgetController" flex layout-fill>
-    <md-content layout="column" layout-align="stretch" ng-style="{ height: widgetHeight + 'px' }">
-        <feedbacks-summary></feedbacks-summary>
+    <md-content layout="column" layout-align="stretch"  ng-style="{ height: widgetHeight + 'px' }">
+        <!--// BLACK MAGIC !!! DO NOT REMOVE THIS DIV-->
+        <div>
+            <md-card class="summary-card" ng-if="settings.show_summary">
+                <md-card-content>
+                    <!--<feedbacks-summary></feedbacks-summary>-->
+                    <ratings-summary feedbacks="data"></ratings-summary>
+                </md-card-content>
+            </md-card>
+        </div>
+
         <feedback-input></feedback-input>
-        <!--<md-divider></md-divider>-->
         <md-card class="scroll-this" layout="column" layout-align="start stretch">
             <!--TODO: following md-card-content should be a directive-->
             <md-subheader class="md-sticky">Feedbacks • {{data.length}}</md-subheader>
