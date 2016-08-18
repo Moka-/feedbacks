@@ -7,14 +7,14 @@ module.exports = (function() {
         FEATURE_VALUE: 'feature_value'
     };
 
-    var igs = {};
+    var igs;
     var model;
 
     function DecisionTreeID3(data, target, features) {
         this.data = data;
         this.target = target;
         this.features = features;
-
+        igs = {};
         model = createTree(data, target, features);
     }
 
