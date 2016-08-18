@@ -16,7 +16,7 @@ angular.module('data', ['application'])
         this.editFeedback = function (user_id_token, feedback) {
             var promise = $http({
                 method: "put",
-                url: '/api/feedbacks/' + application.getAppInstance() + '/' + application.getComponentId() + '/' + feedback.feedback_id,
+                url: '/api/feedbacks/' + application.getAppInstance() + '/' + application.getComponentId() + '/' + feedback.id,
                 data: {user_id_token, feedback}
             });
             return promise;

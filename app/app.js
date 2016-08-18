@@ -17,9 +17,9 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 app.use(logger('dev', {
-    /* skip: function (req, res) {
+    skip: function (req, res) {
         return req.baseUrl == '/node' && res.statusCode < 400;
-     }*/
+    }
 }));
 
 app.use(bodyParser.json());
@@ -37,8 +37,8 @@ app.get('*', function(req, res) {
 });
 
 //////////////////////////////DEBUG AREA/////////////////////////////////////
-/*var req = {params : {feedback_id : [16 ,17] }};
- dal.replies.list(req.params.feedback_id.join(","), function (err, results) {
+/*var req = {params : {id : [16 ,17] }};
+ dal.replies.list(req.params.id.join(","), function (err, results) {
  if (err) {
  res.json(err);
  } else {
@@ -66,11 +66,11 @@ app.get('*', function(req, res) {
  // push it into its parent's children object
  childrenOf[parentId].push(item);
  } else {
- if (!tree[item.feedback_id]){
- tree[item.feedback_id] = [];
+ if (!tree[item.id]){
+ tree[item.id] = [];
  }
 
- tree[item.feedback_id].push(item);
+ tree[item.id].push(item);
  }
  }
 
