@@ -1,4 +1,5 @@
 var ID3 = require('./decision-tree');
+var db = require('../dal/db');
 
 module.exports = {
     highlights: function (feedbacks, callback) {
@@ -7,23 +8,49 @@ module.exports = {
             return;
         }
 
-        var data = buildVectors(feedbacks);
+        var normalized = feedbacks.map(function (obj) {
+
+            var robj = {};
+            for (var key in obj){
+                if (!obj.hasOwnProperty(key)) continue;
+
+                robj[key] = obj[key];
+            }
+
+            var rating = obj.rating;
+            if (rating < 3) robj.rating = "bad";
+            if (rating > 3) robj.rating = "good";
+            if (rating == 3) robj.rating = "neutral";
+
+            return robj;
+        });
+
+        var data = buildVectors(normalized);
 
         var dt = new ID3(data.vectors, "rating", data.words);
         var results = dt.igRanks();
 
-        results.forEach(function (result, index, array) {
+        results.forEach(function (result) {
             result.instances = 0;
-            feedbacks.forEach(function (feedback, index, array) {
-                if(feedback.comment.indexOf(result.word) !== -1) {
+            feedbacks.forEach(function (feedback) {
+                if(feedback.comment.split(' ').some(function(w){return w === result.word})){
                     result.instances += 1;
-                    if (result.instances == 1) result.appearence = feedback.comment;
+                    result.appearence = feedback.comment;
                 }
-
             });
         });
 
         callback(null, results);
+    },
+    catalogsFeedbacks: function (app_instance, callback) {
+        var sql = "select c.name, CAST(f.created_on AS DATE) as date, count(f.id) as count " +
+                "from catalogs c, widgets w, feedbacks f " +
+                "where c.id = w.catalog_id " +
+                "and w.app_instance = f.app_instance and w.app_instance = ? " +
+                "and w.component_id = f.component_id " +
+                "group by c.name, CAST(f.created_on AS DATE)";
+
+        db.query(sql, app_instance, callback);
     }
 };
 

@@ -465,7 +465,7 @@ router.route('/widgets/:app_instance/:component_id')
 router.route('/catalogs/:app_instance')
     .get(function (req, res, next) {
         dal.catalogs.list(req.params, function (err, catalogs) {
-            dal.widgets.list(req.params, function (err, widgets) {
+            dal.widgets.list([req.params.app_instance], function (err, widgets) {
                 catalogs.forEach(function (current) {
                     current.widgets = widgets.filter(function (value) {
                         return value.catalog_id == current.id;
@@ -598,6 +598,12 @@ router.route('/analysis/highlights/:app_instance/:component_id')
         });
     });
 
+router.route('/analysis/catalogsFeedbacks/:app_instance')
+    .get(function (req, res, next) {
+        analysis.catalogsFeedbacks(req.params.app_instance, function (err, results) {
+            res.json(results);
+        });
+    });
 
 router.route('/flagged')
     .post(function (req, res, next) {
@@ -609,6 +615,8 @@ router.route('/flagged')
             }
         });
     });
+
+router.use('/flags', require('./api/flags'));
 
 router.route('/vote')
     .post(function (req, res, next) {

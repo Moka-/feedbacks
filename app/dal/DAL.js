@@ -7,9 +7,9 @@ var widgetFeedbacksQuery =
     'FROM `feedbacks` fb,`visitors` v ' +
     'WHERE fb.visitor_id = v.id ' +
     'AND fb.app_instance = ? ' +
-    'AND fb.component_id = ?';
+    'AND fb.component_id = ? AND fb.marked_inappropriate = 0';
 
-var feedbackQuery = widgetFeedbacksQuery + ' AND f.id = ?';
+var feedbackQuery = widgetFeedbacksQuery + ' AND f.id = ? ';
 
 var defaultAppSettings =
     'SELECT * ' +

@@ -17,10 +17,12 @@ angular.module('feedbacks')
         return {
             restrict: 'E',
             scope: {widget: '='},
-            controller: ['$scope', '$wix', 'data', 'analysis', function ($scope, $wix, data, analysis) {
+            controller: ['$scope', '$wix', '$filter', 'data', 'analysis', function ($scope, $wix, $filter, data, analysis) {
                 $scope.feedbacks = [];
+                $scope.feedbackAwaitingReview = [];
                 data.getFeedbacks($scope.widget.component_id).then(function (response) {
                     $scope.feedbacks = response.data;
+                    $scope.feedbackAwaitingReview = $filter('awaitingReview')($scope.feedbacks);
                 });
 
                 $scope.feedbacksHighlights = [];
@@ -31,8 +33,19 @@ angular.module('feedbacks')
             }],
             templateUrl: 'partials/templates/widgetOverview.html'
         }
-    })
-    .directive('ratingsSummary', function() {
+    }).filter('awaitingReview', function() {
+        return function( items ) {
+            var filtered = [];
+            items.forEach(function(item) {
+                if( item.times_flagged > 0 &&
+                    !item.marked_appropriate &&
+                    !item.marked_inappropriate){
+                    filtered.push(item);
+                }
+            });
+            return filtered;
+        };
+    }).directive('ratingsSummary', function() {
         return {
             restrict: 'E',
             scope: {
@@ -108,13 +121,18 @@ angular.module('feedbacks')
                     "p": null};
                 $scope.ratingsChart.options = {
                     legend: { position: "none" },
-                    hAxis: { textPosition: 'none', gridlines: { color: 'transparent' }, baselineColor: 'transparent'},
-                    vAxis: { baselineColor: 'transparent' },
+                    hAxis: { textPosition: 'none',
+                        gridlines: { color: 'transparent' },
+                        baselineColor: 'transparent'
+                    },
+                    vAxis: { baselineColor: 'transparent',
+                        textStyle : { fontSize: 12,
+                                        color: '#676767' } },
                     bar: { groupWidth: '80%'},
                     width: 300,
                     height: 90,
                     chartArea:{
-                        left:50,
+                        left:60,
                         right:0,
                         bottom:0,
                         top:0,
@@ -126,7 +144,7 @@ angular.module('feedbacks')
             templateUrl: 'partials/templates/ratingsSummary.html'
         }
     }).directive('feedbacksPerDay', function() {
-    return {
+        return {
         restrict: 'E',
         scope: {
             feedbacks: '='
@@ -172,7 +190,7 @@ angular.module('feedbacks')
                 legend: { position: "none" },
                 hAxis: {
                     title: 'Time'
-                },
+                    },
                 vAxis: {
                     title: 'Feedbacks'
                 }
@@ -181,4 +199,71 @@ angular.module('feedbacks')
         }],
         templateUrl: 'partials/templates/feedbacksPerDay.html'
     }
-    });
+    }).directive('applicationOverview', function() {
+    return {
+        restrict: 'E',
+        scope: {},
+        controller: ['$scope', '$wix', 'analysis', function ($scope, $wix, analysis) {
+            analysis.catalogsFeedbacks().then(function (response) {
+                $scope.catalogFeedbacks = response.data;
+                fillChart(response.data);
+            });
+
+            function fillChart(result) {
+                var datesOnly = result.map(function(obj){ return new Date(obj.date); });
+                var firstDate = new Date(Math.min.apply(null,datesOnly));
+
+                var catalogsOnly = result.map(function(obj){ return obj.name; });
+                var catalogsDistinct = Array.from(new Set(catalogsOnly));
+
+                catalogsDistinct.forEach(function(element){
+                    $scope.chartCols.push({label: element, type: "number"});
+                });
+
+                var now = new Date();
+                for (var d = firstDate; d <= now; d.setDate(d.getDate() + 1)) {
+
+                    var feedbacksToday = result.filter(function(value){
+                        return new Date(value.date).setHours(0, 0, 0, 0) === new Date(d).setHours(0, 0, 0, 0);
+                    });
+
+                    var today = {c: [{v: d.getDate() + "/" + (d.getMonth()+1)}]};
+
+                    catalogsDistinct.forEach(function(element){
+                        var t = feedbacksToday.filter(function(value){ return value.name === element});
+
+                        if (t.length == 0) {
+                            today.c.push({v: 0 })
+                        } else {
+                            today.c.push({v: t[0].count })
+                        }
+                    });
+                    $scope.chartData.push(today);
+                }
+            }
+
+            $scope.catalogsHistory = {};
+            $scope.catalogsHistory.type = "LineChart";
+
+            $scope.chartData = [];
+            $scope.chartCols = [
+                {label: "Date", type: "string"}
+            ];
+            $scope.catalogsHistory.data = {
+                "cols": $scope.chartCols,
+                "rows": $scope.chartData,
+                "p": null};
+            $scope.catalogsHistory.options = {
+                title: 'Feedbacks per catalog',
+                hAxis: {
+                    title: 'Time'
+                },
+                vAxis: {
+                    title: 'Feedbacks'
+                }
+            };
+
+        }],
+        templateUrl: 'partials/templates/applicationOverview.html'
+    }
+});

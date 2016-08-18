@@ -12,7 +12,6 @@
 
         <feedback-input></feedback-input>
         <md-card class="scroll-this" layout="column" layout-align="start stretch">
-            <!--TODO: following md-card-content should be a directive-->
             <md-subheader class="md-sticky">Feedbacks • {{data.length}}</md-subheader>
             <md-card-content layout="column" layout-align="start stretch"
                              ng-if="settings.show_feedbacks && data && data.length > 0" class="feedback-list">
@@ -35,8 +34,8 @@
                                                      ng-if="settings.enable_ratings && feedback.rating"></input-stars>
                                     </h4>
                                     <div ng-if="settings.enable_comments">
-                                        <div class="flagged" ng-if="feedback.times_flagged > 4">This has been flagged as
-                                            inappropriate •
+                                        <div class="flagged" ng-if="feedback.times_flagged != 0 && !feedback.marked_appropriate">
+                                            This has been flagged as inappropriate •
                                             <a href="" class="flagged-toggle"
                                                ng-click="toggleFlagged(feedback)">
                                         <span ng-switch on="feedback.showFlagged">
@@ -44,26 +43,28 @@
                                             <span ng-switch-default>Show</span>
                                         </span></a>
                                         </div>
-                                        <div ng-show="feedback.times_flagged < 4 || feedback.showFlagged">
+                                        <div ng-show="feedback.times_flagged == 0 || feedback.marked_appropriate || feedback.showFlagged">
                                             {{feedback.comment}}
 
-
                                             <div class="action-buttons" layout="row" layout-align="start center">
-                                            <span><a href="" class="reply-button"
-                                                     ng-click="toggleReply(feedback)">Reply</a> •</span>
+                                            <!--<span><a href="" class="reply-button"-->
+                                                     <!--ng-click="toggleReply(feedback)">Reply</a> •</span>-->
                                                 <md-button ng-click="showFlagDialog($event,feedback.id)"
                                                            class="md-icon-button"
-                                                           ng-if="catalog.name != 'Default Catalog'">
+                                                           ng-if="catalog.name != 'Default Catalog'"
+                                                            aria-label="a">
                                                     <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
                                                 </md-button>
                                                 <md-button ng-click="toggleVote(feedback, 1)"
                                                            class="md-icon-button"
-                                                           ng-if="catalog.name != 'Default Catalog'">
+                                                           ng-if="catalog.name != 'Default Catalog'"
+                                                           aria-label="a">
                                                     <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
                                                 </md-button>
                                                 <md-button ng-click="toggleVote(feedback, -1)"
                                                            class="md-icon-button"
-                                                           ng-if="catalog.name != 'Default Catalog'">
+                                                           ng-if="catalog.name != 'Default Catalog'"
+                                                           aria-label="a">
                                                     <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
                                                 </md-button>
                                             </div>

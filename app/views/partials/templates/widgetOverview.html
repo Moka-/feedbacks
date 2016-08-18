@@ -21,7 +21,7 @@
                 <div layout="column" layout-align="start stretch"
                      ng-repeat="highlight in feedbacksHighlights | orderBy:'-score' | limitTo:10" flex>
                     <div layout="row" layout-align="space-between start">
-                        <span>{{ highlight.word }}</span>
+                        <span style="font-weight: 600">{{ highlight.word }}</span>
                         <ng-pluralize count="highlight.instances" when="{
                                                             '1': 'appears in 1 feedback',
                                                             'other': 'appears in  {{highlight.instances}} feedbacks'}">
@@ -35,6 +35,6 @@
         </md-card>
     </div>
     <div flex="50" layout="column">
-        <flagged-feedbacks feedbacks="feedbacks"></flagged-feedbacks>
+        <flagged-feedbacks feedbacks="feedbackAwaitingReview"></flagged-feedbacks>
     </div>
 </md-content>

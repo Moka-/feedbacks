@@ -262,7 +262,6 @@ angular.module('feedbacks')
         };
 
         $scope.postReply = function (item) {
-            debugger;
             'SELECT r.*, v.display_name, v.avatar_url, (select count(*) from `flagged` f where r.id =  f.item_id) "times_flagged" ';
             var reply = {
                 recipient_id: item.id,
@@ -281,6 +280,7 @@ angular.module('feedbacks')
                 function (res) { // success
                     reply.created_on = new Date();
                     reply.times_flagged = 0;
+                    reply.marked_appropriate = 0;
                     reply.avatar_url = $scope.logged_user.image_url;
                     reply.display_name = $scope.logged_user.full_name;
                     reply.id = res.data[2].insertId;
@@ -315,7 +315,11 @@ angular.module('feedbacks')
 
                 return request.then(
                     function (res) { // success
-                        alert('horaay');
+                        $scope.data.forEach(function (element) {
+                            if (element.id === res.config.data.item_id){
+                                element.times_flagged++;
+                            }
+                        });
                     },
                     function (err) { // error
                         alert('oops');

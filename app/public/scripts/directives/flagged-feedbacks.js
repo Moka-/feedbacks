@@ -5,9 +5,15 @@ angular.module('feedbacks')
         return {
             restrict: 'E',
             scope: { feedbacks: '=' },
-            controller: ['$scope', '$wix', 'data', function ($scope, $wix, data ) {
+            controller: ['$scope', 'flags', 'data', function ($scope, flags, data ) {
 
-                // do work
+                $scope.appropriate = function (feedback) {
+                    flags.markAppropriate(feedback.id);
+                };
+
+                $scope.inappropriate = function (feedback) {
+                    flags.markInappropriate(feedback.id);
+                };
 
             }],
             templateUrl: 'partials/templates/flaggedFeedbacks.html'

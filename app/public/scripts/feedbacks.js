@@ -7,6 +7,7 @@ angular.module('feedbacks', [
     'application',
     'analysis',
     'data',
+    'flags',
     'ngMaterial',
     'ngAnimate',
     'dndLists',
