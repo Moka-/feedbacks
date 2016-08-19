@@ -8,7 +8,7 @@ var async = require('async');
 var express = require('express');
 var router = express.Router();
 var analysis = require('../bl/analysis');
-
+var popularity = require('../bl/popularity-algorithm');
 var request = require('request');
 
 
@@ -420,7 +420,6 @@ router.route('/feedbacks/:app_instance/:component_id/:feedback_id/:id_token')
 router.route('/widgets/:app_instance')
     .get(function (req, res, next) {
         var params = [req.params.app_instance];
-
         dal.widgets.list(params, function (err, results) {
             res.json(results);
         });
@@ -428,6 +427,7 @@ router.route('/widgets/:app_instance')
     .post(function (req, res, next) {
         next(new Error('not implemented'));
     });
+
 
 router.route('/widgets/:app_instance/:component_id')
     .get(function (req, res, next) {
@@ -466,22 +466,32 @@ router.route('/catalogs/:app_instance')
     .get(function (req, res, next) {
         dal.catalogs.list(req.params, function (err, catalogs) {
             dal.widgets.list([req.params.app_instance], function (err, widgets) {
-                catalogs.forEach(function (current) {
-                    current.widgets = widgets.filter(function (value) {
-                        return value.catalog_id == current.id;
+                dal.widgets.score(req.params.app_instance, function (err, feedbacks) {
+                    widgets.forEach(function (current) {
+                        current.feedbacks = feedbacks.filter(function (value) {
+                            return value.component_id == current.component_id;
+                        });
+
+                        current.score = popularity.getWidgetScore(5, current.created_on, current.feedbacks);
                     });
+
+                    catalogs.forEach(function (current) {
+                        current.widgets = widgets.filter(function (value) {
+                            return value.catalog_id == current.id;
+                        });
+                    });
+
+                    var defaultCatalog = {
+                        name: "Default Catalog",
+                        id: 0,
+                        widgets: widgets.filter(function (value) {
+                            return value.catalog_id == null;
+                        })
+                    };
+
+                    catalogs.unshift(defaultCatalog);
+                    res.json(catalogs);
                 });
-
-                var defaultCatalog = {
-                    name: "Default Catalog",
-                    id: 0,
-                    widgets: widgets.filter(function (value) {
-                        return value.catalog_id == null;
-                    })
-                };
-
-                catalogs.unshift(defaultCatalog);
-                res.json(catalogs);
             });
         });
     });

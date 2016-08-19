@@ -110,7 +110,7 @@ module.exports = {
     },
     widgets: {
         list: function (params, callback) {
-            var sql = "SELECT component_id, catalog_id, widget_name FROM `widgets` w WHERE app_instance = ?";
+            var sql = "SELECT component_id, catalog_id, created_on, widget_name FROM `widgets` w WHERE app_instance = ?";
             db.query(sql, params, callback);
         },
         view: function (params, callback) {
@@ -143,7 +143,16 @@ module.exports = {
                 "' WHERE app_instance = '" + params.app_instance + "' AND component_id IN (" + params.widgetIds + ")";
 
             db.query(sql, null, callback);
+        },
+        score: function (params, callback) {
+            var sql = "SELECT W.app_instance, W.component_id, W.widget_name, W.catalog_id,F.id, F.rating, ifnull(F.edited_on, F.created_on) 'date'" +
+                " FROM widgets W, feedbacks F" +
+                " WHERE W.app_instance = F.app_instance " +
+                " AND   W.component_id = F.component_id " +
+                " AND   W.app_instance='" + params + "'";
 
+
+            db.query(sql, params, callback);
         },
         delete: function (params, callback) {
             var sql = "";
