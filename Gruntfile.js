@@ -1,11 +1,11 @@
 'use strict';
-
+process.execArgv = [];
 module.exports = function (grunt) {
     grunt.initConfig({
         express: {
             options: {
-                // Override defaults here
-                port: 9000
+                port: 9000,
+                breakOnFirstLine: true
             },
             web: {
                 options: {
@@ -25,10 +25,12 @@ module.exports = function (grunt) {
                     livereload: true
                 },
                 files: [
+                    'app/public/**/*.html',
                     'app/public/styles/**/*.css',
                     'app/views/**/*.html',
                     'app/public/scripts/**/*.js',
                     'app/public/images/**/*'
+
                 ],
                 tasks: ['jshint']
             },
@@ -64,11 +66,8 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-parallel');
     grunt.loadNpmTasks('grunt-express-server');
-    //grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    //grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    //grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.registerTask('default', ['parallel:web']);
     //grunt.registerTask('default', ['express:dev']);
 };

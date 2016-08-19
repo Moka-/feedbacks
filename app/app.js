@@ -5,80 +5,81 @@ var express = require('express'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
-    http = require('http');
-var router = express.Router();
+    http = require('http'),
+    app = express(),
+    routes = require('./routes/views'),
+    api = require('./routes/api'),
+    dal = require('./dal/dal');
 
-var app = express();
-
-var routes = require('./routes/widget');
-var api = require('./routes/api');
-var dal = require('./dal/dal');
-// view engine setup
+app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-app.set('port', process.env.PORT || 9000);
-app.use(logger('dev'));
+app.use(logger('dev', {
+    skip: function (req, res) {
+        return req.baseUrl == '/node' && res.statusCode < 400;
+    }
+}));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/node', express.static(path.join(__dirname, '../node_modules')));
-app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
-app.post('/provision', function (res1, res2) {
-    console.log(res1);
-    console.log(res2);
-});
-// serve index and view partials
 
-// index.html is reffered at the end
+app.use('/node', express.static(path.join(__dirname, '../node_modules')));
 app.get('/partials/:name', routes.partials);
 app.use('/partials/templates', express.static(path.join(__dirname, 'views/partials/templates')));
 
-app.get('/visitors', api.visitors.list);
-app.post('/visitors', api.visitors.add);
-app.get('/visitor/:id', api.visitors.view);
-app.put('/visitor/:id', api.visitors.update);
-app.delete('/visitor/:id', api.visitors.delete);
-
-app.get('/feedbacks/:app_instance/:component_id', api.feedbacks.list);
-app.post('/feedbacks', api.feedbacks.add);
-app.get('/feedback/:id', api.feedbacks.view);
-app.put('/feedback/:id', api.feedbacks.update);
-app.delete('/feedback/:id', api.feedbacks.delete);
-
-app.get('/widgets', api.widgets.list);
-app.post('/widgets', api.widgets.add);
-app.get('/widgets/:app_instance/:component_id', api.widgets.view);
-app.get('/widget-settings/:app_instance/:component_id', api.widgets.settings);
-app.put('/widgets', api.widgets.update);
-app.delete('/widget/:id', api.widgets.delete);
-
-app.get('/catalogs/:app_instance', api.catalogs.list);
-app.post('/catalogs', api.catalogs.add);
-//app.get('/catalogs/:id', api.catalogs.view);
-app.put('/catalogs/:id', api.catalogs.update);
-app.delete('/catalogs/:id', api.catalogs.delete);
-
+app.use('/api', api);
 app.get('*', function(req, res) {
-    res.sendfile('app/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+    res.sendFile(path.join(__dirname, 'public/index.html')); // load the single view file (angular will handle the page changes on the front-end)
 });
 
-/*var req={};
- api.widgets.update(req, function (a, b) {
-    console.log(a);
-    console.log(b);
-});*/
-/*var req = {};
-req.params = {app_instance : "4a8eda33-6035-4c65-9cf6-6befeaf2d2af",
-                component_id : "comp-inx9esxf"}
- api.widgets.view(req);*/
+//////////////////////////////DEBUG AREA/////////////////////////////////////
+/*var req = {params : {id : [16 ,17] }};
+ dal.replies.list(req.params.id.join(","), function (err, results) {
+ if (err) {
+ res.json(err);
+ } else {
+ var repliesTree = listToTree(results);
+ }
+ });
 
+
+ function listToTree(data) {
+ var tree = [],
+ childrenOf = {};
+ var item, id, parentId;
+
+ for (var i = 0, length = data.length; i < length; i++) {
+ item = data[i];
+ id = item['id'];
+ parentId = item['recipient_id'];
+ // every item may have children
+ childrenOf[id] = childrenOf[id] || [];
+ // init its children
+ item['replies'] = childrenOf[id];
+ if (parentId) {
+ // init its parent's children object
+ childrenOf[parentId] = childrenOf[parentId] || [];
+ // push it into its parent's children object
+ childrenOf[parentId].push(item);
+ } else {
+ if (!tree[item.id]){
+ tree[item.id] = [];
+ }
+
+ tree[item.id].push(item);
+ }
+ }
+
+ return tree;
+ }
+
+ /////////////*////////DEBUG AREA END////////////////////////
 
 // redirect all others to the index (HTML5 history)
-//app.get('*', widget_routes.widget);
-
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;

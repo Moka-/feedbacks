@@ -1,0 +1,23 @@
+
+<div class="ratings-summary" layout="row" layout-align="center center" ng-show="feedbacks.length > 0">
+    <div layout="column" layout-align="center center">
+        <div class="average">
+            <span>
+            {{averageRating | number: 1}}
+                </span>
+            <i class="fa fa-star"></i>
+        </div>
+
+        <div class="users">
+            {{feedbacks.length | number}}
+            <i class="fa fa-user"></i>
+        </div>
+    </div>
+
+    <div google-chart chart="ratingsChart"></div>
+</div>
+
+<div class="ratings-summary" layout="row" layout-align="center center" ng-show="feedbacks.length == 0">
+    No one has yet to leave a feedback
+</div>
+

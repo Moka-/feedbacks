@@ -1,0 +1,42 @@
+<md-card>
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline">Flagged feedbacks</span>
+            <span class="md-subhead">These feedbacks were marked as inappropriate or abusive. Please review them:</span>
+        </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+        <md-list >
+            <md-list-item class="md-3-line md-long-text feedback-list-item"
+                          ng-repeat="feedback in feedbacks | orderBy:'created_on':true track by $index">
+                <div layout="row" layout-align="start start" flex="100">
+                    <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'images/avatar.png'}}"
+                         class="md-avatar feedback-avatar"/>
+                    <div layout="column" layout-align="start start" flex="100">
+                        <div class="md-list-item-text comment-content">
+                            <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
+                                <span am-time-ago="feedback.created_on" class="time-ago"></span>
+                                <input-stars max="5" ng-model="feedback.rating"
+                                             readonly></input-stars>
+                            </h4>
+                            <p>{{feedback.comment}}</p>
+
+                            <div>
+                                <a href="" class="reply-button"
+                                   ng-click="toggleReply(feedback)">Reply</a> •
+                                <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
+                                <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
+                                <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
+                            </div>
+
+                        </div>
+                        <!--<post-reply flex="100" style="width: 100%"></post-reply>-->
+                        <!--<feedback-replies></feedback-replies>-->
+                    </div>
+                </div>
+                <md-button class="md-secondary" ng-click="appropriate(feedback)">Appropriate</md-button>
+                <md-button class="md-secondary" ng-click="inappropriate(feedback)">Inappropriate</md-button>
+            </md-list-item>
+        </md-list>
+    </md-card-content>
+</md-card>

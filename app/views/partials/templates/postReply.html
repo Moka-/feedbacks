@@ -1,0 +1,51 @@
+<div layout="row" class="post-reply" ng-if="feedback.show_reply" flex="100">
+    <img ng-src="{{logged_user.image_url ? logged_user.image_url : 'images/avatar.png'}}"
+         class="md-avatar"/>
+    <div layout="column" layout-align="space-between end" flex="100">
+        <textarea rows="2" placeholder="Reply..." ng-model="replyText"></textarea>
+        <div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"
+             layout-align="space-between none">
+
+            <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
+                <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
+                {{replyText.length}}/{{settings.comment_max_length}}
+            </span>
+            </div>
+            <div>
+                <md-button class="md-small post-button" ng-click="cancelReply(feedback)">
+                    Cancel
+                </md-button>
+                <md-button class="md-raised md-primary md-small post-button" ng-click="postReply(feedback)"
+                           ng-disabled="!logged_in || replyText.length > settings.comment_max_length ">
+                    Reply
+                </md-button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div layout="row" class="post-reply" ng-if="reply.show_reply" flex="100">
+    <img ng-src="{{logged_user.image_url ? logged_user.image_url : 'images/avatar.png'}}"
+         class="md-avatar"/>
+    <div layout="column" layout-align="space-between end" flex="100">
+        <textarea rows="2" placeholder="Reply..." ng-model="replyText"></textarea>
+        <div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"
+             layout-align="space-between none">
+
+            <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
+                <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
+                {{replyText.length}}/{{settings.comment_max_length}}
+            </span>
+            </div>
+            <div>
+                <md-button class="md-small post-button" ng-click="cancelReply(reply)">
+                    Cancel
+                </md-button>
+                <md-button class="md-raised md-primary md-small post-button" ng-click="postReply(reply)"
+                           ng-disabled="!logged_in || replyText.length > settings.comment_max_length ">
+                    Reply
+                </md-button>
+            </div>
+        </div>
+    </div>
+</div>

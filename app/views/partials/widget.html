@@ -1,48 +1,79 @@
 <div class="widget" ng-controller="WidgetController" flex layout-fill>
-    <md-content layout="column" layout-align="stretch" ng-style="{ height: widgetHeight + 'px' }">
-        <feedbacks-summary></feedbacks-summary>
-        <md-card class="scroll-this" flex>
-            <md-card-content>
-                <div layout="row" layout-align="start center" style="margin-bottom: 10px">
-                    <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
-                    <div layout="column" layout-align="space-between stretch" class="logged-user">
-                        {{logged_user.full_name}}
-                        <div class="log-out">
-                            <a href="" ng-click="logOut()" ng-show="logged_in" >
-                                SWITCH USER
-                            </a>
-                            <google-plus-signin clientid="4644920241-or3rocgiqb3156n1r5j7r40taetolkja" ng-show="!logged_in"></google-plus-signin>
-                        </div>
+    <md-content layout="column" layout-align="stretch"  ng-style="{ height: widgetHeight + 'px' }">
+        <!--// BLACK MAGIC !!! DO NOT REMOVE THIS DIV-->
+        <div>
+            <md-card class="summary-card" ng-if="settings.show_summary">
+                <md-card-content>
+                    <!--<feedbacks-summary></feedbacks-summary>-->
+                    <ratings-summary feedbacks="data"></ratings-summary>
+                </md-card-content>
+            </md-card>
+        </div>
 
-                    </div>
-                    <textarea rows="2" placeholder="Say something!" ng-model="new_feedback.comment" ng-focus="comment_focused = true" ng-blur="comment_focused = false"></textarea>
+        <feedback-input></feedback-input>
+        <md-card class="scroll-this" layout="column" layout-align="start stretch">
+            <md-subheader class="md-sticky">Feedbacks • {{data.length}}</md-subheader>
+            <md-card-content layout="column" layout-align="start stretch"
+                             ng-if="settings.show_feedbacks && data && data.length > 0" class="feedback-list">
+                <div layout="column" layout-align="center center" ng-if="loading_feedbacks">
+                    <md-progress-circular md-mode="indeterminate" md-diameter="70"></md-progress-circular>
                 </div>
-                <div layout="row" layout-align="space-between center">
-                    <div>
-                    </div>
-                    <div>
-                        <star-rating rating="new_feedback.rating" max-rating="{{settings.max_rating}}"></star-rating>
-                        <md-button class="md-raised md-primary" ng-click="postComment()">Post</md-button>
-                    </div>
-                </div>
-            </md-card-content>
-            <md-card-content>
-                    <md-progress-circular md-mode="indeterminate" ng-if="loading_feedbacks"></md-progress-circular>
-                <md-list ng-if="settings.show_feedbacks"
-                         ng-hide="loading_feedbacks"
-                         layout="column"
-                         layout-align="start start">
-                    <md-list-item class="md-2-line feedback"
+
+                <md-list ng-hide="loading_feedbacks">
+                    <md-list-item class="md-3-line md-long-text feedback-list-item"
                                   ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
-                        <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'http://wiseheartdesign.com/images/articles/default-avatar.png'}}"
-                             class="md-avatar"/>
-                        <div class="md-list-item-text">
-                            <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
-                                <span am-time-ago="feedback.created_on" class="time-ago"></span>
-                                <star-rating rating="feedback.rating" max-rating="{{settings.max_rating}}"
-                                             ng-if="settings.enable_ratings" read-only="true"/>
-                            </h4>
-                            <p>{{feedback.comment}}</p>
+                        <div layout="row" layout-align="start start" flex="100">
+                            <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'images/avatar.png'}}"
+                                 class="md-avatar feedback-avatar"/>
+                            <div layout="column" layout-align="start start" flex="100">
+                                <div class="md-list-item-text comment-content">
+                                    <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
+                                        <span am-time-ago="feedback.created_on" class="time-ago"></span>
+                                        <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating"
+                                                     readonly
+                                                     ng-if="settings.enable_ratings && feedback.rating"></input-stars>
+                                    </h4>
+                                    <div ng-if="settings.enable_comments">
+                                        <div class="flagged" ng-if="feedback.times_flagged != 0 && !feedback.marked_appropriate">
+                                            This has been flagged as inappropriate •
+                                            <a href="" class="flagged-toggle"
+                                               ng-click="toggleFlagged(feedback)">
+                                        <span ng-switch on="feedback.showFlagged">
+                                            <span ng-switch-when="true">Hide</span>
+                                            <span ng-switch-default>Show</span>
+                                        </span></a>
+                                        </div>
+                                        <div ng-show="feedback.times_flagged == 0 || feedback.marked_appropriate || feedback.showFlagged">
+                                            {{feedback.comment}}
+
+                                            <div class="action-buttons" layout="row" layout-align="start center">
+                                            <!--<span><a href="" class="reply-button"-->
+                                                     <!--ng-click="toggleReply(feedback)">Reply</a> •</span>-->
+                                                <md-button ng-click="showFlagDialog($event,feedback.id)"
+                                                           class="md-icon-button"
+                                                           ng-if="catalog.name != 'Default Catalog'"
+                                                            aria-label="a">
+                                                    <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
+                                                </md-button>
+                                                <md-button ng-click="toggleVote(feedback, 1)"
+                                                           class="md-icon-button"
+                                                           ng-if="catalog.name != 'Default Catalog'"
+                                                           aria-label="a">
+                                                    <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
+                                                </md-button>
+                                                <md-button ng-click="toggleVote(feedback, -1)"
+                                                           class="md-icon-button"
+                                                           ng-if="catalog.name != 'Default Catalog'"
+                                                           aria-label="a">
+                                                    <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <post-reply flex="100" style="width: 100%"></post-reply>
+                                <feedback-replies></feedback-replies>
+                            </div>
                         </div>
                     </md-list-item>
                 </md-list>

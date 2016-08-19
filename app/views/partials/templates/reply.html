@@ -1,0 +1,26 @@
+<md-list>
+    <md-list-item class="md-3-line md-long-text reply-list-item" ng-repeat="subReply in reply.replies">
+        <div layout="row" layout-align="start start">
+            <img ng-src="{{subReply.avatar_url ? subReply.avatar_url : 'images/avatar.png'}}"
+                 class="md-avatar"/>
+            <div layout="column" layout-align="space-between start">
+                <div class="md-list-item-text">
+                    <h4>{{subReply.display_name ? subReply.display_name : 'Anonymous'}}
+                        <span am-time-ago="reply.created_on" class="time-ago"></span>
+                    </h4>
+                    <p ng-if="settings.enable_comments">{{subReply.comment}}</p>
+                </div>
+                <div>
+                    <a href="" class="reply-button" ng-click="toggleReply(subReply)">Reply</a> •
+                    <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
+                    <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
+                    <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
+                </div>
+                <reply></reply>
+                <post-reply></post-reply>
+
+            </div>
+
+        </div>
+    </md-list-item>
+</md-list>

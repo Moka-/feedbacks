@@ -3,13 +3,17 @@
 angular.module('feedbacks', [
     'ngRoute',
     'wix',
-    'directive.g+signin',
     'angularMoment',
     'application',
+    'analysis',
     'data',
+    'flags',
     'ngMaterial',
     'ngAnimate',
-    'dndLists'
+    'dndLists',
+    'angular-input-stars',
+    'angular-uuid',
+    'googlechart'
 ])
     .config(function ($routeProvider, $locationProvider, $mdThemingProvider) {
         $routeProvider

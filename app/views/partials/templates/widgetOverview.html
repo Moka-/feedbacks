@@ -1,0 +1,40 @@
+<md-content class="md-padding" layout="row">
+    <div flex="50" layout="column">
+        <md-card ng-show="feedbacks.length > 0">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">Overview</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+                <ratings-summary feedbacks="feedbacks"></ratings-summary>
+                <feedbacks-per-day feedbacks="feedbacks"></feedbacks-per-day>
+            </md-card-content>
+        </md-card>
+        <md-card class="highlights">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">Feedbacks Highlights</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+                <div layout="column" layout-align="start stretch"
+                     ng-repeat="highlight in feedbacksHighlights | orderBy:'-score' | limitTo:10" flex>
+                    <div layout="row" layout-align="space-between start">
+                        <span style="font-weight: 600">{{ highlight.word }}</span>
+                        <ng-pluralize count="highlight.instances" when="{
+                                                            '1': 'appears in 1 feedback',
+                                                            'other': 'appears in  {{highlight.instances}} feedbacks'}">
+                        </ng-pluralize>
+                    </div>
+                    <div>
+                        <p>"{{ highlight.appearence }}"</p>
+                    </div>
+                </div>
+            </md-card-content>
+        </md-card>
+    </div>
+    <div flex="50" layout="column">
+        <flagged-feedbacks feedbacks="feedbackAwaitingReview"></flagged-feedbacks>
+    </div>
+</md-content>

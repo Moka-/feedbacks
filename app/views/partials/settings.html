@@ -1,6 +1,6 @@
 <div ng-cloak>
-    <div layout="row" layout-align="space-around" ng-if="!settings">
-        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    <div layout="column" layout-align="center center" ng-if="!settings" style="height:600px">
+        <md-progress-circular md-mode="indeterminate" md-diameter="70"></md-progress-circular>
     </div>
     <md-content layout="column" layout-align="space-between none" ng-show="settings">
         <md-tabs md-dynamic-height md-border-bottom>
@@ -14,7 +14,8 @@
                         </div>
                         <div layout="row" layout-align="space-between center">
                             <span>Required?</span>
-                            <md-checkbox ng-model="settings.comment_required" aria-label="Comment required"/>
+                            <md-checkbox ng-model="settings.comment_required" ng-disabled="true"
+                                         aria-label="Comment required"/>
                         </div>
 
                         <div layout="row" layout-align="space-between center">
@@ -22,7 +23,8 @@
                             <md-slider flex ng-model="settings.comment_max_length" min="10" max="300"
                                        aria-label="Comment maximum length"></md-slider>
                             <md-input-container class="md-block" flex="10">
-                                <input required type="number" step="any" name="rate" ng-model="settings.comment_max_length" min="10"
+                                <input required type="number" step="any" name="rate"
+                                       ng-model="settings.comment_max_length" min="10"
                                        max="300" aria-label="Comment maximum length"/>
                             </md-input-container>
                         </div>
@@ -35,12 +37,14 @@
                         </div>
                         <div layout="row" layout-align="space-between center">
                             <span>Required?</span>
-                            <md-checkbox ng-model="settings.rating_required" aria-label="Rating required"/>
+                            <md-checkbox ng-model="settings.rating_required" ng-disabled="true"
+                                         aria-label="Rating required"/>
                         </div>
                         <div layout="row" layout-align="space-between center">
                             <span flex="40">Rating steps</span>
-                            <md-slider flex md-discrete ng-model="settings.max_rating" step="1" min="3" max="10"
-                                       aria-label="Max rating">
+                            <md-slider flex md-discrete ng-disabled="true" ng-model="settings.max_rating" step="1"
+                                       min="3" max="10"
+                                       ng-readonly="readonly" aria-label="Max rating">
                             </md-slider>
                         </div>
                     </section>
@@ -108,11 +112,11 @@
         <md-divider></md-divider>
         <md-content flex layout-padding layout="row" layout-align="space-between center">
             <div>
-                <md-button ng-click="gotodash()">Go to dashboard</md-button>
+                <md-button ng-click="goToDash()">Go to dashboard</md-button>
             </div>
             <div>
-                <md-button class="md-raised" ng-click="revert()">Revert</md-button>
-                <md-button class="md-raised" ng-click="apply()">Apply</md-button>
+                <md-button class="md-raised" ng-click="revertChanges()">Revert</md-button>
+                <md-button class="md-raised" ng-click="applyChanges()">Apply</md-button>
                 <md-button class="md-raised md-primary" ng-click="save()">Save settings</md-button>
             </div>
         </md-content>

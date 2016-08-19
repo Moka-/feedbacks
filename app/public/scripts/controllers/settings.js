@@ -15,7 +15,7 @@ angular.module('feedbacks')
 
       $scope.catalogs = []; // Init an empty array
 
-      $http.get('/catalogs/' + application.getApplicationId()).then(
+      $http.get('/api/catalogs/' + application.getApplicationId()).then(
           function (response){ // Success loading settings
               $scope.catalogs = response.data;
           }, function(response){ // Shit's fucked yo
@@ -24,36 +24,34 @@ angular.module('feedbacks')
 
       $scope.loadCatalogs = function () {
 
-      }
+      };
 
-      $scope.gotodash = function(){
+      $scope.goToDash = function () {
           $wix.Settings.getDashboardAppUrl(function(url) {
               window.open(url, '_blank');
           });
-      }
-      $scope.revert = function(){
+      };
+
+      $scope.revertChanges = function () {
           loadSettings();
-      }
-      $scope.apply = function(){
+      };
+
+      $scope.applyChanges = function () {
           $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, $wix.Utils.getOrigCompId());
-      }
+      };
+
       $scope.save = function(){
           var request = $http({
               method: "put",
-              url: "/widgets",
+              url: "/api/widgets/" + application.getAppInstance() + "/" + application.getComponentId(),
               data: $scope.settings
           });
 
           return request.then(
               function (res) {
-                  $wix.Settings.triggerSettingsUpdatedEvent(res, $wix.Utils.getOrigCompId());
+                  $wix.Settings.triggerSettingsUpdatedEvent($scope.settings, application.getComponentId());
               }, function (err) {
-                  alert('oops');
-                  $scope.new_feedback = {
-                      comment: '',
-                      rating: 0
-                  };
-                  $scope.from_expanded = false;
+                  alert('Error loading new settings');
               });
-      }
+      };
   });

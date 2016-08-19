@@ -1,9 +1,18 @@
-<md-card>
+<md-card class="summary-card" ng-if="settings.show_summary">
     <md-card-content>
-        <div class="summary" layout="column" layout-align="center center">
-            <star-rating rating="average_rating" max-rating="{{settings.max_rating}}"
-                         read-only="true"></star-rating>
+        <div layout="column" layout-align="center center">
+            <md-progress-circular md-mode="indeterminate" ng-if="loading_summary"
+                                  md-diameter="70"></md-progress-circular>
+        </div>
+        <div class="summary" layout="column" layout-align="center center" ng-if="data.length" ng-hide="loading_summary">
+            <input-stars max="{{settings.max_rating}}" ng-model="average_rating_rounded" readonly></input-stars>
             <span>{{average_rating | number:1 }}/{{settings.max_rating}} by {{data.length | number}} users</span>
         </div>
+        <div layout="column" layout-align="center center" style="font-size: 1.2em;" ng-hide="loading_summary"
+             ng-if="!data.length">
+            No one has yet to leave a feedback.<br/>
+            Be the first!
+        </div>
+        <div google-chart chart="myChart"></div>
     </md-card-content>
 </md-card>

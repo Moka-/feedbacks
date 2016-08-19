@@ -75,3 +75,19 @@
 .simpleDemo .catalog-item{
     width: 300px;
 }
+
+.ratings-summary {
+    color: #676767;
+}
+
+.ratings-summary .average {
+    font-size: 4em;
+}
+.ratings-summary .average i {
+    margin-left: -10px;
+}
+
+.ratings-summary .users {
+    font-size: 1.1em;
+    margin-top: -10px;
+}
