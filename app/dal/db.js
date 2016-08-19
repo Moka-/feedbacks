@@ -4,6 +4,7 @@ var mysql = require('mysql');
 var pool = mysql.createPool({
     typeCast: true,
     connectionLimit: 100,
+    acquireTimeout: 30000,
     host: 'wix-feedbacks-test.cohruqtd5dnp.us-west-2.rds.amazonaws.com', // TODO: move the connection data to a config
     port: '1337',
     user: 'feedback',

@@ -11,6 +11,8 @@ angular.module('feedbacks')
                 $scope.models.catalogs = response.data;
                 $scope.originalCatalogs = JSON.parse(JSON.stringify(response.data));
                 $scope.loading_catalogs = false;
+
+
             }, function (response) { // Shit's fucked yo
 
             });
