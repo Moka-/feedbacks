@@ -1,15 +1,15 @@
 'use strict';
 
-var express = require('express'),
-    path = require('path'),
-    logger = require('morgan'),
-    cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser'),
-    http = require('http'),
-    app = express(),
-    routes = require('./routes/views'),
-    api = require('./routes/api'),
-    dal = require('./dal/dal');
+var express = require('express');
+var path = require('path');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var http = require('http');
+var app = express();
+var routes = require('./routes/views');
+var api = require('./routes/api');
+var dal = require('./dal/dal');
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
