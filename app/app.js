@@ -10,6 +10,7 @@ var app = express();
 var routes = require('./routes/views');
 var api = require('./routes/api');
 var dal = require('./dal/dal');
+//var temp =  require('./dal/mongodb');
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -35,49 +36,6 @@ app.use('/api', api);
 app.get('*', function(req, res) {
     res.sendFile(path.join(__dirname, 'public/index.html')); // load the single view file (angular will handle the page changes on the front-end)
 });
-
-//////////////////////////////DEBUG AREA/////////////////////////////////////
-/*var req = {params : {id : [16 ,17] }};
- dal.replies.list(req.params.id.join(","), function (err, results) {
- if (err) {
- res.json(err);
- } else {
- var repliesTree = listToTree(results);
- }
- });
-
-
- function listToTree(data) {
- var tree = [],
- childrenOf = {};
- var item, id, parentId;
-
- for (var i = 0, length = data.length; i < length; i++) {
- item = data[i];
- id = item['id'];
- parentId = item['recipient_id'];
- // every item may have children
- childrenOf[id] = childrenOf[id] || [];
- // init its children
- item['replies'] = childrenOf[id];
- if (parentId) {
- // init its parent's children object
- childrenOf[parentId] = childrenOf[parentId] || [];
- // push it into its parent's children object
- childrenOf[parentId].push(item);
- } else {
- if (!tree[item.id]){
- tree[item.id] = [];
- }
-
- tree[item.id].push(item);
- }
- }
-
- return tree;
- }
-
- /////////////*////////DEBUG AREA END////////////////////////
 
 // redirect all others to the index (HTML5 history)
 app.use(function(req, res, next) {
@@ -110,7 +68,7 @@ if (app.get('env') === 'development') {
 //     });
 // });
 
-var server = http.createServer(app).listen( app.get('port'), function() {
+var server = http.createServer(app).listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });
 
@@ -130,7 +88,6 @@ function cleanup () {
         console.error("Could not close connections in time, forcing shut down");
         process.exit(1);
     }, 30*1000);
-
 }
 
 

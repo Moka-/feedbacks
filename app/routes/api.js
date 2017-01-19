@@ -1,16 +1,20 @@
 'use strict';
 
 var dal = require('../dal/dal');
-var uuid = require('node-uuid');
+//var uuid = require('node-uuid');
 var https = require('https');
 var googleAuth = require('google-auth-library');
 var async = require('async');
 var express = require('express');
 var router = express.Router();
-var analysis = require('../bl/analysis');
-var popularity = require('../bl/popularity-algorithm');
+//var analysis = require('../bl/analysis');
+//var popularity = require('../bl/popularity-algorithm');
 var request = require('request');
 
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/FeedbacksDB');
+var models = require('../dal/models')(mongoose);
+var db = mongoose.connection;
 
 // app's client IDs to check with audience in ID Token.
 var clientId = '4644920241-or3rocgiqb3156n1r5j7r40taetolkja.apps.googleusercontent.com';
@@ -428,30 +432,46 @@ router.route('/widgets/:app_instance')
         next(new Error('not implemented'));
     });
 
-
 router.route('/widgets/:app_instance/:component_id')
     .get(function (req, res, next) {
-        var viewParams = [req.params.app_instance, req.params.component_id];
+        var app_instance = req.params.app_instance,
+            component_id = req.params.component_id;
 
-        dal.widgets.view(viewParams, function (err, widget) {
-            if (widget.length == 0) {
-                dal.widgets.settingsCopy(req.params.app_instance, function (err, appWidgetSettings) {
-                    var params = req.params;
+        // models.Widget.count({ app_instance, component_id }, function (err, count) {
+        //     if (err) {}
+        //
+        //     if (count) {
+        //
+        //     }
+        // })
 
-                    if (appWidgetSettings.length > 0) {
-                        params = appWidgetSettings[0];
-                        params.component_id = req.params.component_id;
-                        params.catalog_id = null;
-                    }
-
-                    dal.widgets.add(params, function (err, results) {
-                        res.json(results);
-                    });
-                });
-            } else {
-                res.json(widget);
-            }
+        models.Widget.findOneOrCreate(  { app_instance, component_id },
+                                        { app_instance, component_id },
+                                        function (err, widget) {
+            res.json(widget);
         });
+
+        // var viewParams = [req.params.app_instance, req.params.component_id];
+        //
+        // dal.widgets.view(viewParams, function (err, widget) {
+        //     if (widget.length == 0) {
+        //         dal.widgets.settingsCopy(req.params.app_instance, function (err, appWidgetSettings) {
+        //             var params = req.params;
+        //
+        //             if (appWidgetSettings.length > 0) {
+        //                 params = appWidgetSettings[0];
+        //                 params.component_id = req.params.component_id;
+        //                 params.catalog_id = null;
+        //             }
+        //
+        //             dal.widgets.add(params, function (err, results) {
+        //                 res.json(results);
+        //             });
+        //         });
+        //     } else {
+        //         res.json(widget);
+        //     }
+        // });
     })
     .put(function (req, res, next) {
         dal.widgets.update(req.body, function (err, results) {
