@@ -14,7 +14,7 @@ var request = require('request');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/FeedbacksDB');
 var models = require('../dal/models')(mongoose);
-var db = mongoose.connection;
+var ObjectId = mongoose.Types.ObjectId;
 
 // app's client IDs to check with audience in ID Token.
 var clientId = '4644920241-or3rocgiqb3156n1r5j7r40taetolkja.apps.googleusercontent.com';
@@ -300,74 +300,84 @@ router.route('/visitors/:id')
         next(new Error('not implemented'));
     });
 
-router.route('/feedbacks/:app_instance/:component_id')
+router.route('/feedbacks/:widget_id')
     .get(function (req, res, next) {
-        var params = [req.params.app_instance, req.params.component_id];
-        dal.feedbacks.list(params, function (err, results) {
-            res.json(results);
+        var target_id = new ObjectId(req.params.widget_id);
+
+        models.Feedback.find({ target_id }, function (err, feedbacks) {
+            res.json(feedbacks);
         });
     })
     .post(function (req, res, next) {
-        var publisher;
-        var feedback = {
-            app_instance: req.params.app_instance,
-            component_id: req.params.component_id,
-            created_on: new Date().toISOString(),
-            rating: req.body.rating,
-            comment: req.body.comment
-        };
+        verifyToken(req.body.publisher_token, function (err, tokenInfo) {
+            var email = tokenInfo.email,
+                name = tokenInfo.given_name,
+                picture_url = tokenInfo.picture;
 
-        async.series([
-                function (callback) {
-                    (new (new googleAuth).OAuth2).verifyIdToken(req.body.publisher_token, null, function (err, googleRes) {
-                        if (err) callback(err);
+            models.Visitor.findOneOrCreate({email}, {email, name, picture_url}, function (err, visitor) {
+                var target_id = new ObjectId(req.params.widget_id),
+                    visitor_id = visitor._id,
+                    comment = req.body.comment,
+                    rating = req.body.rating;
 
-                        var googleAttributes = googleRes.getPayload();
-                        publisher = {
-                            display_name: googleAttributes.given_name,
-                            avatar_url: googleAttributes.picture,
-                            id: googleAttributes.email
-                        };
+                var newFeedback = new models.Feedback({ target_id, visitor_id, comment, rating });
+                newFeedback.save(function (err, feedback) {
+                    res.json(feedback);
+                })
+            })
+        });
 
-                        feedback.visitor_id = publisher.id;
-
-                        callback(null, publisher);
-                    })
-                },
-                function (callback) { // add the publisher to visitors
-                    dal.visitors.view(feedback.visitor_id, function (err, user) {
-                        if (user.length == 0) {
-                            dal.visitors.add(publisher, function (err) {
-                                callback(err);
-                            });
-                        } else {
-                            callback();
-                        }
-                    });
-                },
-                function (callback) { // add the feedback
-                    dal.feedbacks.add(feedback, function (err, results) {
-                        if (err) {
-                            callback(err);
-                        } else {
-                            console.log(results);
-                            callback(null, results);
-                            // var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-                            // dal.feedbacks.view(widgetParams, function (err, results) {
-                            //     callback(err);
-                            // });
-                        }
-                    });
-                }
-            ],
-            function (err, results) {
-                if (err) {
-                    res.status(500).json({error: "Internal server error"});
-                } else {
-                    res.json(results);
-                }
-            }
-        );
+        // async.series([
+        //         function (callback) {
+        //             (new (new googleAuth).OAuth2).verifyIdToken(req.body.publisher_token, null, function (err, googleRes) {
+        //                 if (err) callback(err);
+        //
+        //                 var googleAttributes = googleRes.getPayload();
+        //                 publisher = {
+        //                     display_name: googleAttributes.given_name,
+        //                     avatar_url: googleAttributes.picture,
+        //                     id: googleAttributes.email
+        //                 };
+        //
+        //                 feedback.visitor_id = publisher.id;
+        //
+        //                 callback(null, publisher);
+        //             })
+        //         },
+        //         function (callback) { // add the publisher to visitors
+        //             dal.visitors.view(feedback.visitor_id, function (err, user) {
+        //                 if (user.length == 0) {
+        //                     dal.visitors.add(publisher, function (err) {
+        //                         callback(err);
+        //                     });
+        //                 } else {
+        //                     callback();
+        //                 }
+        //             });
+        //         },
+        //         function (callback) { // add the feedback
+        //             dal.feedbacks.add(feedback, function (err, results) {
+        //                 if (err) {
+        //                     callback(err);
+        //                 } else {
+        //                     console.log(results);
+        //                     callback(null, results);
+        //                     // var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
+        //                     // dal.feedbacks.view(widgetParams, function (err, results) {
+        //                     //     callback(err);
+        //                     // });
+        //                 }
+        //             });
+        //         }
+        //     ],
+        //     function (err, results) {
+        //         if (err) {
+        //             res.status(500).json({error: "Internal server error"});
+        //         } else {
+        //             res.json(results);
+        //         }
+        //     }
+        // );
     });
 
 router.route('/feedbacks/:app_instance/:component_id/:feedback_id')
@@ -437,41 +447,11 @@ router.route('/widgets/:app_instance/:component_id')
         var app_instance = req.params.app_instance,
             component_id = req.params.component_id;
 
-        // models.Widget.count({ app_instance, component_id }, function (err, count) {
-        //     if (err) {}
-        //
-        //     if (count) {
-        //
-        //     }
-        // })
-
         models.Widget.findOneOrCreate(  { app_instance, component_id },
                                         { app_instance, component_id },
                                         function (err, widget) {
             res.json(widget);
         });
-
-        // var viewParams = [req.params.app_instance, req.params.component_id];
-        //
-        // dal.widgets.view(viewParams, function (err, widget) {
-        //     if (widget.length == 0) {
-        //         dal.widgets.settingsCopy(req.params.app_instance, function (err, appWidgetSettings) {
-        //             var params = req.params;
-        //
-        //             if (appWidgetSettings.length > 0) {
-        //                 params = appWidgetSettings[0];
-        //                 params.component_id = req.params.component_id;
-        //                 params.catalog_id = null;
-        //             }
-        //
-        //             dal.widgets.add(params, function (err, results) {
-        //                 res.json(results);
-        //             });
-        //         });
-        //     } else {
-        //         res.json(widget);
-        //     }
-        // });
     })
     .put(function (req, res, next) {
         dal.widgets.update(req.body, function (err, results) {
@@ -484,36 +464,42 @@ router.route('/widgets/:app_instance/:component_id')
 
 router.route('/catalogs/:app_instance')
     .get(function (req, res, next) {
-        dal.catalogs.list(req.params, function (err, catalogs) {
-            dal.widgets.list([req.params.app_instance], function (err, widgets) {
-                dal.widgets.score(req.params.app_instance, function (err, feedbacks) {
-                    widgets.forEach(function (current) {
-                        current.feedbacks = feedbacks.filter(function (value) {
-                            return value.component_id == current.component_id;
-                        });
+        var app_instance = req.params.app_instance;
 
-                        current.score = popularity.getWidgetScore(5, current.created_on, current.feedbacks);
-                    });
-
-                    catalogs.forEach(function (current) {
-                        current.widgets = widgets.filter(function (value) {
-                            return value.catalog_id == current.id;
-                        });
-                    });
-
-                    var defaultCatalog = {
-                        name: "Default Catalog",
-                        id: 0,
-                        widgets: widgets.filter(function (value) {
-                            return value.catalog_id == null;
-                        })
-                    };
-
-                    catalogs.unshift(defaultCatalog);
-                    res.json(catalogs);
-                });
-            });
+        models.Catalog.find({ app_instance }, function(err, catalogs){
+            res.json(catalogs);
         });
+
+        // dal.catalogs.list(req.params, function (err, catalogs) {
+        //     dal.widgets.list([req.params.app_instance], function (err, widgets) {
+        //         dal.widgets.score(req.params.app_instance, function (err, feedbacks) {
+        //             widgets.forEach(function (current) {
+        //                 current.feedbacks = feedbacks.filter(function (value) {
+        //                     return value.component_id == current.component_id;
+        //                 });
+        //
+        //                 current.score = popularity.getWidgetScore(5, current.created_on, current.feedbacks);
+        //             });
+        //
+        //             catalogs.forEach(function (current) {
+        //                 current.widgets = widgets.filter(function (value) {
+        //                     return value.catalog_id == current.id;
+        //                 });
+        //             });
+        //
+        //             var defaultCatalog = {
+        //                 name: "Default Catalog",
+        //                 id: 0,
+        //                 widgets: widgets.filter(function (value) {
+        //                     return value.catalog_id == null;
+        //                 })
+        //             };
+        //
+        //             catalogs.unshift(defaultCatalog);
+        //             res.json(catalogs);
+        //         });
+        //     });
+        // });
     });
 
 router.route('/catalogs')

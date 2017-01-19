@@ -39,14 +39,14 @@
                  layout-align="space-between none">
                 <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
                     <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
-                                {{new_feedback.comment.length}}/{{settings.comment_max_length}}
+                                {{new_feedback.comment.length}}/{{settings.max_comment_length}}
                             </span>
                 </div>
                 <div>
                     <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating"
                                  ng-if="settings.enable_ratings"></input-stars>
                     <md-button class="md-raised md-primary md-small post-button" ng-click="postComment()"
-                               ng-disabled="!logged_in || new_feedback.comment.length > settings.comment_max_length ">
+                               ng-disabled="!logged_in || new_feedback.comment.length > settings.max_comment_length ">
                         Post
                     </md-button>
                 </div>
@@ -60,7 +60,7 @@
                  layout-align="space-between none">
                 <div class="comment-length"><!-- div for the sake of alignment in case of ng-if == false -->
                     <span layout="column" layout-align="start start" ng-if="settings.enable_comments">
-                                {{edited_feedback.comment.length}}/{{settings.comment_max_length}}
+                                {{edited_feedback.comment.length}}/{{settings.max_comment_length}}
                             </span>
                 </div>
                 <div>
@@ -70,7 +70,7 @@
                         Cancel
                     </md-button>
                     <md-button class="md-raised md-primary md-small post-button" ng-click="postFeedbackEdit()"
-                               ng-disabled="edited_feedback.comment.length == 0 || edited_feedback.comment.length > settings.comment_max_length ||
+                               ng-disabled="edited_feedback.comment.length == 0 || edited_feedback.comment.length > settings.max_comment_length ||
                                         (edited_feedback.comment == my_feedback.comment && edited_feedback.rating == my_feedback.rating)">
                         Save
                     </md-button>

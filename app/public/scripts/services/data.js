@@ -2,11 +2,11 @@
 
 angular.module('data', ['application'])
     .service('data', ['$http', '$q', 'application', function ($http, $q, application) {
-        this.getFeedbacks = function getFeedbacks(component_id) {
-            if (!component_id)
-                component_id = application.getComponentId();
+        this.getFeedbacks = function getFeedbacks(widget_id) {
+            if (!widget_id)
+                return [];
 
-            var promise = $http.get('/api/feedbacks/' + application.getAppInstance() + '/' + component_id);
+            var promise = $http.get('/api/feedbacks/' + widget_id);
             return promise;
         };
         this.getReplies = function getReplies(feedback_ids) {

@@ -77,11 +77,6 @@ angular.module('feedbacks')
 
         updateWidgetHeight();
 
-        /*Wix.addEventListener(Wix.Events.SITE_SAVED,function (data) {
-         console.log(data);
-
-         });*/
-
         $scope.settings = {
             show_summary: true,
             show_feedbacks: true,
@@ -92,27 +87,27 @@ angular.module('feedbacks')
 
         application.getWidgetSettings().then(
             function (response) { // Success loading settings
-                $scope.settings = response.data[0];
+                $scope.settings = response.data;
                 $scope.loading_summary = false;
+
+                data.getFeedbacks($scope.settings._id).then(function (res) {
+                    $scope.data = res.data;
+                    $scope.loading_feedbacks = false;
+                    recalculateAverage();
+
+                    var ids = res.data.map(function (feedback) {
+                        return feedback.id;
+                    });
+
+                    data.getReplies(ids.join(',')).then(function (res) {
+                        for (var i in $scope.data) {
+                            $scope.data[i].replies = res.data[$scope.data[i].id];
+                        }
+                    });
+                });
             }, function (response) { // Shit's fucked yo
 
             });
-
-        data.getFeedbacks().then(function (res) {
-            $scope.data = res.data;
-            $scope.loading_feedbacks = false;
-            recalculateAverage();
-
-            var ids = res.data.map(function (feedback) {
-                return feedback.id;
-            });
-
-            data.getReplies(ids.join(',')).then(function (res) {
-                for (var i in $scope.data) {
-                    $scope.data[i].replies = res.data[$scope.data[i].id];
-                }
-            });
-        });
 
         $scope.$watchGroup(['logged_user.email', 'data'], function (newValues, oldValues) {
             if (newValues[0] && newValues[1] && Array.isArray(newValues[1])) {
@@ -127,9 +122,10 @@ angular.module('feedbacks')
         });
 
         $scope.postComment = function () {
+            // TODO: export this method to data
             var request = $http({
                 method: "post",
-                url: "/api/feedbacks/" + application.getAppInstance() + "/" + application.getComponentId(),
+                url: "/api/feedbacks/" + $scope.settings._id,
                 data: {
                     comment: $scope.new_feedback.comment,
                     rating: $scope.new_feedback.rating,
@@ -138,18 +134,20 @@ angular.module('feedbacks')
             });
 
             return request.then(
-                function (res) { // success
-                    var feedback = {
-                        id: res.data[2].insertId,
-                        app_instance: application.getAppInstance(),
-                        avatar_url: $scope.logged_user.image_url,
-                        comment: $scope.new_feedback.comment,
-                        component_id: application.getComponentId(),
-                        created_on: new Date(),
-                        display_name: $scope.logged_user.full_name,
-                        rating: $scope.new_feedback.rating,
-                        visitor_id: $scope.logged_user.email
-                    };
+                function (response) { // success
+                    debugger;
+
+                    var feedback = response.data;
+                    //     id: res.data[2].insertId,
+                    //     app_instance: application.getAppInstance(),
+                    //     avatar_url: $scope.logged_user.image_url,
+                    //     comment: $scope.new_feedback.comment,
+                    //     component_id: application.getComponentId(),
+                    //     created_on: new Date(),
+                    //     display_name: $scope.logged_user.full_name,
+                    //     rating: $scope.new_feedback.rating,
+                    //     visitor_id: $scope.logged_user.email
+                    // };
 
                     $scope.data.unshift(feedback);
                     $scope.my_feedback = feedback;
@@ -162,7 +160,7 @@ angular.module('feedbacks')
                     recalculateAverage();
                 },
                 function (err) { // error
-                    alert('oops');
+                    alert('Error posting feedback');
                     $scope.new_feedback = {
                         comment: '',
                         rating: 0
