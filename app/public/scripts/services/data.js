@@ -16,15 +16,16 @@ angular.module('data', ['application'])
         this.editFeedback = function (user_id_token, feedback) {
             var promise = $http({
                 method: "put",
-                url: '/api/feedbacks/' + application.getAppInstance() + '/' + application.getComponentId() + '/' + feedback.id,
+                url: '/api/feedbacks/' + feedback._id,
                 data: {user_id_token, feedback}
             });
             return promise;
         };
-        this.deleteFeedback = function (user_id_token, feedback_id) {
+        this.deleteFeedback = function (user_id_token, feedback) {
             var promise = $http({
-                method: "delete",
-                url: '/api/feedbacks/' + application.getAppInstance() + '/' + application.getComponentId() + '/' + feedback_id + '/' + user_id_token
+                method: "post",
+                url: '/api/feedbacks/delete/' + feedback._id,
+                data: {user_id_token}
             });
             return promise;
         };

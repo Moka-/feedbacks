@@ -48,31 +48,35 @@ angular.module('feedbacks')
     }).directive('ratingsSummary', function() {
         return {
             restrict: 'E',
-            scope: {
-                feedbacks: '='
-            },
             controller: ['$scope', function ($scope) {
                 $scope.averageRating = 0;
-                $scope.$watchCollection('feedbacks', function (newVal, oldVal) {
-                    if(newVal && newVal.length != oldVal.length){
-                        var sum = 0;
-                        var actualRates = 0;
 
-                        for (var i = 0; i < newVal.length; i++) {
-                            sum += newVal[i].rating;
-                            if (newVal[i].rating != 0)
+                $scope.$on('feedbacksChanged',function(event, data){
+                    $scope.calculateAverage(data.feedbacks);
+                    $scope.fillChart(data.feedbacks);
+                })
+
+                $scope.calculateAverage = function(feedbacks){
+                    if(feedbacks && feedbacks.length){
+                        var sum = 0,
+                            actualRates = 0;
+
+                        for (var i = 0; i < feedbacks.length; i++) {
+                            sum += feedbacks[i].rating;
+                            if (feedbacks[i].rating != 0)
                                 actualRates++;
                         }
 
                         $scope.averageRating = sum / actualRates;
-
-                        fillChart(newVal);
                     }
-                });
+                }
 
-                function fillChart(feedbacks) {
+                $scope.fillChart = function(feedbacks) {
+                    $scope.chartData.forEach(function(element){ element[1].v = 0; })
+
                     feedbacks.forEach(function (element) {
-                        $scope.chartData[element.rating - 1][1]['v']++;
+                        if (element.rating)
+                            $scope.chartData[element.rating - 1][1]['v']++;
                     })
                 }
 
@@ -139,7 +143,6 @@ angular.module('feedbacks')
                         height:"100%"
                     }
                 };
-
             }],
             templateUrl: 'partials/templates/ratingsSummary.html'
         }

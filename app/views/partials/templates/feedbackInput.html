@@ -1,6 +1,6 @@
 <md-card>
     <!--login-->
-    <md-card-content class="highlighted" layout="row" layout-align="space-between start" ng-if="!logged_in">
+    <md-card-content class="highlighted" layout="row" layout-align="space-between start" ng-if="!logged_user">
         <div class="login" layout="row" layout-align="center none" ng-hide="loading_summary" flex>
             <div layout="column" layout-align="center center" flex="25">
                 <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
@@ -21,13 +21,13 @@
         </div>
     </md-card-content>
 
-    <md-card-content class="highlighted" layout="row" layout-align="space-between start" ng-if="logged_in">
+    <md-card-content class="highlighted" layout="row" layout-align="space-between start" ng-if="logged_user">
         <!--avatar name & logout-->
         <div layout="row" layout-align="start stretch" ng-hide="loading_summary">
             <img class="avatar" ng-src="{{ logged_user.image_url }}"/>
             <div layout="column" layout-align="center stretch" class="logged-user">
                 {{logged_user.full_name}}
-                <a href="" class="logout" ng-click="signOut()" ng-show="logged_in">Logout</a>
+                <a href="" class="logout" ng-click="signOut()" ng-show="logged_user">Logout</a>
             </div>
         </div>
 
@@ -45,15 +45,15 @@
                 <div>
                     <input-stars max="{{settings.max_rating}}" ng-model="new_feedback.rating"
                                  ng-if="settings.enable_ratings"></input-stars>
-                    <md-button class="md-raised md-primary md-small post-button" ng-click="postComment()"
-                               ng-disabled="!logged_in || new_feedback.comment.length > settings.max_comment_length ">
+                    <md-button class="md-raised md-primary md-small post-button" ng-click="postFeedback()"
+                               ng-disabled="!logged_user || new_feedback.comment.length > settings.max_comment_length ">
                         Post
                     </md-button>
                 </div>
             </div>
         </div>
         <!--existing feedback editor-->
-        <div layout="column" layout-align="space-between end" flex="100" ng-show="my_feedback && edit_mode">
+        <div layout="column" layout-align="space-between end" flex="100" ng-show="my_feedback && edited_feedback">
                     <textarea rows="2" placeholder="Say something!" ng-model="edited_feedback.comment"
                               ng-if="settings.enable_comments"></textarea>
             <div style="margin-top: 3px; width:100%; z-index: 10000;" layout="row"
@@ -69,20 +69,19 @@
                     <md-button class="md-small post-button" ng-click="cancelFeedbackEdit()">
                         Cancel
                     </md-button>
-                    <md-button class="md-raised md-primary md-small post-button" ng-click="postFeedbackEdit()"
-                               ng-disabled="edited_feedback.comment.length == 0 || edited_feedback.comment.length > settings.max_comment_length ||
-                                        (edited_feedback.comment == my_feedback.comment && edited_feedback.rating == my_feedback.rating)">
+                    <md-button class="md-raised md-primary md-small post-button" ng-click="saveFeedbackEdit()"
+                               ng-disabled="!allowEditSave()">
                         Save
                     </md-button>
                 </div>
             </div>
         </div>
         <!--existing feedback viewer-->
-        <div layout="row" layout-align="space-between center" flex="100" ng-show="my_feedback && !edit_mode">
+        <div layout="row" layout-align="space-between center" flex="100" ng-show="my_feedback && !edited_feedback">
             <div layout="column" layout-align="center none" flex="100" style="padding: 5px;">
                 <div layout="row" layout-align="space-between start">
                     <div>
-                        <span style="font-weight: 600">Your comment</span>
+                        <span style="font-weight: 600">You</span>
                         <span am-time-ago="my_feedback.created_on" class="time-ago"></span>
                         <input-stars max="{{settings.max_rating}}" ng-model="my_feedback.rating" readonly
                                      ng-if="settings.enable_ratings && my_feedback.rating"></input-stars>

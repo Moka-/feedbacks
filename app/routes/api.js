@@ -277,34 +277,34 @@ function verifyToken(token, callback) {
     })
 }
 
-router.route('/visitors')
-    .get(function (req, res, next) {
-        dal.visitors.list(req.params, function (err, result) {
-            res.json(result);
-        });
-    })
-    .post(function (req, res, next) {
-        next(new Error('not implemented'));
-    });
+// router.route('/visitors')
+//     // .get(function (req, res, next) {
+//     //     dal.visitors.list(req.params, function (err, result) {
+//     //         res.json(result);
+//     //     });
+//     // })
+//     .post(function (req, res, next) {
+//         next(new Error('not implemented'));
+//     });
 
 router.route('/visitors/:id')
     .get(function (req, res, next) {
         dal.visitors.view(req.params, function (err, result) {
             res.json(result);
         });
-    })
-    .put(function (req, res, next) {
-        next(new Error('not implemented'));
-    })
-    .delete(function (req, res, next) {
-        next(new Error('not implemented'));
     });
+    // .put(function (req, res, next) {
+    //     next(new Error('not implemented'));
+    // })
+    // .delete(function (req, res, next) {
+    //     next(new Error('not implemented'));
+    // });
 
 router.route('/feedbacks/:widget_id')
     .get(function (req, res, next) {
         var target_id = new ObjectId(req.params.widget_id);
 
-        models.Feedback.find({ target_id }, function (err, feedbacks) {
+        models.Feedback.find({ target_id, deleted: false }, function (err, feedbacks) {
             res.json(feedbacks);
         });
     })
@@ -317,67 +317,75 @@ router.route('/feedbacks/:widget_id')
             models.Visitor.findOneOrCreate({email}, {email, name, picture_url}, function (err, visitor) {
                 var target_id = new ObjectId(req.params.widget_id),
                     visitor_id = visitor._id,
+                    visitor_email = visitor.email,
+                    visitor_name = visitor.name,
+                    visitor_picture_url = visitor.picture_url,
                     comment = req.body.comment,
                     rating = req.body.rating;
 
-                var newFeedback = new models.Feedback({ target_id, visitor_id, comment, rating });
+                var newFeedback = new models.Feedback({ target_id, visitor_id, visitor_email, visitor_name, visitor_picture_url, comment, rating });
                 newFeedback.save(function (err, feedback) {
                     res.json(feedback);
                 })
             })
         });
+    })
+    .put(function (req, res, next) {
+        var token = req.body.user_id_token;
+        var updatedFeedback = req.body.feedback;
 
-        // async.series([
-        //         function (callback) {
-        //             (new (new googleAuth).OAuth2).verifyIdToken(req.body.publisher_token, null, function (err, googleRes) {
-        //                 if (err) callback(err);
-        //
-        //                 var googleAttributes = googleRes.getPayload();
-        //                 publisher = {
-        //                     display_name: googleAttributes.given_name,
-        //                     avatar_url: googleAttributes.picture,
-        //                     id: googleAttributes.email
-        //                 };
-        //
-        //                 feedback.visitor_id = publisher.id;
-        //
-        //                 callback(null, publisher);
-        //             })
-        //         },
-        //         function (callback) { // add the publisher to visitors
-        //             dal.visitors.view(feedback.visitor_id, function (err, user) {
-        //                 if (user.length == 0) {
-        //                     dal.visitors.add(publisher, function (err) {
-        //                         callback(err);
-        //                     });
-        //                 } else {
-        //                     callback();
-        //                 }
-        //             });
-        //         },
-        //         function (callback) { // add the feedback
-        //             dal.feedbacks.add(feedback, function (err, results) {
-        //                 if (err) {
-        //                     callback(err);
-        //                 } else {
-        //                     console.log(results);
-        //                     callback(null, results);
-        //                     // var widgetParams = [feedback.app_instance, feedback.component_id, feedback.id];
-        //                     // dal.feedbacks.view(widgetParams, function (err, results) {
-        //                     //     callback(err);
-        //                     // });
-        //                 }
-        //             });
-        //         }
-        //     ],
-        //     function (err, results) {
-        //         if (err) {
-        //             res.status(500).json({error: "Internal server error"});
-        //         } else {
-        //             res.json(results);
-        //         }
-        //     }
-        // );
+        verifyToken(token, function (err, user) {
+            models.Feedback.findOne(
+                {_id: updatedFeedback._id, visitor_email: user.email},
+                function (err, feedback) {
+                    if
+                        (err) res.error();
+                    else {
+                        feedback.comment = updatedFeedback.comment;
+                        feedback.rating = updatedFeedback.rating;
+                        feedback.visitor_name = user.name;
+                        feedback.visitor_picture_url = user.picture;
+                        feedback.edited_on = new Date();
+
+                        feedback.save();
+
+                        res.send(feedback);
+                    }
+                }
+            );
+        });
+    });
+
+router.route('/feedbacks/delete/:feedback_id')
+    .post(function (req, res, next) {
+        var feedback_id = req.params.feedback_id;
+        var token = req.body.user_id_token;
+
+        verifyToken(token, function (err, user) {
+            models.Feedback.findOne(
+                {_id: feedback_id, visitor_email: user.email},
+                function (err, feedback) {
+                    if
+                        (err) res.error();
+                    else {
+                        feedback.deleted = true;
+                        feedback.save();
+                        res.send(feedback);
+                    }
+                }
+            );
+
+
+            // models.Feedback.findOneAndUpdate(
+            //     {_id: feedback_id, visitor_email: user.email},
+            //     {$set: {deleted: true}},
+            //     {new: true},
+            //     function (err, feedback) {
+            //         if (err) res.error();
+            //         else     res.send(feedback);
+            //     }
+            // );
+        });
     });
 
 router.route('/feedbacks/:app_instance/:component_id/:feedback_id')
@@ -385,51 +393,9 @@ router.route('/feedbacks/:app_instance/:component_id/:feedback_id')
         dal.feedbacks.view(req.params, function (err, results) {
             res.json(results);
         });
-    })
-    .put(function (req, res, next) {
-        var app_instance = req.params.app_instance;
-        var component_id = req.params.component_id;
-        var feedback_id = req.params.id;
-
-        verifyToken(req.body.user_id_token, function (err, tokenInfo) {
-            dal.feedbacks.update(
-                app_instance,
-                component_id,
-                feedback_id,
-                tokenInfo.email,
-                req.body.feedback.comment,
-                req.body.feedback.rating,
-                function (err, results) {
-                    if (err)
-                        res.error();
-                    else
-                        res.json(results);
-                });
-        });
     });
 
 router.route('/feedbacks/:app_instance/:component_id/:feedback_id/:id_token')
-    .delete(function (req, res, next) {
-
-        var app_instance = req.params.app_instance;
-        var component_id = req.params.component_id;
-        var feedback_id = req.params.feedback_id;
-        var id_token = req.params.id_token;
-
-        verifyToken(id_token, function (err, tokenInfo) {
-            dal.feedbacks.delete(
-                app_instance,
-                component_id,
-                feedback_id,
-                tokenInfo.email,
-                function (err, results) {
-                    if (err)
-                        res.error();
-                    else
-                        res.json(results);
-                });
-        });
-    });
 
 router.route('/widgets/:app_instance')
     .get(function (req, res, next) {
@@ -447,11 +413,12 @@ router.route('/widgets/:app_instance/:component_id')
         var app_instance = req.params.app_instance,
             component_id = req.params.component_id;
 
-        models.Widget.findOneOrCreate(  { app_instance, component_id },
-                                        { app_instance, component_id },
-                                        function (err, widget) {
-            res.json(widget);
-        });
+        models.Widget.findOneOrCreate(
+            { app_instance, component_id },
+            { app_instance, component_id },
+            function (err, widget) {
+                res.json(widget);
+            });
     })
     .put(function (req, res, next) {
         dal.widgets.update(req.body, function (err, results) {
@@ -465,10 +432,10 @@ router.route('/widgets/:app_instance/:component_id')
 router.route('/catalogs/:app_instance')
     .get(function (req, res, next) {
         var app_instance = req.params.app_instance;
-
-        models.Catalog.find({ app_instance }, function(err, catalogs){
-            res.json(catalogs);
-        });
+            res.success();
+        // models.Catalog.find({ app_instance }, function(err, catalogs){
+        //     res.json(catalogs);
+        // });
 
         // dal.catalogs.list(req.params, function (err, catalogs) {
         //     dal.widgets.list([req.params.app_instance], function (err, widgets) {

@@ -6,7 +6,8 @@ angular.module('feedbacks')
       var loadSettings = function(){
           application.getWidgetSettings().then(
               function (response){ // Success loading settings
-                  $scope.settings = response.data[0];
+                  debugger;
+                  $scope.settings = response.data;
               }, function(response){ // Shit's fucked yo
 
               });
@@ -15,16 +16,16 @@ angular.module('feedbacks')
 
       $scope.catalogs = []; // Init an empty array
 
-      $http.get('/api/catalogs/' + application.getApplicationId()).then(
-          function (response){ // Success loading settings
-              $scope.catalogs = response.data;
-          }, function(response){ // Shit's fucked yo
-              debugger;
-          });
+      // $http.get('/api/catalogs/' + application.getApplicationId()).then(
+      //     function (response){ // Success loading settings
+      //         $scope.catalogs = response.data;
+      //     }, function(response){ // Shit's fucked yo
+      //         debugger;
+      //     });
 
-      $scope.loadCatalogs = function () {
-
-      };
+      // $scope.loadCatalogs = function () {
+      //
+      // };
 
       $scope.goToDash = function () {
           $wix.Settings.getDashboardAppUrl(function(url) {

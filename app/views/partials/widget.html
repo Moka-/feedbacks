@@ -5,36 +5,37 @@
             <md-card class="summary-card" ng-if="settings.show_summary">
                 <md-card-content>
                     <!--<feedbacks-summary></feedbacks-summary>-->
-                    <ratings-summary feedbacks="data"></ratings-summary>
+                    <ratings-summary feedbacks="feedbacks"></ratings-summary>
                 </md-card-content>
             </md-card>
         </div>
 
         <feedback-input></feedback-input>
+
         <md-card class="scroll-this" layout="column" layout-align="start stretch">
-            <md-subheader class="md-sticky">Feedbacks • {{data.length}}</md-subheader>
+            <md-subheader class="md-sticky">Feedbacks • {{feedbacks.length}}</md-subheader>
             <md-card-content layout="column" layout-align="start stretch"
-                             ng-if="settings.show_feedbacks && data && data.length > 0" class="feedback-list">
+                             ng-if="settings.show_feedbacks && feedbacks && feedbacks.length > 0" class="feedback-list">
                 <div layout="column" layout-align="center center" ng-if="loading_feedbacks">
                     <md-progress-circular md-mode="indeterminate" md-diameter="70"></md-progress-circular>
                 </div>
 
                 <md-list ng-hide="loading_feedbacks">
                     <md-list-item class="md-3-line md-long-text feedback-list-item"
-                                  ng-repeat="feedback in data | orderBy:'created_on':true track by $index">
+                                  ng-repeat="feedback in feedbacks | orderBy:'created_on':true track by $index">
                         <div layout="row" layout-align="start start" flex="100">
-                            <img ng-src="{{feedback.avatar_url ? feedback.avatar_url : 'images/avatar.png'}}"
+                            <img ng-src="{{feedback.visitor_picture_url ? feedback.visitor_picture_url : 'images/avatar.png'}}"
                                  class="md-avatar feedback-avatar"/>
                             <div layout="column" layout-align="start start" flex="100">
                                 <div class="md-list-item-text comment-content">
-                                    <h4>{{feedback.display_name ? feedback.display_name : 'Anonymous'}}
+                                    <h4>{{feedback.visitor_name ? feedback.visitor_name : 'Anonymous'}}
                                         <span am-time-ago="feedback.created_on" class="time-ago"></span>
                                         <input-stars max="{{settings.max_rating}}" ng-model="feedback.rating"
                                                      readonly
                                                      ng-if="settings.enable_ratings && feedback.rating"></input-stars>
                                     </h4>
                                     <div ng-if="settings.enable_comments">
-                                        <div class="flagged" ng-if="feedback.times_flagged != 0 && !feedback.marked_appropriate">
+                                        <div class="flagged" ng-if="feedback.flag_voters.length != 0 && !feedback.marked_appropriate">
                                             This has been flagged as inappropriate •
                                             <a href="" class="flagged-toggle"
                                                ng-click="toggleFlagged(feedback)">
@@ -43,7 +44,7 @@
                                             <span ng-switch-default>Show</span>
                                         </span></a>
                                         </div>
-                                        <div ng-show="feedback.times_flagged == 0 || feedback.marked_appropriate || feedback.showFlagged">
+                                        <div ng-show="feedback.flag_voters.length == 0 || feedback.marked_appropriate || feedback.showFlagged">
                                             {{feedback.comment}}
 
                                             <div class="action-buttons" layout="row" layout-align="start center">

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('feedbacks')
-    .controller('WidgetController', function ($scope, $wix, $http, $filter, $mdDialog, data, application) {
+    .controller('WidgetController', function ($scope, $rootScope, $wix, $http, $filter, $mdDialog, data, application) {
 
         function User(id_token, full_name, email, image_url) {
             this.id_token = id_token;
@@ -9,7 +9,6 @@ angular.module('feedbacks')
             this.email = email;
             this.image_url = image_url ? image_url : "images/avatar.png";
         };
-
         function Feedback() {
             this.comment = "";
             this.rating = 0;
@@ -21,8 +20,7 @@ angular.module('feedbacks')
         };
 
         var auth2; // The Sign-In object.
-        $scope.logged_in = false;
-        $scope.logged_user = new User();
+        $scope.logged_user = null;
 
         function signInInit() {
             var initSigninV2 = function () {
@@ -47,43 +45,34 @@ angular.module('feedbacks')
                 if (user && user.isSignedIn()) {
                     var authResponse = user.getAuthResponse();
                     var profile = user.getBasicProfile();
-                    $scope.logged_in = true;
                     $scope.logged_user = new User(authResponse.id_token, profile.getName(), profile.getEmail(), profile.getImageUrl());
-                } else {
-                    $scope.logged_in = false;
-                    $scope.logged_user = new User();
-                }
-
-                $scope.$apply();
+                    setMyFeedback();
+                } else
+                    $scope.logged_user = null;
             };
 
             gapi.load('auth2', initSigninV2);
         }
-
         signInInit(); // Magic. Do not touch
-
-        $scope.loading_feedbacks = true;
-        $scope.loading_summary = true;
-        $scope.settings = {};
-        $scope.data = {};
-        $scope.my_feedback = {};
-        $scope.edit_mode = false;
-
         function updateWidgetHeight() {
             $wix.getBoundingRectAndOffsets(function (data) {
                 $scope.widgetHeight = data.rect.height;
             });
         }
-
         updateWidgetHeight();
 
-        $scope.settings = {
-            show_summary: true,
-            show_feedbacks: true,
-            enable_comments: true,
-            enable_ratings: true,
-            max_rating: 5
-        };
+        $scope.loading_feedbacks = true;
+        $scope.loading_summary = true;
+        $scope.feedbacks = [];
+
+        function setMyFeedback(){
+            if ($scope.logged_user && $scope.feedbacks && $scope.feedbacks.length){
+                var my_comments = $filter('filter')($scope.feedbacks, {visitor_email: $scope.logged_user.email}, true);
+                if (my_comments && my_comments.length) {
+                    $scope.my_feedback = my_comments[0];
+                }
+            }
+        }
 
         application.getWidgetSettings().then(
             function (response) { // Success loading settings
@@ -91,37 +80,28 @@ angular.module('feedbacks')
                 $scope.loading_summary = false;
 
                 data.getFeedbacks($scope.settings._id).then(function (res) {
-                    $scope.data = res.data;
+                    $scope.feedbacks = res.data;
                     $scope.loading_feedbacks = false;
-                    recalculateAverage();
 
-                    var ids = res.data.map(function (feedback) {
-                        return feedback.id;
-                    });
+                    $rootScope.$broadcast('feedbacksChanged',{feedbacks: $scope.feedbacks});
+                    setMyFeedback();
 
-                    data.getReplies(ids.join(',')).then(function (res) {
-                        for (var i in $scope.data) {
-                            $scope.data[i].replies = res.data[$scope.data[i].id];
-                        }
-                    });
+                    //TODO: fix replies after the project gets stable
+                    // var ids = res.data.map(function (feedback) {
+                    //     return feedback.id;
+                    // });
+
+                    // data.getReplies(ids.join(',')).then(function (res) {
+                    //     for (var i in $scope.data) {
+                    //         $scope.data[i].replies = res.data[$scope.data[i].id];
+                    //     }
+                    // });
                 });
-            }, function (response) { // Shit's fucked yo
-
+            }, function (response) {
+                console.log("Error loading widget settings");
             });
 
-        $scope.$watchGroup(['logged_user.email', 'data'], function (newValues, oldValues) {
-            if (newValues[0] && newValues[1] && Array.isArray(newValues[1])) {
-                var my_comments = $filter('filter')(newValues[1], {visitor_id: newValues[0]}, true);
-                if (my_comments && my_comments.length > 0) {
-                    $scope.my_feedback = my_comments[0];
-                }
-            }
-            else {
-                $scope.my_feedback = null;
-            }
-        });
-
-        $scope.postComment = function () {
+        $scope.postFeedback = function () {
             // TODO: export this method to data
             var request = $http({
                 method: "post",
@@ -135,29 +115,13 @@ angular.module('feedbacks')
 
             return request.then(
                 function (response) { // success
-                    debugger;
 
                     var feedback = response.data;
-                    //     id: res.data[2].insertId,
-                    //     app_instance: application.getAppInstance(),
-                    //     avatar_url: $scope.logged_user.image_url,
-                    //     comment: $scope.new_feedback.comment,
-                    //     component_id: application.getComponentId(),
-                    //     created_on: new Date(),
-                    //     display_name: $scope.logged_user.full_name,
-                    //     rating: $scope.new_feedback.rating,
-                    //     visitor_id: $scope.logged_user.email
-                    // };
 
-                    $scope.data.unshift(feedback);
+                    $scope.feedbacks.unshift(feedback);
                     $scope.my_feedback = feedback;
 
-                    $scope.new_feedback = {
-                        comment: '',
-                        rating: 0
-                    };
-
-                    recalculateAverage();
+                    $rootScope.$broadcast('feedbacksChanged',{feedbacks: $scope.feedbacks});
                 },
                 function (err) { // error
                     alert('Error posting feedback');
@@ -168,56 +132,47 @@ angular.module('feedbacks')
                 });
         };
 
-        $scope.postFeedbackEdit = function () {
-            data.editFeedback($scope.logged_user.id_token, $scope.edited_feedback).then(function (res) {
-                if (res.status == 200 && res.data.affectedRows == 1) {
-                    $scope.edit_mode = false;
-                    $scope.my_feedback.comment = $scope.edited_feedback.comment;
-                    $scope.my_feedback.rating = $scope.edited_feedback.rating;
-
-                    recalculateAverage();
-                }
-            });
-        };
-
         $scope.deleteFeedback = function () {
-            data.deleteFeedback($scope.logged_user.id_token, $scope.my_feedback.id).then(function (res) {
-                if (res.status == 200 && res.data.affectedRows == 1) {
-                    var index = $scope.data.indexOf($scope.my_feedback);
-                    $scope.data.splice(index, 1);
+            data.deleteFeedback($scope.logged_user.id_token, $scope.my_feedback).then(function (res) {
+                debugger;
+                if (res.status == 200 && res.data.deleted) {
+                    var index = $scope.feedbacks.indexOf($scope.my_feedback);
+                    $scope.feedbacks.splice(index, 1);
                     $scope.my_feedback = null;
 
-                    recalculateAverage();
+                    $rootScope.$broadcast('feedbacksChanged',{feedbacks: $scope.feedbacks});
                 }
             });
         };
 
         $scope.editFeedback = function () {
             $scope.edit_mode = true;
-            $scope.edited_feedback =
-            {
-                id: $scope.my_feedback.id,
-                comment: $scope.my_feedback.comment,
-                rating: $scope.my_feedback.rating
-            };
+            $scope.edited_feedback = JSON.parse(JSON.stringify($scope.my_feedback));
+        };
+
+        $scope.allowEditSave = function () {
+            return  $scope.edited_feedback &&
+                    $scope.edited_feedback.comment.length &&
+                    $scope.edited_feedback.comment.length <= $scope.settings.max_comment_length &&
+                    (   $scope.edited_feedback.comment != $scope.my_feedback.comment ||
+                        $scope.edited_feedback.rating != $scope.my_feedback.rating);
+        }
+
+        $scope.saveFeedbackEdit = function () {
+            data.editFeedback($scope.logged_user.id_token, $scope.edited_feedback).then(function (res) {
+                if (res.status == 200 && res.data) {
+                    $scope.edited_feedback = null;
+                    var index = $scope.feedbacks.indexOf($scope.my_feedback);
+                    $scope.my_feedback = res.data;
+                    $scope.feedbacks[index] = $scope.my_feedback;
+
+                    $rootScope.$broadcast('feedbacksChanged',{feedbacks: $scope.feedbacks});
+                }
+            });
         };
 
         $scope.cancelFeedbackEdit = function () {
             $scope.edit_mode = false;
-        };
-
-        function recalculateAverage() {
-            var sum = 0;
-            var actualRates = 0;
-
-            for (var i = 0; i < $scope.data.length; i++) {
-                sum += $scope.data[i].rating;
-                if ($scope.data[i].rating != 0)
-                    actualRates++;
-            }
-
-            $scope.average_rating = sum / actualRates;
-            $scope.average_rating_rounded = Math.round($scope.average_rating);
         };
 
         $scope.new_feedback = {
@@ -313,7 +268,7 @@ angular.module('feedbacks')
 
                 return request.then(
                     function (res) { // success
-                        $scope.data.forEach(function (element) {
+                        $scope.feedbacks.forEach(function (element) {
                             if (element.id === res.config.data.item_id){
                                 element.times_flagged++;
                             }

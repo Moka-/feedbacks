@@ -15,7 +15,7 @@ module.exports = function(mongoose) {
         app_instance: String,
         component_id: String,
         catalog_id: ObjectId,
-        name: String,
+        name: { type: String, default: 'New Widget' },
         show_feedbacks: { type: Boolean, default: true },
         show_summary: { type: Boolean, default: true },
         max_rating: { type: Number, default: 5 },
@@ -32,6 +32,11 @@ module.exports = function(mongoose) {
     var feedbackSchema = new Schema({
         target_id: ObjectId,
         visitor_id: ObjectId,
+
+        visitor_email: String,
+        visitor_name: String,
+        visitor_picture_url: String,
+
         created_on : { type: Date, default: Date.now },
         edited_on: { type: Date, default: Date.now },
         deleted: { type: Boolean, default: false },
