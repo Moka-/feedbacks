@@ -48,25 +48,28 @@
                                             {{feedback.comment}}
 
                                             <div class="action-buttons" layout="row" layout-align="start center">
-                                            <!--<span><a href="" class="reply-button"-->
-                                                     <!--ng-click="toggleReply(feedback)">Reply</a> •</span>-->
-                                                <md-button ng-click="showFlagDialog($event,feedback.id)"
-                                                           class="md-icon-button"
-                                                           ng-if="catalog.name != 'Default Catalog'"
-                                                            aria-label="a">
-                                                    <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
-                                                </md-button>
-                                                <md-button ng-click="toggleVote(feedback, 1)"
+                                                <span style="font-size: 1em">
+                                                    {{feedback.up_voters.length}}
+                                                </span>
+
+                                                <md-button ng-click="upVote(feedback, $index)"
                                                            class="md-icon-button"
                                                            ng-if="catalog.name != 'Default Catalog'"
                                                            aria-label="a">
-                                                    <md-icon md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
+                                                    <md-icon ng-class="{'selected': feedback.up_voters.indexOf(logged_user._id) !== -1}"
+                                                             md-svg-src="images/ic_thumb_up_black_18px.svg"></md-icon>
                                                 </md-button>
                                                 <md-button ng-click="toggleVote(feedback, -1)"
                                                            class="md-icon-button"
                                                            ng-if="catalog.name != 'Default Catalog'"
                                                            aria-label="a">
                                                     <md-icon md-svg-src="images/ic_thumb_down_black_18px.svg"></md-icon>
+                                                </md-button>
+                                                <md-button ng-click="showFlagDialog($event,feedback.id)"
+                                                           class="md-icon-button"
+                                                           ng-if="catalog.name != 'Default Catalog'"
+                                                           aria-label="a">
+                                                    <md-icon md-svg-src="images/ic_flag_black_18px.svg"></md-icon>
                                                 </md-button>
                                             </div>
                                         </div>

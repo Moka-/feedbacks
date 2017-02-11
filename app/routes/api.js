@@ -287,10 +287,25 @@ function verifyToken(token, callback) {
 //         next(new Error('not implemented'));
 //     });
 
-router.route('/visitors/:id')
-    .get(function (req, res, next) {
-        dal.visitors.view(req.params, function (err, result) {
-            res.json(result);
+router.route('/visitor/:id_token')
+    .get(function (req, res) {
+        var id_token = req.params.id_token;
+
+        verifyToken(id_token, function (err, user) {
+            if (err)
+                res.error();
+            else {
+                var email = user.email,
+                    name = user.given_name,
+                    picture_url = user.picture;
+
+                models.Visitor.findOneOrCreate({email}, {email, name, picture_url}, function (err, visitor) {
+                    if (err)
+                        res.error();
+                    else
+                    res.json(visitor);
+                });
+            }
         });
     });
     // .put(function (req, res, next) {
@@ -610,6 +625,34 @@ router.route('/vote')
                 res.json(results);
             }
         });
+    });
+
+router.route('/upvote/:target_id')
+    .post(function (req, res) {
+        var target_id = req.params.target_id;
+        var token = req.body.visitor_token;
+
+        verifyToken(token, function (err, user) {
+            var email = user.email,
+                name = user.given_name,
+                picture_url = user.picture;
+
+            models.Visitor.findOneOrCreate({email}, {email, name, picture_url}, function (err, visitor) {
+                models.Feedback.findOne(
+                    {_id: target_id},
+                    (function (visitor_id, err, feedback) {
+                        if (err) res.error();
+                        else
+                            if (feedback.up_voters.indexOf(visitor_id) !== -1)
+                                feedback.up_voters.pull(visitor_id);
+                            else
+                                feedback.up_voters.addToSet(visitor_id);
+                        feedback.save();
+                        res.json(feedback);
+                    }).bind(null, visitor._id)
+                );
+            })
+        })
     });
 
 module.exports = router;

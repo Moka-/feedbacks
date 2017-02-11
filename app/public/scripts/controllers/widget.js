@@ -45,7 +45,18 @@ angular.module('feedbacks')
                 if (user && user.isSignedIn()) {
                     var authResponse = user.getAuthResponse();
                     var profile = user.getBasicProfile();
-                    $scope.logged_user = new User(authResponse.id_token, profile.getName(), profile.getEmail(), profile.getImageUrl());
+
+                    $scope.logged_user = new User(
+                        authResponse.id_token,
+                        profile.getName(),
+                        profile.getEmail(),
+                        profile.getImageUrl());
+
+                    data.getVisitor(authResponse.id_token).then(
+                        function (response) {
+                            $scope.logged_user._id = response.data._id;
+                    });
+
                     setMyFeedback();
                 } else
                     $scope.logged_user = null;
@@ -82,7 +93,6 @@ angular.module('feedbacks')
                 data.getFeedbacks($scope.settings._id).then(function (res) {
                     $scope.feedbacks = res.data;
                     $scope.loading_feedbacks = false;
-
                     $rootScope.$broadcast('feedbacksChanged',{feedbacks: $scope.feedbacks});
                     setMyFeedback();
 
@@ -134,7 +144,6 @@ angular.module('feedbacks')
 
         $scope.deleteFeedback = function () {
             data.deleteFeedback($scope.logged_user.id_token, $scope.my_feedback).then(function (res) {
-                debugger;
                 if (res.status == 200 && res.data.deleted) {
                     var index = $scope.feedbacks.indexOf($scope.my_feedback);
                     $scope.feedbacks.splice(index, 1);
@@ -146,7 +155,6 @@ angular.module('feedbacks')
         };
 
         $scope.editFeedback = function () {
-            $scope.edit_mode = true;
             $scope.edited_feedback = JSON.parse(JSON.stringify($scope.my_feedback));
         };
 
@@ -172,7 +180,7 @@ angular.module('feedbacks')
         };
 
         $scope.cancelFeedbackEdit = function () {
-            $scope.edit_mode = false;
+            $scope.edited_feedback = null;
         };
 
         $scope.new_feedback = {
@@ -195,6 +203,7 @@ angular.module('feedbacks')
         };
 
         $scope.toggleVote = function (item, vote) {
+            debugger;
             var request = $http({
                 method: "post",
                 url: "/api/vote",
@@ -208,6 +217,24 @@ angular.module('feedbacks')
             return request.then(
                 function (res) { // success
                     alert('horaay');
+                },
+                function (err) { // error
+                    alert('oops');
+                });
+        };
+
+        $scope.upVote = function (item, index) {
+            var request = $http({
+                method: "post",
+                url: "/api/upvote/" + item._id,
+                data: {
+                    visitor_token: $scope.logged_user.id_token
+                }
+            });
+
+            return request.then(
+                function (res) { // success
+                    $scope.feedbacks[index] = res.data;
                 },
                 function (err) { // error
                     alert('oops');

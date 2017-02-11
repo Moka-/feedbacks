@@ -273,3 +273,11 @@ a:hover {
 .flagged {
     font-style: italic;
 }
+
+.action-buttons md-icon{
+    margin-top: -0.5em;
+}
+
+.selected {
+    color: blue;
+}

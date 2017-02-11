@@ -29,6 +29,10 @@ angular.module('data', ['application'])
             });
             return promise;
         };
+        this.getVisitor = function (id_token){
+            var promise = $http.get('/api/visitor/' + id_token);
+            return promise;
+        };
         this.getWidgets = function (){
             var promise = $http.get('/api/widgets/' + application.getAppInstance());
             return promise;
